@@ -151,6 +151,7 @@ def authenticate():
 
 @app.route('/expense')
 def expense():
+	return render_template('expense.html')
 
 if __name__ == '__main__':
   main()
