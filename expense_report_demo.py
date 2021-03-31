@@ -98,7 +98,7 @@ def authenticate():
 	email = request.form['email']
 	password = request.form['password']
 	if email and password:
-		sql_string = 'select * from employee where email='+email+', password='+password
+		sql_string = 'select * from employee where email="'+email+'" and password="'+password+'"'
 		results = sql_select(sql_string)
 		print('results:'+results)
 		if len(results) == 1:
