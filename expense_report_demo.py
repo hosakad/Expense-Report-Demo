@@ -39,7 +39,7 @@ CONST_PLAN = ['Advanced', 'Standard']
 # 
 # error messages
 #MSG_EMAIL_MISMATCH = 'メールアドレスとパスワードが一致しません'
-MSG_EMAIL_MISMATCH = 'sample message'
+MSG_EMAIL_MISMATCH = 'sample_message'
 MSG_NO_EMAIL_PASSWORD = 'メールアドレスまたはパスワードが入力されませんでした'
 
 def getDBConnection():
