@@ -38,8 +38,7 @@ CONST_ROLES = [CONST_ROLE_ADMIN, CONST_ROLE_APPROVER, CONST_ROLE_USER]
 CONST_PLAN = ['Advanced', 'Standard']
 # 
 # error messages
-#MSG_EMAIL_MISMATCH = 'メールアドレスとパスワードが一致しません'
-MSG_EMAIL_MISMATCH = 'sample_message'
+MSG_EMAIL_MISMATCH = 'メールアドレスとパスワードが一致しません'
 MSG_NO_EMAIL_PASSWORD = 'メールアドレスまたはパスワードが入力されませんでした'
 
 def getDBConnection():
@@ -85,8 +84,8 @@ def index():
 
 	return redirect(url_for('login'))
 
-@app.route('/error/')
-def error(msg):
+@app.route('/error/<message>')
+def error(message):
 	return render_template('error.html', message=message)
 
 @app.route('/login')
@@ -107,8 +106,7 @@ def authenticate():
 			return redirect(url_for('index'))
 		else:
 			# login failed
-			print('url_for:', url_for('error', message=MSG_EMAIL_MISMATCH))
-			return redirect(url_for('error', msg=MSG_EMAIL_MISMATCH))
+			return redirect(url_for('error', message=MSG_EMAIL_MISMATCH))
 	else:
 		# email or password was null
 		return redirect(url_for('error', message=MSG_NO_EMAIL_PASSWORD))
