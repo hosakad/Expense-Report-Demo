@@ -94,7 +94,7 @@ def error(message):
 def login():
 	return render_template('login.html')
 
-@app.rout('/logout')
+@app.route('/logout')
 def logout():
 	redis_client.delete(REDIS_EMAIL)
 	redis_client.delete(REDIS_ROLE)
