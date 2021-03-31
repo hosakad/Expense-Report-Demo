@@ -85,8 +85,8 @@ def index():
 
 	return redirect(url_for('login'))
 
-@app.route('/error')
-def error(message):
+@app.route('/error/')
+def error(msg):
 	return render_template('error.html', message=message)
 
 @app.route('/login')
@@ -108,7 +108,7 @@ def authenticate():
 		else:
 			# login failed
 			print('url_for:', url_for('error', message=MSG_EMAIL_MISMATCH))
-			return redirect(url_for('error', message=MSG_EMAIL_MISMATCH))
+			return redirect(url_for('error', msg=MSG_EMAIL_MISMATCH))
 	else:
 		# email or password was null
 		return redirect(url_for('error', message=MSG_NO_EMAIL_PASSWORD))
