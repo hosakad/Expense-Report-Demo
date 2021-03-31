@@ -107,6 +107,7 @@ def authenticate():
 			return redirect(url_for('index'))
 		else:
 			# login failed
+			print('url_for:', url_for('error', message=MSG_EMAIL_MISMATCH))
 			return redirect(url_for('error', message=MSG_EMAIL_MISMATCH))
 	else:
 		# email or password was null
