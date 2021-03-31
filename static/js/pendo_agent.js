@@ -9,17 +9,17 @@
             // Please use Strings, Numbers, or Bools for value types.
             pendo.initialize({
                 visitor: {
-                    id:              visitor_id ||'VISITOR-UNIQUE-ID'   // Required if user is logged in
-                    // email:        // Recommended if using Pendo Feedback, or NPS Email
-                    // full_name:    // Recommended if using Pendo Feedback
-                    // role:         // Optional
+                    id:             email ||'VISITOR-UNIQUE-ID'   // Required if user is logged in
+                    email:          email // Recommended if using Pendo Feedback, or NPS Email
+                    full_name:      full_name // Recommended if using Pendo Feedback
+                    department:     department 
 
                     // You can add any additional visitor level key-values here,
                     // as long as it's not one of the above reserved names.
                 },
 
                 account: {
-                    id:           account_id ||'ACCOUNT-UNIQUE-ID' // Highly recommended
+                    id:           company ||'ACCOUNT-UNIQUE-ID' // Highly recommended
                     // name:         // Optional
                     // is_paying:    // Recommended if using Pendo Feedback
                     // monthly_value:// Recommended if using Pendo Feedback
@@ -31,4 +31,4 @@
                     // as long as it's not one of the above reserved names.
                 }
             });
-    })('2bee995a-ad25-49dd-6737-8861a2023460');
+    })('aaba14f9-9f84-4155-5448-3968ddf87700');
