@@ -151,7 +151,7 @@ def authenticate():
 
 @app.route('/expense')
 def expense():
-	return render_template('expense'.html',
+	return render_template('expense.html',
 							email=redis_client.get(REDIS_EMAIL).decode('utf8'),
 							role=redis_client.get(REDIS_ROLE).decode('utf8'),
 							full_name=redis_client.get(REDIS_FULL_NAME).decode('utf8'),
