@@ -38,7 +38,8 @@ CONST_ROLES = [CONST_ROLE_ADMIN, CONST_ROLE_APPROVER, CONST_ROLE_USER]
 CONST_PLAN = ['Advanced', 'Standard']
 # 
 # error messages
-MSG_EMAIL_MISMATCH = 'メールアドレスとパスワードが一致しません'
+#MSG_EMAIL_MISMATCH = 'メールアドレスとパスワードが一致しません'
+MSG_EMAIL_MISMATCH = 'sample message'
 MSG_NO_EMAIL_PASSWORD = 'メールアドレスまたはパスワードが入力されませんでした'
 
 def getDBConnection():
@@ -80,7 +81,7 @@ def index():
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
 		# if the employee is already logged in, show index.html
-		return_template('index.html')
+		render_template('index.html')
 
 	return redirect(url_for('login'))
 
