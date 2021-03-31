@@ -91,7 +91,7 @@ def error(message):
 def login():
 	return render_template('login.html')
 
-@app.route('/authenticate', method=['POST'])
+@app.route('/authenticate', methods=['POST'])
 def authenticate():
 
 	email = request.form['email']
