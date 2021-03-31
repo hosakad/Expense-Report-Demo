@@ -68,7 +68,7 @@ def getAccountID():
 
 def sql_select(sql_string):
 
-	cursor = conn.cursor()
+	cursor = getDBConnection().cursor()
 	cursor.execute(sql_string)
 	results = cursor.fetchall()
 	return results
