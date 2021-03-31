@@ -38,8 +38,11 @@ CONST_ROLES = [CONST_ROLE_ADMIN, CONST_ROLE_APPROVER, CONST_ROLE_USER]
 CONST_PLAN = ['Advanced', 'Standard']
 # 
 # error messages
-MSG_EMAIL_MISMATCH = 'メールアドレスとパスワードが一致しません'
-MSG_NO_EMAIL_PASSWORD = 'メールアドレスまたはパスワードが入力されませんでした'
+ERROR_MESSAGES = {
+	MSG_EMAIL_MISMATCH : 'メールアドレスとパスワードが一致しません',
+	MSG_NO_EMAIL_PASSWORD : 'メールアドレスまたはパスワードが入力されませんでした'
+}
+
 
 def getDBConnection():
 	global DATABASE_CONNECTION
@@ -78,16 +81,17 @@ def sql_select(sql_string):
 def index():
 	# initialize
 	email = redis_client.get(REDIS_EMAIL)
-	print('email:', email.decode('utf8'))
 	if email:
 		# if the employee is already logged in, show index.html
 		print('already logged in')
+		print('email:', email.decode('utf8'))
 		return render_template('index.html')
 
 	return redirect(url_for('login'))
 
-@app.route('/error/<message>')
-def error(message):
+@app.route('/error/<message_id>')
+def error(message_id):
+	message = ERROR_MESSAGES[message_id]
 	return render_template('error.html', message=message)
 
 @app.route('/login')
@@ -102,7 +106,7 @@ def logout():
 	redis_client.delete(REDIS_COMPANY_ID)
 	redis_client.delete(REDIS_COMPANY_NAME)
 	redis_client.delete(REDIS_PLAN)
-	return redirect(url_for('index'))
+	return render_template('logout.html')
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
@@ -110,7 +114,10 @@ def authenticate():
 	email = request.form['email']
 	password = request.form['password']
 	if email and password:
-		sql_string = "select * from employee where email='"+email+"' and password='"+password+"'"
+		sql_string = "select email, role, first_name, last_name, company.id, company.name, company.plan"\
+					" from employee join company"\
+					" on employee.company_id = company.id"\
+					" where email='"+email+"' and password='"+password+"'"
 		results = sql_select(sql_string)
 		print('results:', results)
 		if len(results) == 1:
@@ -118,10 +125,10 @@ def authenticate():
 			return redirect(url_for('index'))
 		else:
 			# login failed
-			return redirect(url_for('error', message=MSG_EMAIL_MISMATCH))
+			return redirect(url_for('error', message_id='MSG_EMAIL_MISMATCH'))
 	else:
 		# email or password was null
-		return redirect(url_for('error', message=MSG_NO_EMAIL_PASSWORD))
+		return redirect(url_for('error', message_id='MSG_NO_EMAIL_PASSWORD'))
 
 if __name__ == '__main__':
   main()
