@@ -78,6 +78,7 @@ def sql_select(sql_string):
 def index():
 	# initialize
 	email = redis_client.get(REDIS_EMAIL)
+	print('email:', email.decode('utf8'))
 	if email:
 		# if the employee is already logged in, show index.html
 		render_template('index.html')
