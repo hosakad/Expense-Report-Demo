@@ -1,1 +1,1 @@
-web: gunicorn simple_web_app:app
+web: gunicorn expense-report-demo:app
