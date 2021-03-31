@@ -58,7 +58,7 @@ def getAccountID():
 	else:
 		return 'ACCOUNT-UNIQUE-ID'
 
-def sql_select(sql_string) 
+def sql_select(sql_string):
 
 	cursor = conn.cursor()
 	cursor.execute(sql_string)
