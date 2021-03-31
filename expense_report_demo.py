@@ -87,7 +87,7 @@ def index():
 		# if the employee is already logged in, show index.html
 		print('already logged in')
 		print('email:', email.decode('utf8'))
-		return render_template('index.html'
+		return render_template('index.html',
 								email=redis_client.get(REDIS_EMAIL).decode('utf8'),
 								role=redis_client.get(REDIS_ROLE).decode('utf8'),
 								full_name=redis_client.get(REDIS_FULL_NAME).decode('utf8'),
