@@ -100,7 +100,7 @@ def authenticate():
 	if email and password:
 		sql_string = "select * from employee where email='"+email+"' and password='"+password+"'"
 		results = sql_select(sql_string)
-		print('results:'+results)
+		print('results:', results)
 		if len(results) == 1:
 			redis_client.set(REDIS_EMAIL, email)
 			return redirect(url_for('index'))
