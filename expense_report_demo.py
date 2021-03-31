@@ -38,6 +38,8 @@ CONST_ROLES = [CONST_ROLE_ADMIN, CONST_ROLE_APPROVER, CONST_ROLE_USER]
 CONST_PLAN = ['Advanced', 'Standard']
 # 
 # error messages
+MSG_EMAIL_MISMATCH = 'msg0'
+MSG_NO_EMAIL_PASSWORD = 'msg1'
 ERROR_MESSAGES = {
 	MSG_EMAIL_MISMATCH : 'メールアドレスとパスワードが一致しません',
 	MSG_NO_EMAIL_PASSWORD : 'メールアドレスまたはパスワードが入力されませんでした'
@@ -114,21 +116,22 @@ def authenticate():
 	email = request.form['email']
 	password = request.form['password']
 	if email and password:
-		sql_string = "select email, role, first_name, last_name, company.id, company.name, company.plan"\
+		sql_string = "select email, role, first_name, last_name, company.id as company_id,"\
+					" company.name as company_name, company.plan as company_plan"\
 					" from employee join company"\
 					" on employee.company_id = company.id"\
 					" where email='"+email+"' and password='"+password+"'"
 		results = sql_select(sql_string)
 		print('results:', results)
 		if len(results) == 1:
-			redis_client.set(REDIS_EMAIL, email)
+			#redis_client.set(REDIS_EMAIL, email)
 			return redirect(url_for('index'))
 		else:
 			# login failed
-			return redirect(url_for('error', message_id='MSG_EMAIL_MISMATCH'))
+			return redirect(url_for('error', message_id=MSG_EMAIL_MISMATCH))
 	else:
 		# email or password was null
-		return redirect(url_for('error', message_id='MSG_NO_EMAIL_PASSWORD'))
+		return redirect(url_for('error', message_id=MSG_NO_EMAIL_PASSWORD))
 
 if __name__ == '__main__':
   main()
