@@ -1,0 +1,17 @@
+html, body, div{
+    margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+#sidebar{
+    background-color:rgba(0, 0, 0, 0.5);
+}
+
+#content{
+    background-color:#f5fafa;
+
+}

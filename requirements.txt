@@ -2,4 +2,4 @@ Flask
 gunicorn
 redis
 requests
-
+psycopg2-binary
