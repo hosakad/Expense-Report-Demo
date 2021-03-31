@@ -21,9 +21,9 @@ pool= redis.ConnectionPool(decode_responses=True)
 redis_client = redis.StrictRedis(connection_pool=pool).from_url(redis_url)
 
 # Redis keys
-REDIS_FULL_NAME = 'EMPLOYEE_FULL_NAME'
 REDIS_EMAIL = 'EMPLOYEE_EMAIL' # visitor ID
 REDIS_ROLE = 'EMPLOYEE_ROLE'
+REDIS_FULL_NAME = 'EMPLOYEE_FULL_NAME'
 REDIS_COMPANY_ID = 'COMPANY_ID' # account ID
 REDIS_COMPANY_NAME = 'COMPANY_NAME'
 REDIS_PLAN = 'COMPANY_PLAN'
@@ -92,6 +92,16 @@ def error(message):
 @app.route('/login')
 def login():
 	return render_template('login.html')
+
+@app.rout('/logout')
+def logout():
+	redis_client.del(REDIS_EMAIL)
+	redis_client.del(REDIS_ROLE)
+	redis_client.del(REDIS_FULL_NAME)
+	redis_client.del(REDIS_COMPANY_ID)
+	redis_client.del(REDIS_COMPANY_NAME)
+	redis_client.del(REDIS_PLAN)
+	return redirect(url_for('index'))
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
