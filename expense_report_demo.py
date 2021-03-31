@@ -21,15 +21,15 @@ pool= redis.ConnectionPool(decode_responses=True)
 redis_client = redis.StrictRedis(connection_pool=pool).from_url(redis_url)
 
 # Redis keys
-REDIS_FULL_NAME = 'USE_FULL_NAME'
-REDIS_EMAIL = 'USER_EMAIL' # visitor ID
-REDIS_ROLE = 'USER_ROLE'
+REDIS_FULL_NAME = 'EMPLOYEE_FULL_NAME'
+REDIS_EMAIL = 'EMPLOYEE_EMAIL' # visitor ID
+REDIS_ROLE = 'EMPLOYEE_ROLE'
 REDIS_COMPANY_ID = 'COMPANY_ID' # account ID
 REDIS_COMPANY_NAME = 'COMPANY_NAME'
 REDIS_PLAN = 'COMPANY_PLAN'
 
 # constant values to be used in app
-# user roles
+# employee roles
 CONST_ROLE_ADMIN = '管理者'
 CONST_ROLE_APPROVER = '承認者'
 CONST_ROLE_USER = 'ユーザー'
@@ -79,7 +79,7 @@ def index():
 	# initialize
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
-		# if the user is already logged in, show index.html
+		# if the employee is already logged in, show index.html
 		return_template('index.html')
 
 	return redirect(url_for('login'))
@@ -98,7 +98,7 @@ def authenticate():
 	email = request.form['email']
 	password = request.form['password']
 	if email and password:
-		sql_string = 'select * from user where email="'+email+'" and password="'+password+'"'
+		sql_string = 'select * from employee where email="'+email+'" and password="'+password+'"'
 		results = sql_select(sql_string)
 		print('results:'+results)
 		if len(results) == 1:
