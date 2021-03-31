@@ -42,6 +42,7 @@ MSG_EMAIL_MISMATCH = 'メールアドレスとパスワードが一致しませ�
 MSG_NO_EMAIL_PASSWORD = 'メールアドレスまたはパスワードが入力されませんでした'
 
 def getDBConnection():
+	global DATABASE_CONNECTION
 	if DATABASE_CONNECTION is None:
 		DATABASE_CONNECTION = psycopg2.connect(DATABASE_URL, sslmode='require')
 		cursor = DATABASE_CONNECTION.cursor()
