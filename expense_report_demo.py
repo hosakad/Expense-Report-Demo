@@ -82,7 +82,7 @@ def index():
 	if email:
 		# if the employee is already logged in, show index.html
 		print('already logged in')
-		render_template('index.html')
+		return render_template('index.html')
 
 	return redirect(url_for('login'))
 
