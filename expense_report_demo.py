@@ -125,7 +125,7 @@ def authenticate():
 		print('results:', results)
 		if len(results) == 1:
 			#redis_client.set(REDIS_EMAIL, email)
-			email, role, first_name, company_id, company_name, company.plan = result[0]
+			email, role, first_name, company_id, company_name, company.plan = results[0]
 			print('email:', email)
 			print('company_id:', company_id)
 			return redirect(url_for('index'))
