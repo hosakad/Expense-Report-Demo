@@ -125,6 +125,8 @@ def authenticate():
 		print('results:', results)
 		if len(results) == 1:
 			#redis_client.set(REDIS_EMAIL, email)
+			print('email:', results['email'])
+			print('company_id:', results['company_id'])
 			return redirect(url_for('index'))
 		else:
 			# login failed
