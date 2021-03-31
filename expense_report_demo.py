@@ -76,7 +76,7 @@ def sql_select(sql_string):
 @app.route('/')
 def index():
 	# initialize
-	email = redis_client.get(REDIS_EMAIL).decode('UTF8')
+	email = redis_client.get(REDIS_EMAIL)
 	if email:
 		# if the user is already logged in, show index.html
 		return_template('index.html')
