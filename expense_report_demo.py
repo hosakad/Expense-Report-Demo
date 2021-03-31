@@ -81,6 +81,7 @@ def index():
 	print('email:', email.decode('utf8'))
 	if email:
 		# if the employee is already logged in, show index.html
+		print('already logged in')
 		render_template('index.html')
 
 	return redirect(url_for('login'))
@@ -95,12 +96,12 @@ def login():
 
 @app.rout('/logout')
 def logout():
-	redis_client.del(REDIS_EMAIL)
-	redis_client.del(REDIS_ROLE)
-	redis_client.del(REDIS_FULL_NAME)
-	redis_client.del(REDIS_COMPANY_ID)
-	redis_client.del(REDIS_COMPANY_NAME)
-	redis_client.del(REDIS_PLAN)
+	redis_client.delete(REDIS_EMAIL)
+	redis_client.delete(REDIS_ROLE)
+	redis_client.delete(REDIS_FULL_NAME)
+	redis_client.delete(REDIS_COMPANY_ID)
+	redis_client.delete(REDIS_COMPANY_NAME)
+	redis_client.delete(REDIS_PLAN)
 	return redirect(url_for('index'))
 
 @app.route('/authenticate', methods=['POST'])
