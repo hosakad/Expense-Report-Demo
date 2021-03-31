@@ -46,7 +46,7 @@ def getDBConnection():
 	if DATABASE_CONNECTION is None:
 		DATABASE_CONNECTION = psycopg2.connect(DATABASE_URL, sslmode='require')
 		cursor = DATABASE_CONNECTION.cursor()
-		cursor.execute('SET search_path TO' + DATABASE_SCHEMA)
+		cursor.execute('SET search_path TO ' + DATABASE_SCHEMA)
 		cursor.close()
 
 	return DATABASE_CONNECTION
