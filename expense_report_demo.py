@@ -8,8 +8,10 @@ import psycopg2
 # retrieve parametes for database from enrironment value
 DATABASE_URL = os.environ['DATABASE_URL']
 DATABASE_SCHEMA = os.environ['DATABASE_SCHEMA']
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-conn.execute('SET search_path TO' + DATABASE_SCHEMA)
+DATABASE_CONNECTION = None
+cursor = getDBConnection().cursor()
+cursor.execute('SET search_path TO' + DATABASE_SCHEMA)
+cursor.close()
 
 # a random secret used by Flask to encrypt session data cookies
 app = Flask(__name__)
@@ -42,10 +44,16 @@ CONST_PLAN = ['Advanced', 'Standard']
 MSG_EMAIL_MISMATCH = 'メールアドレスとパスワードが一致しません'
 MSG_NO_EMAIL_PASSWORD = 'メールアドレスまたはパスワードが入力されませんでした'
 
+def getDBConnection():
+	if DATABASE_CONNECTION is None:
+		DATABASE_CONNECTION = psycopg2.connect(DATABASE_URL, sslmode='require')
+
+	return DATABASE_CONNECTION
+
 def getVisitorID():
 	visitor_id = redis_client.get(REDIS_EMAIL)
 	print("visitor_id:", visitor_id)
-	if (visitor_id):
+	if visitor_id:
 		return visitor_id.decode('UTF8')
 	else:
 		return 'VISITOR-UNIQUE-ID'
@@ -53,7 +61,7 @@ def getVisitorID():
 def getAccountID():
 	account_id = redis_client.get(REDIS_ACCOUNT_ID)
 	print("account_id:", account_id)
-	if (account_id):
+	if account_id:
 		return account_id.decode('UTF8')
 	else:
 		return 'ACCOUNT-UNIQUE-ID'
@@ -67,9 +75,9 @@ def sql_select(sql_string):
 
 @app.route('/')
 def index():
-	# Initialize
+	# initialize
 	email = redis_client.get(REDIS_EMAIL).decode('UTF8')
-	if (email):
+	if email:
 		# if the user is already logged in, show index.html
 		return_template('index.html')
 
@@ -88,11 +96,11 @@ def authenticate():
 
 	email = request.form['email']
 	password = request.form['password']
-	if (email and password):
+	if email and password:
 		sql_string = 'select * from employee where email='+email+', password='+password
 		results = sql_select(sql_string)
 		print('results:'+results)
-		if (len(results) == 1):
+		if len(results) == 1:
 			redis_client.set(REDIS_EMAIL, email)
 			return redirect(url_for('index'))
 		else:
@@ -104,3 +112,4 @@ def authenticate():
 
 if __name__ == '__main__':
   main()
+  getDBConnection().close()
