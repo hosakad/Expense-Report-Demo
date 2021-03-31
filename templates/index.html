@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Pendoデモ 経費精算 メイン画面</title>
+  <script type="text/javascript"　src="{{url_for('static', filename='pendo_agent.js')}}">
+	var email = '{{email}}'
+	var role = '{{role}}';
+	var full_name = '{{full_name}}'
+	var company_id = '{{company_id}}';
+	var company_name = '{{company_name}}';
+	var company_plan = '{{company_plan}}';
+</script>
 </head>
 <body>
 	<form action="../step1" method="get">

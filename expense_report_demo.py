@@ -26,7 +26,7 @@ REDIS_ROLE = 'EMPLOYEE_ROLE'
 REDIS_FULL_NAME = 'EMPLOYEE_FULL_NAME'
 REDIS_COMPANY_ID = 'COMPANY_ID' # account ID
 REDIS_COMPANY_NAME = 'COMPANY_NAME'
-REDIS_PLAN = 'COMPANY_PLAN'
+REDIS_COMPANY_PLAN = 'COMPANY_PLAN'
 
 # constant values to be used in app
 # employee roles
@@ -87,7 +87,14 @@ def index():
 		# if the employee is already logged in, show index.html
 		print('already logged in')
 		print('email:', email.decode('utf8'))
-		return render_template('index.html')
+		return render_template('index.html'
+								email=redis_client.get(REDIS_EMAIL).decode('utf8'),
+								role=redis_client.get(REDIS_ROLE).decode('utf8'),
+								full_name=redis_client.get(REDIS_FULL_NAME).decode('utf8'),
+								company_id=redis_client.get(REDIS_COMPANY_ID).decode('utf8'),
+								company_name=redis_client.get(REDIS_COMPANY_NAME).decode('utf8'),
+								company_plan=redis_client.get(REDIS_COMPANY_PLAN).decode('utf8')
+							)
 
 	return redirect(url_for('login'))
 
@@ -107,7 +114,7 @@ def logout():
 	redis_client.delete(REDIS_FULL_NAME)
 	redis_client.delete(REDIS_COMPANY_ID)
 	redis_client.delete(REDIS_COMPANY_NAME)
-	redis_client.delete(REDIS_PLAN)
+	redis_client.delete(REDIS_COMPANY_PLAN)
 	return render_template('logout.html')
 
 @app.route('/authenticate', methods=['POST'])
@@ -133,7 +140,7 @@ def authenticate():
 			redis_client.set(REDIS_FULL_NAME, last_name + ' ' + first_name)
 			redis_client.set(REDIS_COMPANY_ID, company_id)
 			redis_client.set(REDIS_COMPANY_NAME, company_name)
-			redis_client.set(REDIS_PLAN, company_plan)
+			redis_client.set(REDIS_COMPANY_PLAN, company_plan)
 			return redirect(url_for('index'))
 		else:
 			# login failed
@@ -141,6 +148,9 @@ def authenticate():
 	else:
 		# email or password was null
 		return redirect(url_for('error', message_id=MSG_NO_EMAIL_PASSWORD))
+
+@app.route('/expense')
+def expense():
 
 if __name__ == '__main__':
   main()
