@@ -125,9 +125,15 @@ def authenticate():
 		print('results:', results)
 		if len(results) == 1:
 			#redis_client.set(REDIS_EMAIL, email)
-			email, role, first_name, company_id, company_name, company.plan = results[0]
+			email, role, first_name, last_name, company_id, company_name, company_plan = results[0]
 			print('email:', email)
 			print('company_id:', company_id)
+			redis_client.set(REDIS_EMAIL, email)
+			redis_client.set(REDIS_ROLE, role)
+			redis_client.set(REDIS_FULL_NAME, last_name + ' ' + first_name)
+			redis_client.set(REDIS_COMPANY_ID, company_id)
+			redis_client.set(REDIS_COMPANY_NAME, company_name)
+			redis_client.set(REDIS_PLAN, company_plan)
 			return redirect(url_for('index'))
 		else:
 			# login failed
