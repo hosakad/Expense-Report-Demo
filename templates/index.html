@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta rel="stylesheet" href={{url_for('static', filename='css/main.css')}}>
   <title>Pendoデモ 経費精算 メイン画面</title>
   <script type="text/javascript">
 	var email = '{{email}}';
@@ -11,7 +12,7 @@
 	var company_name = '{{company_name}}';
 	var company_plan = '{{company_plan}}';
   </script>
-  <script src="{{url_for('static', filename='pendo_agent.js')}}"></script>
+  <script src={{url_for('static', filename='js/pendo_agent.js')}}></script>
 </head>
 <body>
 	<form action="../step1" method="get">
