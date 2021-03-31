@@ -9,9 +9,6 @@ import psycopg2
 DATABASE_URL = os.environ['DATABASE_URL']
 DATABASE_SCHEMA = os.environ['DATABASE_SCHEMA']
 DATABASE_CONNECTION = None
-cursor = getDBConnection().cursor()
-cursor.execute('SET search_path TO' + DATABASE_SCHEMA)
-cursor.close()
 
 # a random secret used by Flask to encrypt session data cookies
 app = Flask(__name__)
@@ -47,6 +44,9 @@ MSG_NO_EMAIL_PASSWORD = 'メールアドレスまたはパスワードが入力�
 def getDBConnection():
 	if DATABASE_CONNECTION is None:
 		DATABASE_CONNECTION = psycopg2.connect(DATABASE_URL, sslmode='require')
+		cursor = DATABASE_CONNECTION.cursor()
+		cursor.execute('SET search_path TO' + DATABASE_SCHEMA)
+		cursor.close()
 
 	return DATABASE_CONNECTION
 
