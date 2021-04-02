@@ -1,4 +1,4 @@
-var email = '{{email}}'
+var email = '{{email}}';
 var role = '{{role}}';
 var full_name = '{{full_name}}';
 var company_id = '{{company_id}}';
