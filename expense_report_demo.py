@@ -56,28 +56,23 @@ def getDBConnection():
 
 	return DATABASE_CONNECTION
 
-def getVisitorID():
-	visitor_id = redis_client.get(REDIS_EMAIL)
-	print("visitor_id:", visitor_id)
-	if visitor_id:
-		return visitor_id.decode('UTF8')
-	else:
-		return 'VISITOR-UNIQUE-ID'
-
-def getAccountID():
-	account_id = redis_client.get(REDIS_ACCOUNT_ID)
-	print("account_id:", account_id)
-	if account_id:
-		return account_id.decode('UTF8')
-	else:
-		return 'ACCOUNT-UNIQUE-ID'
-
 def sql_select(sql_string):
 
 	cursor = getDBConnection().cursor()
 	cursor.execute(sql_string)
 	results = cursor.fetchall()
 	return results
+
+def getPendoParams():
+
+	params[]
+	params['email'] = redis_client.get(REDIS_EMAIL).decode('utf8')
+	params['role'] = redis_client.get(REDIS_ROLE).decode('utf8')
+	params['full_name'] = redis_client.get(REDIS_FULL_NAME).decode('utf8')
+	params['company_id'] = redis_client.get(REDIS_COMPANY_ID).decode('utf8')
+	params['company_name'] = redis_client.get(REDIS_COMPANY_NAME).decode('utf8')
+	params['company_plan'] = redis_client.get(REDIS_COMPANY_PLAN).decode('utf8')
+	return params
 
 @app.route('/')
 def index():
@@ -87,14 +82,7 @@ def index():
 		# if the employee is already logged in, show index.html
 		print('already logged in')
 		print('email:', email.decode('utf8'))
-		return render_template('index.html',
-								email=redis_client.get(REDIS_EMAIL).decode('utf8'),
-								role=redis_client.get(REDIS_ROLE).decode('utf8'),
-								full_name=redis_client.get(REDIS_FULL_NAME).decode('utf8'),
-								company_id=redis_client.get(REDIS_COMPANY_ID).decode('utf8'),
-								company_name=redis_client.get(REDIS_COMPANY_NAME).decode('utf8'),
-								company_plan=redis_client.get(REDIS_COMPANY_PLAN).decode('utf8')
-							)
+		return render_template('index.html', params=getPendoParams())
 
 	return redirect(url_for('login'))
 
