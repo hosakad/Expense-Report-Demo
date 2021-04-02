@@ -5,33 +5,57 @@
 	<link rel="stylesheet" href={{url_for('static', filename='css/main.css')}}>
 	<title>Pendoデモ 経費精算 メイン画面</title>
 	<script type="text/javascript">
-		var email = '{{email}}';
+	</script>
+	<script type="text/javascript" src={{url_for('static', filename='js/pendo_agent.js')}}>
 		var role = '{{role}}';
 		var full_name = '{{full_name}}';
 		var company_id = '{{company_id}}';
 		var company_name = '{{company_name}}';
 		var company_plan = '{{company_plan}}';
 	</script>
-	<script src={{url_for('static', filename='js/pendo_agent.js')}}></script>
 </head>
 <body>
-	<div id="sidebar">
+	<nav>
 		<div id="logo">
 
 		</div>
 		<div id="navigator">
 			<ul>
-				<li><a href={{url_for('expense')}}>経費</a></li>
-				<li><a href={{url_for('expense')}}>レポート</a></li>
-				<li><a href={{url_for('logout')}}>ログアウト</a></li>
+				<li><a href="expense.html">経費</a></li>
+				<li><a href="report.html">レポート</a></li>
+				<li><a href="logout.html">ログアウト</a></li>
 			</ul>
 		</div>
-	</div>
-	<div id="content">
-		<p>アイテム1</p>
-		<p>アイテム2</p>
-		<p>アイテム3</p>
-		<p>アイテム4</p>
-	</div>
-</body>
+	</nav>
+	<section id="content">
+		<div id="expense_list">
+			<h2>経費リスト</h2>
+			<table>
+				<tr>
+					<th>メールアドレス</th>
+					<th>名前</th>
+					<th>金額</th>
+				</tr>
+				<tr>
+					<td>xxx@aaa.com</td>
+					<td>aaaa</td>
+					<td>10,000</td>
+				</tr>
+				<tr>
+					<td>xxx@aaa.com</td>
+					<td>aaaa</td>
+					<td>10,000</td>
+				</tr>
+				<tr>
+					<td>xxx@aaa.com</td>
+					<td>aaaa</td>
+					<td>10,000</td>
+				</tr>
+			</table>
+	
+		</div>
+		<div id="report_list">
+
+		</div>
+	</section></body>
 </html>
