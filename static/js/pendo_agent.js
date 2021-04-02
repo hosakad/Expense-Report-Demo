@@ -9,7 +9,7 @@
             // Please use Strings, Numbers, or Bools for value types.
             pendo.initialize({
                 visitor: {
-                    id:            '{{email}}' ||'VISITOR-UNIQUE-ID',   // Required if user is logged in
+                    id:            email ||'VISITOR-UNIQUE-ID',   // Required if user is logged in
                     role:          role,
                     full_name:      full_name // Recommended if using Pendo Feedback
 
