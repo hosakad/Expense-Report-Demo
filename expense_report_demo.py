@@ -65,7 +65,7 @@ def sql_select(sql_string):
 
 def getPendoParams():
 
-	params = []
+	params = {}
 	params['email'] = redis_client.get(REDIS_EMAIL).decode('utf8')
 	params['role'] = redis_client.get(REDIS_ROLE).decode('utf8')
 	params['full_name'] = redis_client.get(REDIS_FULL_NAME).decode('utf8')
