@@ -67,7 +67,7 @@ def sql_select(sql_string):
 	results = cursor.fetchall()
 	return results
 
-def sql_create(sql_string):
+def sql_create_update(sql_string):
 	print("execute sql:", sql_string)
 	cursor = getDBConnection().cursor()
 	cursor.execute(sql_string)
@@ -181,7 +181,7 @@ def create_expense():
 											+request.form['currency']+"','"\
 											+request.form['description']+"','"\
 											+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"')"
-	sql_create(sql_string)
+	sql_create_update(sql_string)
 
 	return redirect(url_for('html_expense'))
 
@@ -200,6 +200,19 @@ def html_expense_edit():
 		return render_template('expense_edit.html', params=getPendoParams(), expense=results[0])
 	else:
 		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH))
+
+@app.route('/update_expense', methods=['POST'])
+def update_expense():
+	sql_string = "update expense"\
+							" set name = '"+request.form['name']+"',"\
+							" set date = '"+request.form['date']+"',"\
+							" set currency = '"+request.form['currency']+"',"\
+							" set amount = "+request.form['amount']+","\
+							" set description = '"+request.form['description']+"'"\
+							" where id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
+	sql_create_update(sql_string)
+
+	return redirect(url_for('html_expense'))
 
 if __name__ == '__main__':
   main()
