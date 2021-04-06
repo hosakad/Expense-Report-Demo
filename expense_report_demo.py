@@ -79,8 +79,6 @@ def getPendoParams():
 	params['company_plan'] = redis_client.get(REDIS_COMPANY_PLAN).decode('utf8')
 	return params
 
-def update_expense():
-
 @app.route('/')
 def index():
 	# initialize
