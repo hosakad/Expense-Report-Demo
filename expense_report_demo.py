@@ -172,9 +172,7 @@ def create_expense():
 											+request.form['date']+","\
 											+request.form['amount']+","\
 											+request.form['currency']+","\
-											+request.form['description']+")"\
-				" from employee join company"\
-				" on employee.company_id = company.id"\
+											+request.form['description']+")"
 	sql_create(sql_string)
 
 	return redirect(url_for('html_expense'))
