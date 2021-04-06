@@ -4,7 +4,7 @@ import requests
 from flask import Flask, redirect, request, url_for, render_template
 import redis
 import psycopg2
-import psycopg2.extras import DictCursor
+from psycopg2.extras import DictCursor
 
 # retrieve parametes for database from enrironment value
 DATABASE_URL = os.environ['DATABASE_URL']
