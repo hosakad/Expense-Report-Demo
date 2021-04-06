@@ -43,6 +43,7 @@ CONST_PLAN = ['Advanced', 'Standard']
 # error messages
 MSG_EMAIL_MISMATCH = 'msg0'
 MSG_NO_EMAIL_PASSWORD = 'msg1'
+MSG_NO_EXPENSE_ID_MATCH = 'msg2'
 ERROR_MESSAGES = {
 	MSG_EMAIL_MISMATCH : 'メールアドレスとパスワードが一致しません',
 	MSG_NO_EMAIL_PASSWORD : 'メールアドレスまたはパスワードが入力されませんでした',
