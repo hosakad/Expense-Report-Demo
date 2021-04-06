@@ -34,6 +34,7 @@
 			<p>通貨：<input name="currency" type="text" value="{{expense['currency']}}" required></p>
 			<p>金額：<input name="amount" type="number" value="{{expense['amount']}}" required></p>
 			<p>説明：<input name="description" type="text" value="{{expense['description']}}"></p>
+			<input type="hidden" name="id" value="{{expense['id']}}">
 			<button type="submit">更新</button>
 		</form>
 	</section>

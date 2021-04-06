@@ -209,7 +209,7 @@ def update_expense():
 							" currency = '"+request.form['currency']+"',"\
 							" amount = "+request.form['amount']+","\
 							" description = '"+request.form['description']+"'"\
-							" where id = '"+request.form['id']+"'"
+							" where id = "+request.form['id']+""
 	sql_create_update(sql_string)
 
 	return redirect(url_for('html_expense'))
