@@ -198,7 +198,7 @@ def html_expense_edit():
 		print("results[0]:", results[0])
 		return render_template('expense_edit.html', params=getPendoParams(), expense=results[0])
 	else:
-		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH)
+		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH))
 
 if __name__ == '__main__':
   main()
