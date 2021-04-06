@@ -1,19 +1,5 @@
-<!DOCTYPE html>
-<html>
-{% include "header.html" %}
-<body>
-	<nav>
-		<div id="logo">
-
-		</div>
-		<div id="navigator">
-			<ul>
-				<li><a href={{url_for('expense_html')}}>経費</a></li>
-				<li><a href={{url_for('expense_html')}}>レポート</a></li>
-				<li><a href={{url_for('logout')}}>ログアウト</a></li>
-			</ul>
-		</div>
-	</nav>
+{% extends "framework.html" %}
+{% block body %}
 	<section id="expense_list">
 		<form action="../expense_new_html" method="post">
 			<input type="submit" value="新規経費">
@@ -40,5 +26,4 @@
 			<button type="submit">変更</button>
 		</form>
 	</section>
-</body>
-</html>
+{% endblock %}

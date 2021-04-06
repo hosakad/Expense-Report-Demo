@@ -1,32 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<link rel="stylesheet" href={{url_for('static', filename='css/main.css')}}>
-	<title>Pendoデモ 経費精算 新規作成画面</title>
-	<script type="text/javascript">
-		var email = "{{params['email']}}";
-		var role = "{{params['role']}}";
-		var full_name = "{{params['full_name']}}";
-		var company_id = "{{params['company_id']}}";
-		var company_name = "{{params['company_name']}}";
-		var company_plan = "{{params['company_plan']}}";
-	</script>
-	<script src={{url_for('static', filename='js/pendo_agent.js')}}></script>
-</head>
-<body>
-	<nav>
-		<div id="logo">
-
-		</div>
-		<div id="navigator">
-			<ul>
-				<li><a href={{url_for('expense_html')}}>経費</a></li>
-				<li><a href={{url_for('expense_html')}}>レポート</a></li>
-				<li><a href={{url_for('logout')}}>ログアウト</a></li>
-			</ul>
-		</div>
-	</nav>
+{% extends "framework.html" %}
+{% block body %}
 	<section id="expense_new">
 		<form action="../create_expense" method="post">
 			<p>経費名：<input name="name" type="text" required></p>
@@ -37,5 +10,4 @@
 			<button type="submit">作成</button>
 		</form>
 	</section>
-</body>
-</html>
+{% endblock %}

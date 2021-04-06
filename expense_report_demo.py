@@ -158,38 +158,33 @@ def authenticate():
 
 @app.route('/expense_html')
 def expense_html():
-	email = redis_client.get(REDIS_EMAIL)
-	if email:
+	employee_id = redis_client.get(REDIS_EMPLOYEE_ID)
+	if employee_id:
 		sql_string = "select expense.id, name, date, amount, currency, description"\
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
-					" where employee.email = '"+email.decode('utf8')+"'"
+					" where expense.user_id = '"+employee_id.decode('utf8')+"'"
 		results = sql_select(sql_string)
 
 	return render_template('expense.html', params=getPendoParams(), expenses=results, title=TITLE_EXPENSE)
 
 @app.route('/expense_new_html', methods=['POST'])
 def expense_new_html():
-	email = redis_client.get(REDIS_EMAIL)
-	if email:
-		sql_string = "select expense.id, name, date, amount, currency, description"\
-					" from expense join employee"\
-					" on expense.user_id = employee.id"\
-					" where employee.email = '"+email.decode('utf8')+"'"
-		results = sql_select(sql_string)
 
-	return render_template('expense_new.html', params=getPendoParams(), expenses=results, title=TITLE_EXPENSE_NEW)
+	return render_template('expense_new.html', params=getPendoParams(), title=TITLE_EXPENSE_NEW)
 
 @app.route('/create_expense', methods=['POST'])
 def create_expense():
-	sql_string = "insert into expense(name, date, amount, currency, description, user_id)"\
-							" values('"+request.form['name']+"','"\
-											+request.form['date']+"',"\
-											+request.form['amount']+",'"\
-											+request.form['currency']+"','"\
-											+request.form['description']+"','"\
-											+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"')"
-	sql_create_update(sql_string)
+	employee_id = redis_client.get(REDIS_EMPLOYEE_ID)
+	if employee_id:
+		sql_string = "insert into expense(name, date, amount, currency, description, user_id)"\
+								" values('"+request.form['name']+"','"\
+												+request.form['date']+"',"\
+												+request.form['amount']+",'"\
+												+request.form['currency']+"','"\
+												+request.form['description']+"','"\
+												+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"')"
+		sql_create_update(sql_string)
 
 	return redirect(url_for('expense_html'))
 
@@ -221,6 +216,18 @@ def update_expense():
 	sql_create_update(sql_string)
 
 	return redirect(url_for('expense_html'))
+
+@app.route('/report_html')
+def report_html():
+	employee_id = redis_client.get(REDIS_EMPLOYEE_ID)
+	if employee_id:
+		sql_string = "select expense.id, name, date, amount, currency, description"\
+					" from expense join employee"\
+					" on expense.user_id = employee.id"\
+					" where employee.email = '"+email.decode('utf8')+"'"
+		results = sql_select(sql_string)
+
+	return render_template('report.html', params=getPendoParams(), expenses=results, title=TITLE_EXPENSE)
 
 if __name__ == '__main__':
   main()
