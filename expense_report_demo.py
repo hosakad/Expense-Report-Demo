@@ -209,7 +209,7 @@ def update_expense():
 							" currency = '"+request.form['currency']+"',"\
 							" amount = "+request.form['amount']+","\
 							" description = '"+request.form['description']+"'"\
-							" where id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
+							" where id = '"+request.form['id']+"'"
 	sql_create_update(sql_string)
 
 	return redirect(url_for('html_expense'))
