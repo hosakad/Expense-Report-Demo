@@ -58,12 +58,14 @@ def getDBConnection():
 	return DATABASE_CONNECTION
 
 def sql_select(sql_string):
+	print("execute sql:", sql_string)
 	cursor = getDBConnection().cursor(cursor_factory=DictCursor)
 	cursor.execute(sql_string)
 	results = cursor.fetchall()
 	return results
 
 def sql_create(sql_string):
+	print("execute sql:", sql_string)
 	cursor = getDBConnection().cursor()
 	cursor.execute(sql_string)
 	getDBConnection().commit()
@@ -148,7 +150,7 @@ def html_expense():
 		sql_string = "select expense.id, name, date, amount, currency, description"\
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
-					" where expense.user_id = '"+email.decode('utf8')+"'"
+					" where employee.email = '"+email.decode('utf8')+"'"
 		results = sql_select(sql_string)
 
 	return render_template('expense.html', params=getPendoParams(), expenses=results)
@@ -160,7 +162,7 @@ def html_expense_new():
 		sql_string = "select expense.id, name, date, amount, currency, description"\
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
-					" where expense.user_id = '"+email.decode('utf8')+"'"
+					" where employee.email = '"+email.decode('utf8')+"'"
 		results = sql_select(sql_string)
 
 	return render_template('expense_new.html', params=getPendoParams(), expenses=results)
