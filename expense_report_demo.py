@@ -203,12 +203,12 @@ def html_expense_edit():
 
 @app.route('/update_expense', methods=['POST'])
 def update_expense():
-	sql_string = "update expense"\
-							" set name = '"+request.form['name']+"',"\
-							" set date = '"+request.form['date']+"',"\
-							" set currency = '"+request.form['currency']+"',"\
-							" set amount = "+request.form['amount']+","\
-							" set description = '"+request.form['description']+"'"\
+	sql_string = "update expense set"\
+							" name = '"+request.form['name']+"',"\
+							" date = '"+request.form['date']+"',"\
+							" currency = '"+request.form['currency']+"',"\
+							" amount = "+request.form['amount']+","\
+							" description = '"+request.form['description']+"'"\
 							" where id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
 	sql_create_update(sql_string)
 
