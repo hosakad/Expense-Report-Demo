@@ -176,7 +176,7 @@ def html_expense_new():
 def create_expense():
 	sql_string = "insert into expense(name, date, amount, currency, description, user_id)"\
 							" values('"+request.form['name']+"','"\
-											+request.form['date']+"','"\
+											+request.form['date']+"',"\
 											+request.form['amount']+",'"\
 											+request.form['currency']+"','"\
 											+request.form['description']+"','"\
