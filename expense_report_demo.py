@@ -156,8 +156,8 @@ def authenticate():
 		# email or password was null
 		return redirect(url_for('error', message_id=MSG_NO_EMAIL_PASSWORD))
 
-@app.route('/html_expense')
-def html_expense():
+@app.route('/expense_html')
+def expense_html():
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
 		sql_string = "select expense.id, name, date, amount, currency, description"\
@@ -168,8 +168,8 @@ def html_expense():
 
 	return render_template('expense.html', params=getPendoParams(), expenses=results, title=TITLE_EXPENSE)
 
-@app.route('/html_expense_new', methods=['POST'])
-def html_expense_new():
+@app.route('/expense_new_html', methods=['POST'])
+def expense_new_html():
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
 		sql_string = "select expense.id, name, date, amount, currency, description"\
@@ -191,10 +191,10 @@ def create_expense():
 											+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"')"
 	sql_create_update(sql_string)
 
-	return redirect(url_for('html_expense'))
+	return redirect(url_for('expense_html'))
 
-@app.route('/html_expense_edit', methods=['POST'])
-def html_expense_edit():
+@app.route('/expense_edit_html', methods=['POST'])
+def expense_edit_html():
 
 	expense_id = request.form['id']
 
@@ -220,7 +220,7 @@ def update_expense():
 							" where id = "+request.form['id']+""
 	sql_create_update(sql_string)
 
-	return redirect(url_for('html_expense'))
+	return redirect(url_for('expense_html'))
 
 if __name__ == '__main__':
   main()
