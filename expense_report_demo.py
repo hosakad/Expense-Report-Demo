@@ -45,7 +45,8 @@ MSG_EMAIL_MISMATCH = 'msg0'
 MSG_NO_EMAIL_PASSWORD = 'msg1'
 ERROR_MESSAGES = {
 	MSG_EMAIL_MISMATCH : 'メールアドレスとパスワードが一致しません',
-	MSG_NO_EMAIL_PASSWORD : 'メールアドレスまたはパスワードが入力されませんでした'
+	MSG_NO_EMAIL_PASSWORD : 'メールアドレスまたはパスワードが入力されませんでした',
+	MSG_NO_EXPENSE_ID_MATCH: '一致する経費IDがありません'
 }
 
 def getDBConnection():
@@ -192,8 +193,10 @@ def html_expense_edit():
 				" from expense"\
 				" where id = "+expense_id
 	results = sql_select(sql_string)
-
-	return render_template('expense_edit.html', params=getPendoParams(), expenses=results)
+	if len(results) == 1:
+		return render_template('expense_edit.html', params=getPendoParams(), expense=results[0])
+	else:
+		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH)
 
 if __name__ == '__main__':
   main()
