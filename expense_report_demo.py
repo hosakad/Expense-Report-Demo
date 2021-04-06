@@ -23,6 +23,7 @@ pool= redis.ConnectionPool(decode_responses=True)
 redis_client = redis.StrictRedis(connection_pool=pool).from_url(redis_url)
 
 # Redis keys
+REDIS_EMPLOYEE_ID = 'EMPLOYEE_ID'
 REDIS_EMAIL = 'EMPLOYEE_EMAIL' # visitor ID
 REDIS_ROLE = 'EMPLOYEE_ROLE'
 REDIS_FULL_NAME = 'EMPLOYEE_FULL_NAME'
@@ -104,6 +105,7 @@ def login():
 
 @app.route('/logout')
 def logout():
+	redis_client.delete(REDIS_EMPLOYEE_ID)
 	redis_client.delete(REDIS_EMAIL)
 	redis_client.delete(REDIS_ROLE)
 	redis_client.delete(REDIS_FULL_NAME)
@@ -118,7 +120,7 @@ def authenticate():
 	email = request.form['email']
 	password = request.form['password']
 	if email and password:
-		sql_string = "select email, role, first_name, last_name, company.id as company_id,"\
+		sql_string = "select employee.id, email, role, first_name, last_name, company.id as company_id,"\
 					" company.name as company_name, company.plan as company_plan"\
 					" from employee join company"\
 					" on employee.company_id = company.id"\
@@ -126,9 +128,10 @@ def authenticate():
 		results = sql_select(sql_string)
 		print('results:', results)
 		if len(results) == 1:
-			email, role, first_name, last_name, company_id, company_name, company_plan = results[0]
+			employee_id, email, role, first_name, last_name, company_id, company_name, company_plan = results[0]
 			print('email:', email)
 			print('company_id:', company_id)
+			redis_client.set(REDIS_EMPLOYEE_ID, employee_id)
 			redis_client.set(REDIS_EMAIL, email)
 			redis_client.set(REDIS_ROLE, role)
 			redis_client.set(REDIS_FULL_NAME, last_name + ' ' + first_name)
@@ -170,11 +173,12 @@ def html_expense_new():
 @app.route('/create_expense', methods=['POST'])
 def create_expense():
 	sql_string = "insert into expense(name, date, amount, currency, description, user_id)"\
-							" values("+request.form['name']+","\
-											+request.form['date']+","\
-											+request.form['amount']+","\
-											+request.form['currency']+","\
-											+request.form['description']+")"
+							" values('"+request.form['name']+"','"\
+											+request.form['date']+"','"\
+											+request.form['amount']+",'"\
+											+request.form['currency']+"','"\
+											+request.form['description']+"','"\
+											+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"')"
 	sql_create(sql_string)
 
 	return redirect(url_for('html_expense'))
