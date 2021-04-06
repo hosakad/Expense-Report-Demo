@@ -15,7 +15,7 @@
 	<script src={{url_for('static', filename='js/pendo_agent.js')}}></script>
 </head>
 <body>
-	<div id="sidebar">
+	<nav">
 		<div id="logo">
 
 		</div>
@@ -26,8 +26,8 @@
 				<li><a href={{url_for('logout')}}>ログアウト</a></li>
 			</ul>
 		</div>
-	</div>
-	<div id="expense_list">
+	</nav>
+	<section id="expense_list">
 		<form action="../html_expense_new" method="post">
 			<input type="submit" value="新規経費">
 		</form>
@@ -52,6 +52,6 @@
 			</table>
 			<button type="submit">変更</button>
 		</form>
-	</div>
+	</section>
 </body>
 </html>
