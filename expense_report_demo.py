@@ -33,13 +33,21 @@ REDIS_COMPANY_PLAN = 'COMPANY_PLAN'
 
 # constant values to be used in app
 # employee roles
-CONST_ROLE_ADMIN = '管理者'
-CONST_ROLE_APPROVER = '承認者'
-CONST_ROLE_USER = 'ユーザー'
-CONST_ROLES = [CONST_ROLE_ADMIN, CONST_ROLE_APPROVER, CONST_ROLE_USER]
+ROLE_ADMIN = '管理者'
+ROLE_APPROVER = '承認者'
+ROLE_USER = 'ユーザー'
+ROLES = [ROLE_ADMIN, ROLE_APPROVER, ROLE_USER]
 # account plan
-CONST_PLAN = ['Advanced', 'Standard']
-# 
+ACCOUNT_PLAN = ['Advanced', 'Standard']
+# page titles
+TITLE_INDEX = '経費精算 ホーム画面'
+TITLE_EXPENSE = '経費精算 経費一覧画面'
+TITLE_EXPENSE_NEW = '経費精算 新規経費画面'
+TITLE_EXPENSE_EDIT = '経費精算 経費編集画面'
+TITLE_REPORT = '経費精算 レポート一覧画面'
+TITLE_REPORT_NEW = '経費精算 新規レポート画面'
+TITLE_REPORT_EDIT = '経費精算 レポート編集画面'
+
 # error messages
 MSG_EMAIL_MISMATCH = 'msg0'
 MSG_NO_EMAIL_PASSWORD = 'msg1'
@@ -92,7 +100,7 @@ def index():
 		# if the employee is already logged in, show index.html
 		print('already logged in')
 		print('email:', email.decode('utf8'))
-		return render_template('index.html', params=getPendoParams())
+		return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX)
 
 	return redirect(url_for('login'))
 
@@ -158,7 +166,7 @@ def html_expense():
 					" where employee.email = '"+email.decode('utf8')+"'"
 		results = sql_select(sql_string)
 
-	return render_template('expense.html', params=getPendoParams(), expenses=results)
+	return render_template('expense.html', params=getPendoParams(), expenses=results, title=TITLE_EXPENSE)
 
 @app.route('/html_expense_new', methods=['POST'])
 def html_expense_new():
@@ -170,7 +178,7 @@ def html_expense_new():
 					" where employee.email = '"+email.decode('utf8')+"'"
 		results = sql_select(sql_string)
 
-	return render_template('expense_new.html', params=getPendoParams(), expenses=results)
+	return render_template('expense_new.html', params=getPendoParams(), expenses=results, title=TITLE_EXPENSE_NEW)
 
 @app.route('/create_expense', methods=['POST'])
 def create_expense():
@@ -197,7 +205,7 @@ def html_expense_edit():
 	print("results:", results)
 	if len(results) == 1:
 		print("results[0]:", results[0])
-		return render_template('expense_edit.html', params=getPendoParams(), expense=results[0])
+		return render_template('expense_edit.html', params=getPendoParams(), expense=results[0], title=TITLE_EXPENSE_EDIT)
 	else:
 		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH))
 

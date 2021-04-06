@@ -8,18 +8,18 @@
 		</div>
 		<div id="navigator">
 			<ul>
-				<li><a href={{url_for('html_expense')}}>経費</a></li>
-				<li><a href={{url_for('html_expense')}}>レポート</a></li>
+				<li><a href={{url_for('expense_html')}}>経費</a></li>
+				<li><a href={{url_for('expense_html')}}>レポート</a></li>
 				<li><a href={{url_for('logout')}}>ログアウト</a></li>
 			</ul>
 		</div>
 	</nav>
 	<section id="expense_list">
-		<form action="../html_expense_new" method="post">
+		<form action="../expense_new_html" method="post">
 			<input type="submit" value="新規経費">
 		</form>
 		<h2>経費リスト</h2>
-		<form action="../html_expense_edit" method="post">
+		<form action="../expense_edit_html" method="post">
 			<table>
 				<tr>
 					<th>経費名</th>
