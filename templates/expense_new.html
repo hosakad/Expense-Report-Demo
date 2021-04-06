@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href={{url_for('static', filename='css/main.css')}}>
-	<title>Pendoデモ 経費精算 メイン画面</title>
+	<title>Pendoデモ 経費精算 新規作成画面</title>
 	<script type="text/javascript">
 		var email = "{{params['email']}}";
 		var role = "{{params['role']}}";
@@ -27,30 +27,14 @@
 			</ul>
 		</div>
 	</div>
-	<div id="expense_list">
-		<form action="../html_expense_new" method="post">
-			<input type="submit" value="新規経費">
-		</form>
-		<h2>経費リスト</h2>
-		<form action="../html_expense_edit" method="post">
-			<table>
-				<tr>
-					<th>経費名</th>
-					<th>日付</th>
-					<th>金額</th>
-					<th>説明</th>
-				</tr>
-				{% for expense in expenses %}
-				<tr>
-					<td><input type="radio" name="id" value="{{expense['id']}}"></td>
-					<td>{{expense['name']}}</td>
-					<td>{{expense['date']}}</td>
-					<td>{{expense['currency']}} {{expense['amount']}}</td>
-					<td>{{expense['description']}}</td>
-				</tr>
-				{% endfor %}
-			</table>
-			<button type="submit">変更</button>
+	<div id="expense_new">
+		<form action="../create_expense" method="post">
+			<p>経費名：<input name="name" type="text" required></p>
+			<p>日付：<input name="date" type="date" required></p>
+			<p>通貨：<input name="currency" type="text" required></p>
+			<p>金額：<input name="amount" type="number" required></p>
+			<p>説明：<input name="description" type="text"></p>
+			<button type="submit">作成</button>
 		</form>
 	</div>
 </body>

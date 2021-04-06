@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href={{url_for('static', filename='css/main.css')}}>
-	<title>Pendoデモ 経費精算 メイン画面</title>
+	<title>Pendoデモ 経費精算 編集画面</title>
 	<script type="text/javascript">
 		var email = "{{params['email']}}";
 		var role = "{{params['role']}}";
@@ -15,7 +15,7 @@
 	<script src={{url_for('static', filename='js/pendo_agent.js')}}></script>
 </head>
 <body>
-	<nav>
+	<div id="sidebar">
 		<div id="logo">
 
 		</div>
@@ -26,16 +26,16 @@
 				<li><a href="{{url_for('logout')}}">ログアウト</a></li>
 			</ul>
 		</div>
-	</nav>
-	<section id="content">
-		<div id="report_list">
-			{% for report in reports %}
-			<tr>
-				<td>xxx@aaa.com</td>
-				<td>aaaa</td>
-				<td>10,000</td>
-			</tr>
-			{% endfor %}
-		</div>
-	</section></body>
+	</div>
+	<div id="expense_edit">
+		<form action="../update_expense" method="post">
+			<p>経費名：<input name="name" type="text" value="{{expense['name']}}" required></p>
+			<p>日付：<input name="date" type="date" value="{{expense['date']}}" required></p>
+			<p>通貨：<input name="currency" type="text" value="{{expense['currency']}}" required></p>
+			<p>金額：<input name="amount" type="number" value="{{expense['amount']}}" required></p>
+			<p>説明：<input name="description" type="text" value="{{expense['description']}}"></p>
+			<button type="submit">更新</button>
+		</form>
+	</div>
+</body>
 </html>

@@ -1,5 +1,7 @@
-html, body, div{
-    margin: 0;
+@import url("fontawesome-all.min.css");
+
+html, body, div, nav, section{
+	margin: 0;
 	padding: 0;
 	border: 0;
 	font-size: 100%;
@@ -7,13 +9,51 @@ html, body, div{
 	vertical-align: baseline;
 }
 
-#sidebar{
-	
-    background-color:rgba(0, 0, 0, 0.5);
+nav{
+	color:rgba(20, 20, 53, 0.15);
+	background-color:rgba(0, 0, 0, 0.5);
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 200px;
+	height: 100%;
 }
+	nav ul {
+		list-style: none;
+		padding-left: 1em;
+		margin-bottom: 0;
+		color: rgba(255, 255, 255, 0.5);
+		background: rgba(0, 0, 0, 0.15);
+	}
 
-#content{
-	margin-left: 400px;
-    background-color:#f5fafa;
+		nav ul li {
+			border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+		}
+			nav ul li a {
+				display: block;
+				padding: 0.5em 1.5em 0.5em 1.5em;
+				color: rgba(255, 255, 255, 0.5);
+				text-decoration: none;
+				outline: 0;
+				border: 0;
+				-moz-transition: none;
+				-webkit-transition: none;
+				-ms-transition: none;
+				transition: none;
+			}
 
+section{
+	margin-left: 200px;
+	background-color:#f5fafa;
+
+}
+	section p {
+		padding-left: 20px;
+	}
+
+table td {
+	background-color: #fff5ee;
+}
+table tr:nth-child(odd) td{
+	background-color: #f0eeffde;
 }

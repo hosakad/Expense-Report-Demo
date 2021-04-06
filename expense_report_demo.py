@@ -4,11 +4,13 @@ import requests
 from flask import Flask, redirect, request, url_for, render_template
 import redis
 import psycopg2
+import psycopg2.extras import DictCursor
 
 # retrieve parametes for database from enrironment value
 DATABASE_URL = os.environ['DATABASE_URL']
 DATABASE_SCHEMA = os.environ['DATABASE_SCHEMA']
 DATABASE_CONNECTION = None
+DB_ENGINE = None
 
 # a random secret used by Flask to encrypt session data cookies
 app = Flask(__name__)
@@ -45,7 +47,6 @@ ERROR_MESSAGES = {
 	MSG_NO_EMAIL_PASSWORD : 'メールアドレスまたはパスワードが入力されませんでした'
 }
 
-
 def getDBConnection():
 	global DATABASE_CONNECTION
 	if DATABASE_CONNECTION is None:
@@ -57,14 +58,18 @@ def getDBConnection():
 	return DATABASE_CONNECTION
 
 def sql_select(sql_string):
-
-	cursor = getDBConnection().cursor()
+	cursor = getDBConnection().cursor(cursor_factory=DictCursor)
 	cursor.execute(sql_string)
 	results = cursor.fetchall()
 	return results
 
-def getPendoParams():
+def sql_create(sql_string):
+	cursor = getDBConnection().cursor()
+	cursor.execute(sql_string)
+	getDBConnection().commit()
+	return
 
+def getPendoParams():
 	params = {}
 	params['email'] = redis_client.get(REDIS_EMAIL).decode('utf8')
 	params['role'] = redis_client.get(REDIS_ROLE).decode('utf8')
@@ -73,6 +78,8 @@ def getPendoParams():
 	params['company_name'] = redis_client.get(REDIS_COMPANY_NAME).decode('utf8')
 	params['company_plan'] = redis_client.get(REDIS_COMPANY_PLAN).decode('utf8')
 	return params
+
+def update_expense():
 
 @app.route('/')
 def index():
@@ -119,7 +126,6 @@ def authenticate():
 		results = sql_select(sql_string)
 		print('results:', results)
 		if len(results) == 1:
-			#redis_client.set(REDIS_EMAIL, email)
 			email, role, first_name, last_name, company_id, company_name, company_plan = results[0]
 			print('email:', email)
 			print('company_id:', company_id)
@@ -137,17 +143,55 @@ def authenticate():
 		# email or password was null
 		return redirect(url_for('error', message_id=MSG_NO_EMAIL_PASSWORD))
 
-@app.route('/expense')
-def expense():
-	return render_template('expense.html',
-							email=redis_client.get(REDIS_EMAIL).decode('utf8'),
-							role=redis_client.get(REDIS_ROLE).decode('utf8'),
-							full_name=redis_client.get(REDIS_FULL_NAME).decode('utf8'),
-							company_id=redis_client.get(REDIS_COMPANY_ID).decode('utf8'),
-							company_name=redis_client.get(REDIS_COMPANY_NAME).decode('utf8'),
-							company_plan=redis_client.get(REDIS_COMPANY_PLAN).decode('utf8')
-						)
+@app.route('/html_expense')
+def html_expense():
+	email = redis_client.get(REDIS_EMAIL)
+	if email:
+		sql_string = "select id, name, date, amount, currency, description"\
+					" from expense join employee"\
+					" on expense.user_id = employee.id"\
+					" where id = "+email.decode('utf8')
+		results = sql_select(sql_string)
+
+	return render_template('expense.html', params=getPendoParams(), expenses=results)
+
+@app.route('/html_expense_new')
+def html_expense_new():
+	email = redis_client.get(REDIS_EMAIL)
+	if email:
+		sql_string = "select id, name, date, amount, currency, description"\
+					" from expense join employee"\
+					" on expense.user_id = employee.id"\
+					" where id = "+email.decode('utf8')
+		results = sql_select(sql_string)
+
+	return render_template('expense_new.html', params=getPendoParams(), expenses=results)
+
+@app.route('/create_expense')
+def create_expense():
+	sql_string = "insert into expense(name, date, amount, currency, description, user_id)"\
+							" values("+request.form['name']+","\
+											+request.form['date']+","\
+											+request.form['amount']+","\
+											+request.form['currency']+","\
+											+request.form['description']+")"\
+				" from employee join company"\
+				" on employee.company_id = company.id"\
+	sql_create(sql_string)
+
+	return redirect(url_for('html_expense'))
+
+@app.route('/html_expense_edit')
+def html_expense_edit():
+
+	expense_id = request.form['id']
+
+	sql_string = "select id, name, date, amount, currency, description"\
+				" from expense"\
+				" where id = "+expense_id
+	results = sql_select(sql_string)
+
+	return render_template('expense_edit.html', params=getPendoParams(), expenses=results)
 
 if __name__ == '__main__':
   main()
-  getDBConnection().close()
