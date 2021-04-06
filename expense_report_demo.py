@@ -155,7 +155,7 @@ def html_expense():
 
 	return render_template('expense.html', params=getPendoParams(), expenses=results)
 
-@app.route('/html_expense_new')
+@app.route('/html_expense_new', methods=['POST'])
 def html_expense_new():
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
@@ -167,7 +167,7 @@ def html_expense_new():
 
 	return render_template('expense_new.html', params=getPendoParams(), expenses=results)
 
-@app.route('/create_expense')
+@app.route('/create_expense', methods=['POST'])
 def create_expense():
 	sql_string = "insert into expense(name, date, amount, currency, description, user_id)"\
 							" values("+request.form['name']+","\
@@ -179,7 +179,7 @@ def create_expense():
 
 	return redirect(url_for('html_expense'))
 
-@app.route('/html_expense_edit')
+@app.route('/html_expense_edit', methods=['POST'])
 def html_expense_edit():
 
 	expense_id = request.form['id']
