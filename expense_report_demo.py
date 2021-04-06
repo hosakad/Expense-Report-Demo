@@ -193,7 +193,9 @@ def html_expense_edit():
 				" from expense"\
 				" where id = "+expense_id
 	results = sql_select(sql_string)
+	print("results:", results)
 	if len(results) == 1:
+		print("results[0]:", results[0])
 		return render_template('expense_edit.html', params=getPendoParams(), expense=results[0])
 	else:
 		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH)
