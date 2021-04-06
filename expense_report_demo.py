@@ -145,7 +145,7 @@ def authenticate():
 def html_expense():
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
-		sql_string = "select id, name, date, amount, currency, description"\
+		sql_string = "select expense.id, name, date, amount, currency, description"\
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
 					" where id = "+email.decode('utf8')
@@ -157,7 +157,7 @@ def html_expense():
 def html_expense_new():
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
-		sql_string = "select id, name, date, amount, currency, description"\
+		sql_string = "select expense.id, name, date, amount, currency, description"\
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
 					" where id = "+email.decode('utf8')
