@@ -148,7 +148,7 @@ def html_expense():
 		sql_string = "select expense.id, name, date, amount, currency, description"\
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
-					" where expense.user_id = "+email.decode('utf8')
+					" where expense.user_id = '"+email.decode('utf8')+"'"
 		results = sql_select(sql_string)
 
 	return render_template('expense.html', params=getPendoParams(), expenses=results)
@@ -160,7 +160,7 @@ def html_expense_new():
 		sql_string = "select expense.id, name, date, amount, currency, description"\
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
-					" where expense.user_id = "+email.decode('utf8')
+					" where expense.user_id = '"+email.decode('utf8')+"'"
 		results = sql_select(sql_string)
 
 	return render_template('expense_new.html', params=getPendoParams(), expenses=results)
