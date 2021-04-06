@@ -4,14 +4,15 @@
   </div>
   <div id="navigator">
     <ul>
-      {% if params['role'] == 'ユーザー' %}
-      <li><a href="{{url_for('expense_html')}}">経費</a></li>
-      <li><a href="{{url_for('report_html')}}">レポート</a></li>
-    {% elif params['role'] == '管理者' %}
-      <li>管理者</li>
-    {% elif params['role'] == '承認者' %}
-      <li>承認者</li>
+    {% if {{params['role']}} == 'ユーザー' %}
+    <li><a href="{{url_for('expense_html')}}">経費</a></li>
+    <li><a href="{{url_for('report_html')}}">レポート</a></li>
+    {% elif {{params['role']}} == '管理者' %}
+    <li>管理者</li>
+    {% elif {{params['role']}} == '承認者' %}
+    <li>承認者</li>
     {% else %}
+    <li>エラー：{{params['role']}}</li>
     {% endif %}
     <li><a href="{{url_for('logout')}}">ログアウト</a></li>
   </ul>
