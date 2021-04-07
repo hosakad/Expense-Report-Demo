@@ -243,7 +243,7 @@ def create_report():
 		# create a report record
 		sql_string = "insert into report(name, user_id, status)"\
 								" values('"+request.form['name']+"',"\
-												" '"+employee_id+"',"\
+												" '"+employee_id.decode('utf8')+"',"\
 												"	'"+STATUS_OPEN+"')"
 		sql_create_update(sql_string)
 
