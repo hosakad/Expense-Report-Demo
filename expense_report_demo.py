@@ -285,7 +285,7 @@ def update_report():
 							" where id = "+request.form['id']+""
 	sql_create_update(sql_string)
 
-	id_added = request.form.get['id_added']
+	id_added = request.form.get('id_added')
 	if id_added:
 		# add specified expenses to this report
 		sql_string = "update expense set"\
@@ -293,7 +293,7 @@ def update_report():
 								" where expense.id in '"+id_added+"'"
 		sql_create_update(sql_string)
 
-	id_removed = request.form.get['id_removed']
+	id_removed = request.form.get('id_removed')
 	if id_removed:
 		# remove specified expenses from this report
 		sql_string = "update expense set"\
