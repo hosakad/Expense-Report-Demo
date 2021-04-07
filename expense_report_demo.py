@@ -260,7 +260,7 @@ def report_edit_html():
 					" where expense.user_id = '"+employee_id.decode('utf8')+"' and expense.report_id is null"
 		expenses_open = sql_select(sql_string)
 
-		sql_string = "select expense.id, name, date, amount, currency, description"\
+		sql_string = "select expense.id, expense.name, date, amount, currency, description"\
 					" from expense"\
 					" join employee on expense.user_id = employee.id"\
 					" join report on expense.report_id = report.id"\
