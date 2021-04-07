@@ -243,7 +243,7 @@ def create_report():
 		# create a report record
 		sql_string = "insert into report(name, status)"\
 								" values('"+request.form['name']+"',"\
-												"	'"+STATUS_OPEN"')"
+												"	'"+STATUS_OPEN+"')"
 		sql_create_update(sql_string)
 
 	return redirect(url_for('report_html'))
