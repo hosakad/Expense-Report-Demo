@@ -281,20 +281,22 @@ def report_edit_html():
 @app.route('/update_report', methods=['POST'])
 def update_report():
 	sql_string = "update report set"\
-							" name = '"+request.form['name']+"',"\
+							" name = '"+request.form['name']+"'"\
 							" where id = "+request.form['id']+""
 	sql_create_update(sql_string)
 
-	# add specified expenses to this report
-	sql_string = "update expense set"\
-							" expense.report_id = ,"\
-							" where expense.id in "+request.form['id_added']
+	report_id = request.form['id']
+	if report_id:
+		# add specified expenses to this report
+		sql_string = "update expense set"\
+								" expense.report_id = '"+report_id\
+								" where expense.id in "+request.form['id_added']
 
-	# remove specified expenses from this report
-	sql_string = "update expense set"\
-							" expense.report_id = NULL,"\
-							" where expense.id in "+request.form['id_removed']
-	return redirect(url_for('report_html'))
+		# remove specified expenses from this report
+		sql_string = "update expense set"\
+								" expense.report_id = NULL"\
+								" where expense.id in "+request.form['id_removed']
+		return redirect(url_for('report_html'))
 
 if __name__ == '__main__':
   main()
