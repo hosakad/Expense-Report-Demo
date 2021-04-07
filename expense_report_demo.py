@@ -285,18 +285,23 @@ def update_report():
 							" where id = "+request.form['id']+""
 	sql_create_update(sql_string)
 
-	report_id = request.form['id']
-	if report_id:
+	id_added = request.form.get['id_added']
+	if id_added:
 		# add specified expenses to this report
 		sql_string = "update expense set"\
 								" expense.report_id = '"+report_id+"'"\
-								" where expense.id in "+request.form['id_added']
+								" where expense.id in '"+id_added+"'"
+		sql_create_update(sql_string)
 
+	id_removed = request.form.get['id_removed']
+	if id_removed:
 		# remove specified expenses from this report
 		sql_string = "update expense set"\
 								" expense.report_id = NULL"\
-								" where expense.id in "+request.form['id_removed']
-		return redirect(url_for('report_html'))
+								" where expense.id in '"+id_removed+"'"
+		sql_create_update(sql_string)
+
+	return redirect(url_for('report_html'))
 
 if __name__ == '__main__':
   main()
