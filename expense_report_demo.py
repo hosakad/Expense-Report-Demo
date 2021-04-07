@@ -274,7 +274,7 @@ def report_edit_html():
 						" join employee on expense.user_id = employee.id"\
 						" join report on expense.report_id = report.id"\
 						" where expense.user_id = '"+employee_id.decode('utf8')+"'"\
-									" and expense.report_id = '"+"'"\
+									" and expense.report_id = '"+report_id+"'"\
 									" and report.status = '"+STATUS_OPEN+"'"
 			expenses_included = sql_select(sql_string)
 
