@@ -56,10 +56,12 @@ STATUS_APRROVED= '承認済'
 MSG_EMAIL_MISMATCH = 'msg0'
 MSG_NO_EMAIL_PASSWORD = 'msg1'
 MSG_NO_EXPENSE_ID_MATCH = 'msg2'
+MSG_NO_REPORT_ID_MATCH = 'msg3'
 ERROR_MESSAGES = {
 	MSG_EMAIL_MISMATCH : 'メールアドレスとパスワードが一致しません',
 	MSG_NO_EMAIL_PASSWORD : 'メールアドレスまたはパスワードが入力されませんでした',
 	MSG_NO_EXPENSE_ID_MATCH: '一致する経費IDがありません'
+	MSG_NO_REPORT_ID_MATCH: '一致するレポートIDがありません'
 }
 
 def getDBConnection():
@@ -251,32 +253,35 @@ def create_report():
 
 @app.route('/report_edit_html', methods=['POST'])
 def report_edit_html():
-	expenses = []
-	employee_id = redis_client.get(REDIS_EMPLOYEE_ID)
-	if employee_id:
-		sql_string = "select expense.id, name, date, amount, currency, description"\
-					" from expense"\
-					" join employee on expense.user_id = employee.id"\
-					" where expense.user_id = '"+employee_id.decode('utf8')+"' and expense.report_id is null"
-		expenses_open = sql_select(sql_string)
-
-		sql_string = "select expense.id, expense.name, date, amount, currency, description"\
-					" from expense"\
-					" join employee on expense.user_id = employee.id"\
-					" join report on expense.report_id = report.id"\
-					" where expense.user_id = '"+employee_id.decode('utf8')+"' and report.status = '"+STATUS_OPEN+"'"
-		expenses_included = sql_select(sql_string)
-
 	report_id = request.form['id']
 	if report_id:
 		sql_string = "select id, name"\
 					" from report"\
 					" where id = "+report_id
 		reports = sql_select(sql_string)
-	if len(reports) == 1:
-		return render_template('report_edit.html', params=getPendoParams(), report=reports[0], expenses_open=expenses_open, expenses_included=expenses_included, title=TITLE_REPORT_EDIT)
-	else:
-		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH))
+
+		expenses = []
+		employee_id = redis_client.get(REDIS_EMPLOYEE_ID)
+		if employee_id:
+			sql_string = "select expense.id, name, date, amount, currency, description"\
+						" from expense"\
+						" join employee on expense.user_id = employee.id"\
+						" where expense.user_id = '"+employee_id.decode('utf8')+"' and expense.report_id is null"
+			expenses_open = sql_select(sql_string)
+
+			sql_string = "select expense.id, expense.name, date, amount, currency, description"\
+						" from expense"\
+						" join employee on expense.user_id = employee.id"\
+						" join report on expense.report_id = report.id"\
+						" where expense.user_id = '"+employee_id.decode('utf8')+"'"\
+									" and expense.report_id = '"+"'"\
+									" and report.status = '"+STATUS_OPEN+"'"
+			expenses_included = sql_select(sql_string)
+
+		if len(reports) == 1:
+			return render_template('report_edit.html', params=getPendoParams(), report=reports[0], expenses_open=expenses_open, expenses_included=expenses_included, title=TITLE_REPORT_EDIT)
+
+	return redirect(url_for('error', message_id=MSG_NO_REPORT_ID_MATCH))
 
 @app.route('/update_report', methods=['POST'])
 def update_report():
