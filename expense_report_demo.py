@@ -291,16 +291,16 @@ def update_report():
 	if id_added:
 		# add specified expenses to this report
 		sql_string = "update expense set"\
-								" expense.report_id = '"+request.form['id']+"'"\
-								" where expense.id in("+",".join(id_added)+")"
+								" report_id = '"+request.form['id']+"'"\
+								" where id in("+",".join(id_added)+")"
 		sql_create_update(sql_string)
 
 	id_removed = request.form.getlist('id_removed')
 	if id_removed:
 		# remove specified expenses from this report
 		sql_string = "update expense set"\
-								" expense.report_id = null"\
-								" where expense.id in("+",".join(id_removed)+")"
+								" report_id = null"\
+								" where id in("+",".join(id_removed)+")"
 		sql_create_update(sql_string)
 
 	return redirect(url_for('report_html'))
