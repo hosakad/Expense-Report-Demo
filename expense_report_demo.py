@@ -289,7 +289,7 @@ def update_report():
 	if report_id:
 		# add specified expenses to this report
 		sql_string = "update expense set"\
-								" expense.report_id = '"+report_id\
+								" expense.report_id = '"+report_id+"'"\
 								" where expense.id in "+request.form['id_added']
 
 		# remove specified expenses from this report
