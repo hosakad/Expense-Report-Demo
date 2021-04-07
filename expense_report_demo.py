@@ -60,7 +60,7 @@ MSG_NO_REPORT_ID_MATCH = 'msg3'
 ERROR_MESSAGES = {
 	MSG_EMAIL_MISMATCH : 'メールアドレスとパスワードが一致しません',
 	MSG_NO_EMAIL_PASSWORD : 'メールアドレスまたはパスワードが入力されませんでした',
-	MSG_NO_EXPENSE_ID_MATCH: '一致する経費IDがありません'
+	MSG_NO_EXPENSE_ID_MATCH: '一致する経費IDがありません',
 	MSG_NO_REPORT_ID_MATCH: '一致するレポートIDがありません'
 }
 
