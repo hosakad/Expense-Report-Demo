@@ -241,8 +241,9 @@ def create_report():
 	employee_id = redis_client.get(REDIS_EMPLOYEE_ID)
 	if employee_id:
 		# create a report record
-		sql_string = "insert into report(name, status)"\
+		sql_string = "insert into report(name, user_id, status)"\
 								" values('"+request.form['name']+"',"\
+												" '"+employee_id+"',"\
 												"	'"+STATUS_OPEN+"')"
 		sql_create_update(sql_string)
 
