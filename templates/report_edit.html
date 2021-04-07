@@ -1,7 +1,7 @@
 {% extends "common/framework.html" %}
 {% block body %}
 	<section id="report_edit">
-		<form action="../create_report" method="post">
+		<form action="../update_report" method="post">
 			<p>レポート名：<input name="name" type="text" value="{{report['name']}}" required></p>
 			<input type="hidden" name="id" value="{{report['id']}}">
 			<table>
