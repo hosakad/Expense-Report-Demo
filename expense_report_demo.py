@@ -281,6 +281,7 @@ def report_edit_html():
 @app.route('/update_report', methods=['POST'])
 def update_report():
 
+	print("request in /update_report :", request)
 	sql_string = "update report set"\
 							" name = '"+request.form['name']+"'"\
 							" where id = "+request.form['id']+""
@@ -291,7 +292,7 @@ def update_report():
 		# add specified expenses to this report
 		sql_string = "update expense set"\
 								" expense.report_id = '"+request.form['id']+"'"\
-								" where expense.id in '"+id_added+"'"
+								" where expense.id in'"+id_added+"'"
 		sql_create_update(sql_string)
 
 	id_removed = request.form.get('id_removed')
@@ -299,7 +300,7 @@ def update_report():
 		# remove specified expenses from this report
 		sql_string = "update expense set"\
 								" expense.report_id = null"\
-								" where expense.id in '"+id_removed+"'"
+								" where expense.id in'"+id_removed+"'"
 		sql_create_update(sql_string)
 
 	return redirect(url_for('report_html'))
