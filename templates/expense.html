@@ -1,4 +1,4 @@
-{% extends "framework.html" %}
+{% extends "common/framework.html" %}
 {% block body %}
 	<section id="expense_list">
 		<form action="../expense_new_html" method="post">
@@ -8,6 +8,7 @@
 		<form action="../expense_edit_html" method="post">
 			<table>
 				<tr>
+					<th></th>
 					<th>経費名</th>
 					<th>日付</th>
 					<th>金額</th>

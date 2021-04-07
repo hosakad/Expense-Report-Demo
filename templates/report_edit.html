@@ -1,0 +1,48 @@
+{% extends "common/framework.html" %}
+{% block body %}
+	<section id="report_edit">
+		<form action="../create_report" method="post">
+			<p>レポート名：<input name="name" type="text" value="{{report['name']}}" required></p>
+			<input type="hidden" name="id" value="{{report['id']}}">
+			<table>
+				<caption>経費の選択</caption>
+				<tr>
+					<th>加える経費</th>
+					<th>経費名</th>
+					<th>日付</th>
+					<th>金額</th>
+					<th>説明</th>
+				</tr>
+				{% for expense_open in expenses_open %}
+				<tr>
+					<td><input type="checkbox" name="id_added" value="{{expense_open['id']}}"></td>
+					<td>{{expense_open['name']}}</td>
+					<td>{{expense_open['date']}}</td>
+					<td>{{expense_open['currency']}} {{expense_open['amount']}}</td>
+					<td>{{expense_open['description']}}</td>
+				</tr>
+				{% endfor %}
+			</table>
+			<table>
+				<caption>既に含まれる経費</caption>
+				<tr>
+					<th>レポートから削除</th>
+					<th>経費名</th>
+					<th>日付</th>
+					<th>金額</th>
+					<th>説明</th>
+				</tr>
+				{% for expense_included in expenses_included %}
+				<tr>
+					<td><input type="checkbox" name="id_removed" value="{{expense_included['id']}}"></td>
+					<td>{{expense_included['name']}}</td>
+					<td>{{expense_included['date']}}</td>
+					<td>{{expense_included['currency']}} {{expense_included['amount']}}</td>
+					<td>{{expense_included['description']}}</td>
+				</tr>
+				{% endfor %}
+			</table>
+			<button type="submit">更新</button>
+		</form>
+	</section>
+{% endblock %}

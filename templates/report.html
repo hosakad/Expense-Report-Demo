@@ -1,0 +1,28 @@
+{% extends "common/framework.html" %}
+{% block body %}
+	<section id="report_list">
+		<form action="../report_new_html" method="post">
+			<input type="submit" value="新規レポート">
+		</form>
+		<h2>レポート リスト</h2>
+		<form action="../report_edit_html" method="post">
+			<table>
+				<tr>
+					<th>レポート名</th>
+					<th>提出日</th>
+					<th>承認日</th>
+					<th></th>
+				</tr>
+				{% for report in reports %}
+				<tr>
+					<td><input type="radio" name="id" value="{{report['id']}}"></td>
+					<td>{{report['name']}}</td>
+					<td>{{report['submit_date']}}</td>
+					<td>{{report['approve_date']}}</td>
+				</tr>
+				{% endfor %}
+			</table>
+			<button type="submit">変更</button>
+		</form>
+	</section>
+{% endblock %}

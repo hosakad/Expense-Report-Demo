@@ -1,0 +1,10 @@
+{% for expense in expenses %}
+<p>このレポートに含める経費を選択してください</p>
+<tr>
+	<td><input type="checkbox" name="id" value="{{expense['id']}}"></td>
+	<td>{{expense['name']}}</td>
+	<td>{{expense['date']}}</td>
+	<td>{{expense['currency']}} {{expense['amount']}}</td>
+	<td>{{expense['description']}}</td>
+</tr>
+{% endfor %}

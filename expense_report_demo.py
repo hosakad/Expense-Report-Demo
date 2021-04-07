@@ -47,6 +47,10 @@ TITLE_EXPENSE_EDIT = '経費精算 経費編集画面'
 TITLE_REPORT = '経費精算 レポート一覧画面'
 TITLE_REPORT_NEW = '経費精算 新規レポート画面'
 TITLE_REPORT_EDIT = '経費精算 レポート編集画面'
+# report status
+STATUS_OPEN = '未提出'
+STATUS_SUBMITTED = '提出済/承認待'
+STATUS_APRROVED= '承認済'
 
 # error messages
 MSG_EMAIL_MISMATCH = 'msg0'
@@ -158,15 +162,16 @@ def authenticate():
 
 @app.route('/expense_html')
 def expense_html():
+	expenses = []
 	employee_id = redis_client.get(REDIS_EMPLOYEE_ID)
 	if employee_id:
 		sql_string = "select expense.id, name, date, amount, currency, description"\
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
 					" where expense.user_id = '"+employee_id.decode('utf8')+"'"
-		results = sql_select(sql_string)
+		expenses = sql_select(sql_string)
 
-	return render_template('expense.html', params=getPendoParams(), expenses=results, title=TITLE_EXPENSE)
+	return render_template('expense.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE)
 
 @app.route('/expense_new_html', methods=['POST'])
 def expense_new_html():
@@ -190,16 +195,12 @@ def create_expense():
 
 @app.route('/expense_edit_html', methods=['POST'])
 def expense_edit_html():
-
 	expense_id = request.form['id']
-
 	sql_string = "select id, name, date, amount, currency, description"\
 				" from expense"\
 				" where id = "+expense_id
 	results = sql_select(sql_string)
-	print("results:", results)
 	if len(results) == 1:
-		print("results[0]:", results[0])
 		return render_template('expense_edit.html', params=getPendoParams(), expense=results[0], title=TITLE_EXPENSE_EDIT)
 	else:
 		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH))
@@ -219,15 +220,80 @@ def update_expense():
 
 @app.route('/report_html')
 def report_html():
+	reports = []
+	employee_id = redis_client.get(REDIS_EMPLOYEE_ID)
+	if employee_id:
+		sql_string = "select report.id, name, submit_date, approve_date, status"\
+					" from report join employee"\
+					" on report.user_id = employee.id"\
+					" where report.user_id = '"+employee_id.decode('utf8')+"'"
+		reports = sql_select(sql_string)
+
+	return render_template('report.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT)
+
+@app.route('/report_new_html', methods=['POST'])
+def report_new_html():
+
+	return render_template('report_new.html', params=getPendoParams(), title=TITLE_REPORT_NEW)
+
+@app.route('/create_report', methods=['POST'])
+def create_report():
+	employee_id = redis_client.get(REDIS_EMPLOYEE_ID)
+	if employee_id:
+		# create a report record
+		sql_string = "insert into report(name, status)"\
+								" values('"+request.form['name']+"',"\
+												"	'"+STATUS_OPEN"')"
+		sql_create_update(sql_string)
+
+	return redirect(url_for('report_html'))
+
+@app.route('/report_edit_html', methods=['POST'])
+def report_edit_html():
+	expenses = []
 	employee_id = redis_client.get(REDIS_EMPLOYEE_ID)
 	if employee_id:
 		sql_string = "select expense.id, name, date, amount, currency, description"\
-					" from expense join employee"\
-					" on expense.user_id = employee.id"\
-					" where employee.email = '"+email.decode('utf8')+"'"
-		results = sql_select(sql_string)
+					" from expense"\
+					" join employee on expense.user_id = employee.id"\
+					" where expense.user_id = '"+employee_id.decode('utf8')+"' and expense.report_id is null"
+		expenses_open = sql_select(sql_string)
 
-	return render_template('report.html', params=getPendoParams(), expenses=results, title=TITLE_EXPENSE)
+		sql_string = "select expense.id, name, date, amount, currency, description"\
+					" from expense"\
+					" join employee on expense.user_id = employee.id"\
+					" join report on expense.report_id = report.id"\
+					" where expense.user_id = '"+employee_id.decode('utf8')+"' and report.status = '"+STATUS_OPEN+"'"
+		expenses_included = sql_select(sql_string)
+
+	report_id = request.form['id']
+	if report_id:
+		sql_string = "select id, name"\
+					" from report"\
+					" where id = "+report_id
+		reports = sql_select(sql_string)
+	if len(reports) == 1:
+		return render_template('report_edit.html', params=getPendoParams(), report=reports[0], expenses_open=expenses_open, expenses_included=expenses_included, title=TITLE_REPORT_EDIT)
+	else:
+		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH))
+
+@app.route('/update_report', methods=['POST'])
+def update_report():
+	sql_string = "update report set"\
+							" name = '"+request.form['name']+"',"\
+							" where id = "+request.form['id']+""
+	sql_create_update(sql_string)
+
+	# add specified expenses to this report
+	sql_string = "update expense set"\
+							" expense.report_id = ,"\
+							" where expense.id in "+request.form['id_added']
+
+	# remove specified expenses from this report
+	sql_string = "update expense set"\
+							" expense.report_id = NULL,"\
+							" where expense.id in "+request.form['id_removed']
+	return redirect(url_for('report_html'))
 
 if __name__ == '__main__':
   main()
