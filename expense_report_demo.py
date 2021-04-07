@@ -281,7 +281,7 @@ def report_edit_html():
 @app.route('/update_report', methods=['POST'])
 def update_report():
 
-	print("request in /update_report :", request)
+	print("request.form in /update_report :", request.form)
 	sql_string = "update report set"\
 							" name = '"+request.form['name']+"'"\
 							" where id = "+request.form['id']+""
