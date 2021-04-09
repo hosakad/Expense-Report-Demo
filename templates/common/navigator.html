@@ -4,6 +4,7 @@
   </div>
   <div id="navigator">
     <ul>
+    <li><a href="{{url_for('index')}}">ホーム</a></li>
     {% if params['role'] == 'ユーザー' %}
     <li><a href="{{url_for('expense_list_html')}}">経費</a></li>
     <li><a href="{{url_for('report_list_html')}}">レポート</a></li>
