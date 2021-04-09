@@ -71,7 +71,6 @@ def getDBConnection():
 		DATABASE_CONNECTION = psycopg2.connect(DATABASE_URL, sslmode='require')
 		cursor = DATABASE_CONNECTION.cursor()
 		cursor.execute('SET search_path TO ' + DATABASE_SCHEMA)
-		cursor.close()
 
 	return DATABASE_CONNECTION
 
@@ -382,9 +381,9 @@ def approve_list_html():
 			print('result in approve list:', result)
 			print('type of result:', result.type())
 			if result['status'] == STATUS_SUBMITTED:
-				reports_submitted.append(result)
+				reports_submitted.append(result.copy())
 			elif result['status'] == STATUS_APRROVED:
-				reports_approved.append(result)
+				reports_approved.append(result.copy())
 		return render_template('approve_list.html', params=getPendoParams(), title=TITLE_INDEX, reports_submitted=reports_submitted, reports_approved=reports_approved)
 
 @app.route('/approve_report', methods=['POST'])
