@@ -207,7 +207,7 @@ def expense_list_html():
 
 	return render_template('expense.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE)
 
-@app.route('/expense_new_html', methods=['POST'])
+@app.route('/expense_new_html')
 def expense_new_html():
 
 	return render_template('expense_new.html', params=getPendoParams(), title=TITLE_EXPENSE_NEW)
@@ -273,7 +273,7 @@ def report_new_html():
 
 	return render_template('report_new.html', params=getPendoParams(), title=TITLE_REPORT_NEW)
 
-@app.route('/create_report', methods=['POST'])
+@app.route('/create_report')
 def create_report():
 	# create a report record
 	sql_string = "insert into report(name, user_id, status)"\
