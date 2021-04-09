@@ -1,8 +1,14 @@
 {% extends "common/framework.html" %}
 {% block body %}
-<section id="expense_list">
-<div id="report_list">
-	レポートリスト
-</div>
-</section>
+	{% if params['role'] == 'ユーザー' %}
+		{% include "home_user.html %"}
+	{% elif params['role'] == '管理者' %}
+		{% include "home_admin.html" %}
+	{% elif params['role'] == '承認者' %}
+		{% include "home_approver.html" %}
+	{% else %}
+		<section id="home">
+			<li>エラー：params['role']</li>
+		</section>
+	{% endif %}
 {% endblock %}

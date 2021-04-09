@@ -1,5 +1,5 @@
 import os
-import requests
+import datetime
 
 from flask import Flask, redirect, request, url_for, render_template
 import redis
@@ -62,6 +62,7 @@ ERROR_MESSAGES = {
 	MSG_NO_EMAIL_PASSWORD : 'メールアドレスまたはパスワードが入力されませんでした',
 	MSG_NO_EXPENSE_ID_MATCH: '一致する経費IDがありません',
 	MSG_NO_REPORT_ID_MATCH: '一致するレポートIDがありません'
+	
 }
 
 def getDBConnection():
@@ -104,8 +105,41 @@ def index():
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
 		# if the employee is already logged in, show index.html
-		print('already logged in')
-		print('email:', email.decode('utf8'))
+		role = redis_client.get(REDIS_ROLE).decode('utf8')
+		if role = ROLE_USER:
+			# get number of expenses and reports that the user has
+			sql_string = "select count(expense.id), count(distinct report.id)"\
+					" from expense join report"\
+					" on expense.report_id = report.id"\
+					" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"\
+								" and report.submit_date is null and report.approve_date is null"
+			results = sql_select(sql_string)
+			print('results in index:', results[0])
+			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, num_records= results[0])
+		else if role = ROLE_ADMIN:
+			# list all employees
+			sql_string = "select employee.id, email, role, first_name, last_name, company.id as company_id,"\
+									" company.name as company_name, company.plan as company_plan"\
+									" from employee join company"\
+									" on employee.company_id = company.id"\
+									" where email='"+email+"' and password='"+password+"'"
+		else if role = ROLE_APPROVER:
+			# get all reports submitted
+			sql_string = "select report.id as id, report.name as name, report.status as status"\
+									" from report join employee"\
+									" on report.user_id = emloyee.id"\
+									" where report.status = '"+STATUS_SUBMITTED+"' or report.status = '"+STATUS_APRROVED+"'"
+			results = sql_execute(sql_string)
+			reports_submitted = []
+			reports_approved = []
+			print('results in index:', results)
+			for result in results:
+				if result['status'] = STATUS_SUBMITTED:
+					reports_submitted.append(result)
+				else if result['status'] = STATUS_APRROVED:
+					reports_approved.append(result)
+			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, reports_submitted=reports_submitted, reports_approved=reports_approved)
+
 		return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX)
 
 	return redirect(url_for('login'))
@@ -252,7 +286,6 @@ def create_report():
 
 @app.route('/report_detail_html', methods=['POST'])
 def report_detail_html():
-	report_id = request.form['id']
 	sql_string = "select id, name"\
 				" from report"\
 				" where id = "+request.form['id']
@@ -309,10 +342,9 @@ def update_report():
 
 @app.route('/delete_report', methods=['POST'])
 def delete_report():
-	report_id = request.form['id']
 	# delete the specified report
 	sql_string = "delete report"\
-							" where id = '"+report_id+"'"
+							" where id = '"+request.form['id']+"'"
 	sql_execute(sql_string)
 
 	# update expenses assigned to the deleted report
@@ -321,11 +353,21 @@ def delete_report():
 	# add specified expenses to this report
 	sql_string = "update expense set"\
 							" report_id = null"\
-							" where expense.report_id = '"+report_id+"'"
+							" where expense.report_id = '"+request.form['id']+"'"
 	sql_execute(sql_string)
 
 	return redirect(url_for('expense_list_html'))
 
+@app.route('/submit_report', methods=['POST'])
+def delete_report():
+	# change the status of the report to submitted
+	sql_string = "update report set"\
+							" submit_date = '"+datetime.date.today()+"',"\
+							" status = '"+STATUS_SUBMITTED+"'"\
+							" where report.id = '"+request.form['id']+"'"
+	sql_execute(sql_string)
+
+	return redirect(url_for('expense_list_html'))
 
 if __name__ == '__main__':
   main()

@@ -1,0 +1,39 @@
+{% extends "common/framework.html" %}
+{% block body %}
+	<section id="approve_list">
+		<h2>レポート リスト</h2>
+		<form id="report_list">
+			<table>
+				<caption>承認待ちレポート</caption>
+				<tr>
+					<th></th>
+					<th>レポート名</th>
+					<th>ステータス</th>
+				</tr>
+				{% for report in reports_submitted %}
+				<tr>
+					<td><input type="radio" name="id" value="{{reports_submitted['id']}}"></td>
+					<td>{{reports_submitted['name']}}</td>
+					<td>{{reports_submitted['status']}}</td>
+				</tr>
+				{% endfor %}
+			</table>
+			<table>
+				<caption>承認待ちレポート</caption>
+				<tr>
+					<th></th>
+					<th>レポート名</th>
+					<th>ステータス</th>
+				</tr>
+				{% for report in reports_approved %}
+				<tr>
+					<td></td>
+					<td>{{reports_approved['name']}}</td>
+					<td>{{reports_approved['status']}}</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</form>
+		<button type="submit" form="report_list" formaction="../report_detail_html" formmethod="post">詳細表示</button>
+	</section>
+{% endblock %}

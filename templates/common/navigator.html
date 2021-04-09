@@ -9,8 +9,10 @@
     <li><a href="{{url_for('report_list_html')}}">レポート</a></li>
     {% elif params['role'] == '管理者' %}
     <li>管理者</li>
+    <li><a href="{{url_for('member_list_html')}}">経費</a></li>
     {% elif params['role'] == '承認者' %}
     <li>承認者</li>
+    <li><a href="{{url_for('approve_list_html')}}">経費</a></li>
     {% else %}
     <li>エラー：params['role']</li>
     {% endif %}
