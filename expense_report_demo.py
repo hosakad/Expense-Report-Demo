@@ -367,7 +367,7 @@ def approve_list_html():
 	sql_string = "select report.id as id, report.name as name, report.status as status"\
 							" from report join employee"\
 							" on report.user_id = employee.id"\
-							" where employee.company_id = '"+redis_client.get(REDIS_COMPANY_ID)+"' and"\
+							" where employee.company_id = '"+redis_client.get(REDIS_COMPANY_ID).decode('utf')+"' and"\
 									" (report.status = '"+STATUS_SUBMITTED+"' or report.status = '"+STATUS_APRROVED+"')"
 	results = sql_select(sql_string)
 	reports_submitted = []
@@ -390,7 +390,7 @@ def approve_report():
 							" status = '"+STATUS_APRROVED+"'"\
 							" where report.id = '"+request.form['id']+"'"
 	sql_execute(sql_string)
-	
+
 	return redirect(url_for('index'))
 
 
