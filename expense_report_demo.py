@@ -259,7 +259,9 @@ def report_list_html():
 				" on report.user_id = employee.id"\
 				" where report.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
 	reports = sql_select(sql_string)
-	print('results in report list:', reports)
+	if reports:
+		print('results in report list:', reports)
+		print('type of results[0]:', results[0].type())
 
 	return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT)
 
@@ -378,6 +380,7 @@ def approve_list_html():
 	if results:
 		for result in results:
 			print('result in approve list:', result)
+			print('type of result:', result.type())
 			if result['status'] == STATUS_SUBMITTED:
 				reports_submitted.append(result)
 			elif result['status'] == STATUS_APRROVED:
