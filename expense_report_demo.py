@@ -380,12 +380,12 @@ def approve_list_html():
 				reports_submitted.append(result.copy())
 			elif result['status'] == STATUS_APRROVED:
 				reports_approved.append(result.copy())
-		return render_template('approve_list.html', params=getPendoParams(), title=TITLE_INDEX, reports_submitted=results, reports_approved=reports_approved)
+		return render_template('approve_list.html', params=getPendoParams(), title=TITLE_INDEX, reports_submitted=reports_submitted, reports_approved=reports_approved)
 
 @app.route('/approve_report', methods=['POST'])
 def approve_report():
 	sql_string = "update report set"\
-							" submit_date = '"+datetime.date.today()+"',"\
+							" submit_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
 							" status = '"+STATUS_APRROVED+"'"\
 							" where report.id = '"+request.form['id']+"'"
 	return redirect(url_for('index'))
