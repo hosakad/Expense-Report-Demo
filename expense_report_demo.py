@@ -363,7 +363,7 @@ def submit_report():
 
 	return redirect(url_for('expense_list_html'))
 
-@app.route('/approve_list_html', methods=['POST'])
+@app.route('/approve_list_html')
 def approve_list_html():
 	# get all reports submitted
 	sql_string = "select report.id as id, report.name as name, report.status as status"\
