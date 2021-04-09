@@ -12,6 +12,7 @@
 					<th>レポート名</th>
 					<th>提出日</th>
 					<th>承認日</th>
+					<th>ステータス</th>
 				</tr>
 				{% for report in reports %}
 				<tr>
@@ -27,6 +28,7 @@
 					{% else %}
 					<td>{{report['approve_date']}}</td>
 					{% endif %}
+					<td>{{report['status']}}</td>
 				</tr>
 				{% endfor %}
 			</table>

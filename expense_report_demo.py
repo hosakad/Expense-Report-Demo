@@ -369,5 +369,14 @@ def delete_report():
 
 	return redirect(url_for('expense_list_html'))
 
+@app.route('/approve_report', methogs=['POST'])
+def approve_report():
+	sql_string = "update report set"\
+							" submit_date = '"+datetime.date.today()+"',"\
+							" status = '"+STATUS_APRROVED+"'"\
+							" where report.id = '"+request.form['id']+"'"
+	return redirect(url_for('index'))
+
+
 if __name__ == '__main__':
   main()
