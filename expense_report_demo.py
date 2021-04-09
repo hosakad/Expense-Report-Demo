@@ -106,7 +106,7 @@ def index():
 	if email:
 		# if the employee is already logged in, show index.html
 		role = redis_client.get(REDIS_ROLE).decode('utf8')
-		if role = ROLE_USER:
+		if role == ROLE_USER:
 			# get number of expenses and reports that the user has
 			sql_string = "select count(expense.id), count(distinct report.id)"\
 					" from expense join report"\
@@ -116,14 +116,14 @@ def index():
 			results = sql_select(sql_string)
 			print('results in index:', results[0])
 			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, num_records= results[0])
-		else if role = ROLE_ADMIN:
+		else if role == ROLE_ADMIN:
 			# list all employees
 			sql_string = "select employee.id, email, role, first_name, last_name, company.id as company_id,"\
 									" company.name as company_name, company.plan as company_plan"\
 									" from employee join company"\
 									" on employee.company_id = company.id"\
 									" where email='"+email+"' and password='"+password+"'"
-		else if role = ROLE_APPROVER:
+		else if role == ROLE_APPROVER:
 			# get all reports submitted
 			sql_string = "select report.id as id, report.name as name, report.status as status"\
 									" from report join employee"\
