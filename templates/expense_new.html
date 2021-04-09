@@ -1,14 +1,13 @@
 {% extends "common/framework.html" %}
 {% block body %}
 	<section id="expense_new">
-		<form id="expense_new">
+		<form id="form_expense_new">
 			<p>経費名：<input name="name" type="text" required></p>
 			<p>日付：<input name="date" type="date" required></p>
 			<p>通貨：<input name="currency" type="text" required></p>
 			<p>金額：<input name="amount" type="number" required></p>
 			<p>説明：<input name="description" type="text"></p>
-			<button type="submit">作成</button>
 		</form>
-		<button type="submit" form="expense_new" formaction="../create_expense" formmethod="post">作成</button>
+		<button type="submit" form="form_expense_new" formaction="../create_expense" formmethod="post">作成</button>
 	</section>
 {% endblock %}

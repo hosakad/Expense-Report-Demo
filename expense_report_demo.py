@@ -356,7 +356,7 @@ def delete_report():
 								" where expense.report_id = '"+request.form['id']+"'"
 		sql_execute(sql_string)
 
-	return redirect(url_for('expense_list_html'))
+	return redirect(url_for('report_list_html'))
 
 @app.route('/submit_report', methods=['POST'])
 def submit_report():

@@ -5,7 +5,7 @@
 			<button type="button">新規経費</button>
 		</a>
 		<h2>経費リスト</h2>
-		<form id="expense_list">
+		<form id="form_expense_list">
 			<table>
 				<tr>
 					<th></th>
@@ -25,6 +25,6 @@
 				{% endfor %}
 			</table>
 		</form>
-		<button type="submit" form="expense_list" formaction="../expense_detail_html" formmethod="post">詳細表示</button>
+		<button type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post">詳細表示</button>
 	</section>
 {% endblock %}

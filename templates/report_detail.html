@@ -1,7 +1,7 @@
 {% extends "common/framework.html" %}
 {% block body %}
 	<section id="report_edit">
-		<form id="report_detail">
+		<form id="form_report_detail">
 			<p>レポート名：<input name="name" type="text" value="{{report['name']}}" required></p>
 			<input type="hidden" name="id" value="{{report['id']}}">
 			<table>
@@ -43,8 +43,8 @@
 				{% endfor %}
 			</table>
 		</form>
-		<button type="submit" form="report_detail" formaction="../update_report" formmethod="post">更新</button>
-		<button type="submit" form="report_detail" formaction="../submit_report" formmethod="post">申請</button>
-		<button type="submit" form="report_detail" formaction="../delete_report" formmethod="post">削除</button>
+		<button type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">更新</button>
+		<button type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">申請</button>
+		<button type="submit" form="form_report_detail" formaction="../delete_report" formmethod="post">削除</button>
 </section>
 {% endblock %}

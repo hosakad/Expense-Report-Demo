@@ -5,7 +5,7 @@
 			<button type="button">新規レポート</button>
 		</a>
 		<h2>レポート リスト</h2>
-		<form id="report_list">
+		<form id="form_report_list">
 			<table>
 				<tr>
 					<th></th>
@@ -32,7 +32,7 @@
 				</tr>
 				{% endfor %}
 			</table>
-			<button type="submit" formaction="../report_detail_html" formmethod="post">詳細表示</button>
 		</form>
+		<button type="submit" form="form_report_list" formaction="../report_detail_html" formmethod="post">詳細表示</button>
 	</section>
 {% endblock %}
