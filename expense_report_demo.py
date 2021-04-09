@@ -125,6 +125,11 @@ def index():
 									" on employee.company_id = company.id"\
 									" where email='"+email+"' and password='"+password+"'"
 		elif role == ROLE_APPROVER:
+			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
+					" from expense join report"\
+					" on expense.report_id = report.id"\
+					" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"\
+								" and report.submit_date is null and report.approve_date is null"
 
 		return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX)
 
