@@ -205,7 +205,7 @@ def expense_list_html():
 				" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
 	expenses = sql_select(sql_string)
 
-	return render_template('expense.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE)
+	return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE)
 
 @app.route('/expense_new_html')
 def expense_new_html():
