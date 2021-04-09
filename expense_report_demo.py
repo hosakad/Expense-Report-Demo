@@ -359,7 +359,7 @@ def delete_report():
 	return redirect(url_for('expense_list_html'))
 
 @app.route('/submit_report', methods=['POST'])
-def delete_report():
+def submit_report():
 	# change the status of the report to submitted
 	sql_string = "update report set"\
 							" submit_date = '"+datetime.date.today()+"',"\
