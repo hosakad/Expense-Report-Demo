@@ -389,6 +389,8 @@ def approve_report():
 							" submit_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
 							" status = '"+STATUS_APRROVED+"'"\
 							" where report.id = '"+request.form['id']+"'"
+	sql_execute(sql_string)
+	
 	return redirect(url_for('index'))
 
 
