@@ -251,7 +251,7 @@ def update_expense():
 
 @app.route('/delete_expense', methods=['POST'])
 def delete_expense():
-	sql_string = "delete expense"\
+	sql_string = "delete from expense"\
 							" where id = "+request.form['id']+""
 	sql_execute(sql_string)
 
@@ -343,7 +343,7 @@ def update_report():
 @app.route('/delete_report', methods=['POST'])
 def delete_report():
 	# delete the specified report
-	sql_string = "delete report"\
+	sql_string = "delete from report"\
 							" where id = '"+request.form['id']+"'"
 	sql_execute(sql_string)
 
