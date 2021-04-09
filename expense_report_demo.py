@@ -253,12 +253,12 @@ def delete_expense():
 
 @app.route('/report_list_html')
 def report_list_html():
-	reports = []
 	sql_string = "select report.id, name, submit_date, approve_date, status"\
 				" from report join employee"\
 				" on report.user_id = employee.id"\
 				" where report.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
 	reports = sql_select(sql_string)
+	print('results in report list:', reports)
 
 	return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT)
 
@@ -373,9 +373,10 @@ def approve_list_html():
 	results = sql_select(sql_string)
 	reports_submitted = []
 	reports_approved = []
-	print('results in index:', results)
+	print('results in approve list:', results)
 	if results:
 		for result in results:
+			print('result in approve list:', result)
 			if result['status'] == STATUS_SUBMITTED:
 				reports_submitted.append(result)
 			elif result['status'] == STATUS_APRROVED:
