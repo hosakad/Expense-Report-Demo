@@ -116,14 +116,14 @@ def index():
 			results = sql_select(sql_string)
 			print('results in index:', results[0])
 			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, num_records= results[0])
-		else if role == ROLE_ADMIN:
+		elif role == ROLE_ADMIN:
 			# list all employees
 			sql_string = "select employee.id, email, role, first_name, last_name, company.id as company_id,"\
 									" company.name as company_name, company.plan as company_plan"\
 									" from employee join company"\
 									" on employee.company_id = company.id"\
 									" where email='"+email+"' and password='"+password+"'"
-		else if role == ROLE_APPROVER:
+		elif role == ROLE_APPROVER:
 			# get all reports submitted
 			sql_string = "select report.id as id, report.name as name, report.status as status"\
 									" from report join employee"\
@@ -136,7 +136,7 @@ def index():
 			for result in results:
 				if result['status'] = STATUS_SUBMITTED:
 					reports_submitted.append(result)
-				else if result['status'] = STATUS_APRROVED:
+				elif result['status'] = STATUS_APRROVED:
 					reports_approved.append(result)
 			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, reports_submitted=reports_submitted, reports_approved=reports_approved)
 
