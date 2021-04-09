@@ -1,11 +1,11 @@
 {% extends "common/framework.html" %}
 {% block body %}
 	<section id="expense_list">
-		<form action="../expense_new_html" method="post">
-			<input type="submit" value="新規経費">
-		</form>
+		<a href="../expense_new_html">
+			<button type="button" onclick="">新規経費</button>
+		</a>
 		<h2>経費リスト</h2>
-		<form action="../expense_edit_html" method="post">
+		<form id="expense_list">
 			<table>
 				<tr>
 					<th></th>
@@ -24,7 +24,7 @@
 				</tr>
 				{% endfor %}
 			</table>
-			<button type="submit">変更</button>
 		</form>
+		<button type="submit" form="expense_list" formaction="../expense_detail_html" formmethod="post">詳細表示</button>
 	</section>
 {% endblock %}

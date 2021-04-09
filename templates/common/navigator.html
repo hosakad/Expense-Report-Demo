@@ -5,8 +5,8 @@
   <div id="navigator">
     <ul>
     {% if params['role'] == 'ユーザー' %}
-    <li><a href="{{url_for('expense_html')}}">経費</a></li>
-    <li><a href="{{url_for('report_html')}}">レポート</a></li>
+    <li><a href="{{url_for('expense_list_html')}}">経費</a></li>
+    <li><a href="{{url_for('report_list_html')}}">レポート</a></li>
     {% elif params['role'] == '管理者' %}
     <li>管理者</li>
     {% elif params['role'] == '承認者' %}

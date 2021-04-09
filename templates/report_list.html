@@ -1,11 +1,11 @@
 {% extends "common/framework.html" %}
 {% block body %}
 	<section id="report_list">
-		<form action="../report_new_html" method="post">
-			<input type="submit" value="新規レポート">
-		</form>
+		<a href="../report_new_html">
+			<button type="button" onclick="">新規レポート</button>
+		</a>
 		<h2>レポート リスト</h2>
-		<form action="../report_edit_html" method="post">
+		<form id="report_list">
 			<table>
 				<tr>
 					<th></th>
@@ -30,7 +30,7 @@
 				</tr>
 				{% endfor %}
 			</table>
-			<button type="submit">変更</button>
 		</form>
+		<button type="submit" form="report_list" formaction="../report_detail_html" formmethod="post">詳細表示</button>
 	</section>
 {% endblock %}

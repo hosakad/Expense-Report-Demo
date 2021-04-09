@@ -1,9 +1,10 @@
 {% extends "common/framework.html" %}
 {% block body %}
 	<section id="report_new">
-		<form action="../create_report" method="post">
+		<form id="report_new">
 			<p>レポート名：<input name="name" type="text" required></p>
 			<button type="submit">作成</button>
 		</form>
+		<button type="submit" form="report_new" formaction="../create_report" formmethod="post">作成</button>
 	</section>
 {% endblock %}

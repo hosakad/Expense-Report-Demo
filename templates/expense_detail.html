@@ -1,7 +1,7 @@
 {% extends "common/framework.html" %}
 {% block body %}
 	<section id="expense_edit">
-		<form action="../update_expense" method="post">
+		<form id="expense_detail">
 			<p>経費名：<input name="name" type="text" value="{{expense['name']}}" required></p>
 			<p>日付：<input name="date" type="date" value="{{expense['date']}}" required></p>
 			<p>通貨：<input name="currency" type="text" value="{{expense['currency']}}" required></p>
@@ -10,5 +10,7 @@
 			<input type="hidden" name="id" value="{{expense['id']}}">
 			<button type="submit">更新</button>
 		</form>
+		<button type="submit" form="expense_detail" formaction="../update_expense" formmethod="post">更新</button>
+		<button type="submit" form="expense_detail" formaction="../delete_expense" formmethod="post">削除</button>
 	</section>
 {% endblock %}
