@@ -362,7 +362,7 @@ def delete_report():
 def submit_report():
 	# change the status of the report to submitted
 	sql_string = "update report set"\
-							" submit_date = '"+datetime.date.today()+"',"\
+							" submit_date = '"+datetime.date.today().strftime(%Y-%m-%d)+"',"\
 							" status = '"+STATUS_SUBMITTED+"'"\
 							" where report.id = '"+request.form['id']+"'"
 	sql_execute(sql_string)
