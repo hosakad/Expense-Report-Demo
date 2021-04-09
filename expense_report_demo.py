@@ -130,7 +130,7 @@ def index():
 									" from report join employee"\
 									" on report.user_id = employee.id"\
 									" where report.status = '"+STATUS_SUBMITTED+"' or report.status = '"+STATUS_APRROVED+"'"
-			results = sql_execute(sql_string)
+			results = sql_select(sql_string)
 			reports_submitted = []
 			reports_approved = []
 			print('results in index:', results)
