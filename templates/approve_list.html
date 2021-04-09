@@ -2,7 +2,7 @@
 {% block body %}
 	<section id="approve_list">
 		<h2>レポート リスト</h2>
-		<form id="approve_list">
+		<form id="form_approve_list">
 			<table>
 				<caption>承認待ちレポート</caption>
 				<tr>
@@ -34,6 +34,6 @@
 				{% endfor %}
 			</table>
 		</form>
-		<button type="submit" form="approve_list" formaction="../approve_report" formmethod="post">レポート承認</button>
+		<button type="submit" form="form_approve_list" formaction="../approve_report" formmethod="post">レポート承認</button>
 	</section>
 {% endblock %}
