@@ -221,7 +221,7 @@ def create_expense():
 											+request.form['currency']+"','"\
 											+request.form['description']+"','"\
 											+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"')"
-		sql_execute(sql_string)
+	sql_execute(sql_string)
 
 	return redirect(url_for('expense_list_html'))
 
