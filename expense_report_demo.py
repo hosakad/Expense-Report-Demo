@@ -125,22 +125,6 @@ def index():
 									" on employee.company_id = company.id"\
 									" where email='"+email+"' and password='"+password+"'"
 		elif role == ROLE_APPROVER:
-			# get all reports submitted
-			sql_string = "select report.id as id, report.name as name, report.status as status"\
-									" from report join employee"\
-									" on report.user_id = employee.id"\
-									" where report.status = '"+STATUS_SUBMITTED+"' or report.status = '"+STATUS_APRROVED+"'"
-			results = sql_select(sql_string)
-			reports_submitted = []
-			reports_approved = []
-			print('results in index:', results)
-			if results:
-				for result in results:
-					if result['status'] == STATUS_SUBMITTED:
-						reports_submitted.append(result)
-					elif result['status'] == STATUS_APRROVED:
-						reports_approved.append(result)
-				return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, reports_submitted=reports_submitted, reports_approved=reports_approved)
 
 		return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX)
 
@@ -373,6 +357,25 @@ def submit_report():
 	sql_execute(sql_string)
 
 	return redirect(url_for('expense_list_html'))
+
+@app.route('/approve_list_html', methods=['POST'])
+def approve_list_html():
+	# get all reports submitted
+	sql_string = "select report.id as id, report.name as name, report.status as status"\
+							" from report join employee"\
+							" on report.user_id = employee.id"\
+							" where report.status = '"+STATUS_SUBMITTED+"' or report.status = '"+STATUS_APRROVED+"'"
+	results = sql_select(sql_string)
+	reports_submitted = []
+	reports_approved = []
+	print('results in index:', results)
+	if results:
+		for result in results:
+			if result['status'] == STATUS_SUBMITTED:
+				reports_submitted.append(result)
+			elif result['status'] == STATUS_APRROVED:
+				reports_approved.append(result)
+		return render_template('approve_list.html', params=getPendoParams(), title=TITLE_INDEX, reports_submitted=reports_submitted, reports_approved=reports_approved)
 
 @app.route('/approve_report', methods=['POST'])
 def approve_report():

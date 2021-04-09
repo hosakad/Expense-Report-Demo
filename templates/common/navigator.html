@@ -18,6 +18,13 @@
     <li>エラー：params['role']</li>
     {% endif %}
     <li><a href="{{url_for('logout')}}">ログアウト</a></li>
-  </ul>
-</div>
+    </ul>
+  </div>
+  <div id="footer">
+      <h3>ログイン情報</h3>
+      <ul>
+        <li>会社名：{{params['company_name']}}</li>
+        <li>ユーザー名：{{params['full_name']}}</li>
+      </ul>
+  </div>
 </nav>
