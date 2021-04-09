@@ -145,10 +145,6 @@ def login():
 
 @app.route('/logout')
 def logout():
-
-	getDBConnection().close()
-	DATABASE_CONNECTION = None
-
 	redis_client.delete(REDIS_EMPLOYEE_ID)
 	redis_client.delete(REDIS_EMAIL)
 	redis_client.delete(REDIS_ROLE)
