@@ -12,14 +12,14 @@
 				</tr>
 				{% for report in reports_submitted %}
 				<tr>
-					<td><input type="radio" name="id" value="{{reports_submitted['id']}}"></td>
-					<td>{{reports_submitted[1]}}</td>
-					<td>{{reports_submitted[2]}}</td>
+					<td><input type="radio" name="id" value="{{report['id']}}"></td>
+					<td>{{report['name']}}</td>
+					<td>{{report['status']}}</td>
 				</tr>
 				{% endfor %}
 			</table>
 			<table>
-				<caption>承認待ちレポート</caption>
+				<caption>承認済みレポート</caption>
 				<tr>
 					<th></th>
 					<th>レポート名</th>
@@ -28,8 +28,8 @@
 				{% for report in reports_approved %}
 				<tr>
 					<td></td>
-					<td>{{reports_approved[1]}}</td>
-					<td>{{reports_approved[2]}}</td>
+					<td>{{report['name']}}</td>
+					<td>{{report['status']}}</td>
 				</tr>
 				{% endfor %}
 			</table>
