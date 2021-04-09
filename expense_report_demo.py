@@ -350,11 +350,11 @@ def delete_report():
 	# update expenses assigned to the deleted report
 	id_added = request.form.getlist('id_added')
 	if id_added:
-	# add specified expenses to this report
-	sql_string = "update expense set"\
-							" report_id = null"\
-							" where expense.report_id = '"+request.form['id']+"'"
-	sql_execute(sql_string)
+		# add specified expenses to this report
+		sql_string = "update expense set"\
+								" report_id = null"\
+								" where expense.report_id = '"+request.form['id']+"'"
+		sql_execute(sql_string)
 
 	return redirect(url_for('expense_list_html'))
 
