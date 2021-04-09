@@ -1,7 +1,7 @@
 {% extends "common/framework.html" %}
 {% block body %}
 	{% if params['role'] == 'ユーザー' %}
-		{% include "home_user.html %"}
+		{% include "home_user.html" %}
 	{% elif params['role'] == '管理者' %}
 		{% include "home_admin.html" %}
 	{% elif params['role'] == '承認者' %}
