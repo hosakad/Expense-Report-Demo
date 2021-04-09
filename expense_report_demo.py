@@ -256,7 +256,7 @@ def report_list_html():
 	reports = sql_select(sql_string)
 	if reports:
 		print('results in report list:', reports)
-		print('type of results[0]:', results[0].type())
+		print('type of results[0]:', type(results[0]))
 
 	return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT)
 
@@ -375,7 +375,7 @@ def approve_list_html():
 	if results:
 		for result in results:
 			print('result in approve list:', result)
-			print('type of result:', result.type())
+			print('type of result:', type(result))
 			if result['status'] == STATUS_SUBMITTED:
 				reports_submitted.append(result.copy())
 			elif result['status'] == STATUS_APRROVED:
