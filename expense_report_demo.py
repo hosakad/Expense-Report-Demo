@@ -331,19 +331,16 @@ def update_report():
 
 @app.route('/delete_report', methods=['POST'])
 def delete_report():
+	# remove specified expenses from this report
+	sql_string = "update expense set"\
+							" report_id = null"\
+							" where expense.report_id = '"+request.form['id']+"'"
+	sql_execute(sql_string)
+
 	# delete the specified report
 	sql_string = "delete from report"\
 							" where id = '"+request.form['id']+"'"
 	sql_execute(sql_string)
-
-	# update expenses assigned to the deleted report
-	id_added = request.form.getlist('id_added')
-	if id_added:
-		# add specified expenses to this report
-		sql_string = "update expense set"\
-								" report_id = null"\
-								" where expense.report_id = '"+request.form['id']+"'"
-		sql_execute(sql_string)
 
 	return redirect(url_for('report_list_html'))
 
