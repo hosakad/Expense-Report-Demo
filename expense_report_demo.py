@@ -369,7 +369,7 @@ def submit_report():
 
 	return redirect(url_for('expense_list_html'))
 
-@app.route('/approve_report', methogs=['POST'])
+@app.route('/approve_report', methods=['POST'])
 def approve_report():
 	sql_string = "update report set"\
 							" submit_date = '"+datetime.date.today()+"',"\
