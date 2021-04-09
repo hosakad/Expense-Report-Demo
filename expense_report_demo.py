@@ -266,7 +266,7 @@ def report_list_html():
 				" where report.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
 	reports = sql_select(sql_string)
 
-	return render_template('report.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT)
+	return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT)
 
 @app.route('/report_new_html', methods=['POST'])
 def report_new_html():
