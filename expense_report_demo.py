@@ -127,7 +127,7 @@ def index():
 			# get all reports submitted
 			sql_string = "select report.id as id, report.name as name, report.status as status"\
 									" from report join employee"\
-									" on report.user_id = emloyee.id"\
+									" on report.user_id = employee.id"\
 									" where report.status = '"+STATUS_SUBMITTED+"' or report.status = '"+STATUS_APRROVED+"'"
 			results = sql_execute(sql_string)
 			reports_submitted = []
@@ -157,7 +157,7 @@ def login():
 def logout():
 
 	getDBConnection().close()
-	
+
 	redis_client.delete(REDIS_EMPLOYEE_ID)
 	redis_client.delete(REDIS_EMAIL)
 	redis_client.delete(REDIS_ROLE)
