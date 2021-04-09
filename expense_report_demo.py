@@ -108,7 +108,7 @@ def index():
 		role = redis_client.get(REDIS_ROLE).decode('utf8')
 		if role == ROLE_USER:
 			# get number of expenses and reports that the user has
-			sql_string = "select count(expense.id), count(distinct report.id)"\
+			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
 					" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"\
