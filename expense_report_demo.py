@@ -104,6 +104,7 @@ def index():
 	# initialize
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
+		results = None
 		# if the employee is already logged in, show index.html
 		role = redis_client.get(REDIS_ROLE).decode('utf8')
 		if role == ROLE_USER:
@@ -133,12 +134,13 @@ def index():
 			reports_submitted = []
 			reports_approved = []
 			print('results in index:', results)
-			for result in results:
-				if result['status'] == STATUS_SUBMITTED:
-					reports_submitted.append(result)
-				elif result['status'] == STATUS_APRROVED:
-					reports_approved.append(result)
-			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, reports_submitted=reports_submitted, reports_approved=reports_approved)
+			if results:
+				for result in results:
+					if result['status'] == STATUS_SUBMITTED:
+						reports_submitted.append(result)
+					elif result['status'] == STATUS_APRROVED:
+						reports_approved.append(result)
+				return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, reports_submitted=reports_submitted, reports_approved=reports_approved)
 
 		return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX)
 
