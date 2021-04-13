@@ -48,8 +48,9 @@ TITLE_REPORT = '経費精算 レポート一覧画面'
 TITLE_REPORT_NEW = '経費精算 新規レポート画面'
 TITLE_REPORT_DETAIL = '経費精算 レポート編集画面'
 TITLE_APPROVE_LIST = '経費精算 承認依頼一覧画面'
-TITLE_MEMBER_LIST = '経費精算 メンバー一覧画面'
-TITLE_MEMBER_DETAIL ='経費精算 メンバー編集画面'
+TITLE_EMPLOYEE_LIST = '経費精算 メンバー一覧画面'
+TITLE_EMPLOYEE_NEW = '経費精算 メンバー新規作成画面'
+TITLE_EMPLOYEE_DETAIL ='経費精算 メンバー編集画面'
 # report status
 STATUS_OPEN = '未提出'
 STATUS_SUBMITTED = '提出済/承認待'
@@ -407,7 +408,12 @@ def employee_list_html():
 							" where company_id = '"+redis_client.get(REDIS_COMPANY_ID).decode('utf8')+"'"
 	employees = sql_select(sql_string)
 	
-	return render_template('employee_list.html', params=getPendoParams(), title=TITLE_MEMBER_LIST, employees=employees)
+	return render_template('employee_list.html', params=getPendoParams(), title=TITLE_EMPLOYEE_LIST, employees=employees)
+
+@app.route('/employee_new_html')
+def employee_new_html():
+
+	return render_template('employee_new.html', params=getPendoParams(), title=TITLE_EMPLOYEE_NEW)
 
 @app.route('/employee_detail_html', methods=['POST'])
 def employee_detail_html():
@@ -417,7 +423,7 @@ def employee_detail_html():
 							" where id = '"+request.form['id']+"'"
 	employees = sql_select(sql_string)
 
-	return render_template('employee_detail.html', params=getPendoParams(), title=TITLE_MEMBER_DETAIL, employee=employees[0])
+	return render_template('employee_detail.html', params=getPendoParams(), title=TITLE_EMPLOYEE_DETAIL, employee=employees[0])
 
 @app.route('/create_employee', methods=['POST'])
 def create_employee():
