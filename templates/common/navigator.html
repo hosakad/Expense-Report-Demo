@@ -8,12 +8,6 @@
     <li><a href="{{url_for('index')}}">ホーム</a></li>
     <li><a href="{{url_for('expense_list_html')}}">経費</a></li>
     <li><a href="{{url_for('report_list_html')}}">レポート</a></li>
-    {% elif params['role'] == '管理者' %}
-    <li><a href="{{url_for('employee_list_html')}}">メンバー</a></li>
-    {% elif params['role'] == '承認者' %}
-    <li><a href="{{url_for('approve_list_html')}}">承認</a></li>
-    {% else %}
-    <li>エラー：params['role']</li>
     {% endif %}
     <li><a href="{{url_for('logout')}}">ログアウト</a></li>
     </ul>

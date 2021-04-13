@@ -133,20 +133,9 @@ def index():
 			results = sql_select(sql_string)
 			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, num_records= results[0])
 		elif role == ROLE_ADMIN:
-			# list all employees
-			sql_string = "select count(distinct employee.id)"\
-									" from employee"\
-									" where company_id ='"+redis_client.get(REDIS_COMPANY_ID).decode('utf8')+"'"
-			results = sql_select(sql_string)
-			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, num_employees= results[0])
+			return redirect('employee_list_html')
 		elif role == ROLE_APPROVER:
-			sql_string = "select count(distinct report.id)"\
-					" from report join employee"\
-					" on report.user_id = employee.id"\
-					" where employee.company_id ='"+redis_client.get(REDIS_COMPANY_ID).decode('utf8')+"'"
-
-			results = sql_select(sql_string)
-			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, num_reports= results[0])
+			return redirect('approve_list_html')
 	
 	return redirect(url_for('login'))
 
