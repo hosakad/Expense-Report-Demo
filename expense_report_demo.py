@@ -408,7 +408,7 @@ def employee_list_html():
 	
 	return render_template('employee_list.html', params=getPendoParams(), title=TITLE_MEMBER_LIST, employees=employees)
 
-@app.route('/employee_detail_html')
+@app.route('/employee_detail_html', methods=['POST'])
 def employee_detail_html():
 	# get details of the employee record
 	sql_string = "select id, first_name, last_name, email, password, role"\
@@ -418,7 +418,7 @@ def employee_detail_html():
 
 	return render_template('employee_detail.html', param=getPendoParams(), title=TITLE_MEMBER_DETAIL, employee=employees[0])
 
-@app.route('/create_employee')
+@app.route('/create_employee', methods=['POST'])
 def create_employee():
 	sql_string = "insert into employee(first_name, last_name, email, password, role)"\
 							" values('"+request.form['first_name']+"','"\
@@ -430,7 +430,7 @@ def create_employee():
 
 	return redirect(url_for('employee_list_html'))
 
-@app.route('/update_employee')
+@app.route('/update_employee', methods=['POST'])
 def update_employee():
 	sql_string = "update employee set"\
 							" email = '"+request.form['email']+"',"\
@@ -442,7 +442,7 @@ def update_employee():
 
 	return redirect(url_for('employee_list_html'))
 
-@app.route('/delete_employee')
+@app.route('/delete_employee', methods=['POST'])
 def delete_employee():
 	sql_string = "delete from employee"\
 							" where id = "+request.form['id']+""
