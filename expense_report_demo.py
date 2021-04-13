@@ -273,7 +273,7 @@ def report_list_html():
 
 	return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT)
 
-@app.route('/report_new_html', methods=['POST'])
+@app.route('/report_new_html')
 def report_new_html():
 
 	return render_template('report_new.html', params=getPendoParams(), title=TITLE_REPORT_NEW)
