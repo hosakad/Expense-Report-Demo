@@ -20,6 +20,7 @@
 			<input type="hidden" name="id" value="{{employee['id']}}">
 		</form>
 		<button type="submit" form="form_employee_detail" formaction="../update_employee" formmethod="post">更新</button>
+		<button type="submit" form="form_employee_detail" formaction="../employee_list_html">一覧へ戻る</button>
 		<button type="submit" form="form_employee_detail" formaction="../delete_employee" formmethod="post">削除</button>
 	</section>
 {% endblock %}
