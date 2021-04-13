@@ -1,8 +1,8 @@
 <nav>
-  <div id="logo">
+  <div class="logo">
     <h2>exPENDOse</h2>
   </div>
-  <div id="navigator">
+  <div class="navigator">
     <ul>
     {% if params['role'] == 'ユーザー' %}
     <li><a href="{{url_for('index')}}">ホーム</a></li>
@@ -18,7 +18,7 @@
     <li><a href="{{url_for('logout')}}">ログアウト</a></li>
     </ul>
   </div>
-  <div id="footer">
+  <div class="footer">
       <h3>ログイン情報</h3>
       <ul>
         <li>会社名：{{params['company_name']}}</li>
