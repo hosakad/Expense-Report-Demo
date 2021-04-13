@@ -17,6 +17,15 @@ nav{
 	height: 100%;
 }
 
+	nav#logo_img {
+		width: 50%;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	nav#logo_title {
+	}
+
 	nav ul {
 		list-style: none;
 		padding-left: 1em;
@@ -60,10 +69,3 @@ table {
 		background-color: #f0eeffde;
 }
 
-#logo_img {
-	width: 200px;
-}
-
-#logo_title {
-	font: menu;
-}
