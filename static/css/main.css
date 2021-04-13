@@ -28,7 +28,7 @@ nav{
 	}
 
 	nav .navigator{
-		min-height: 100%;
+		margin-top: 0;
 	}
 
 	nav ul {
