@@ -20,7 +20,8 @@ nav{
 	nav#logo{
 		margin-left: auto;
 		margin-right: auto;
-		padding: auto;
+		background-image: url('../image/logo_sidebar.png');
+		background-position: center center;
 	}
 
 	#logo_img {
@@ -57,9 +58,9 @@ nav{
 				-ms-transition: none;
 				transition: none;
 			}
-			
+
 	nav#footer{
-		bottom: 1em;
+		margin-bottom: 1em;
 	}
 section{
 	margin-left: 200px;
