@@ -1,0 +1,18 @@
+{% extends "common/framework.html" %}
+{% block body %}
+	<section id="employee_new">
+		<form id="form_employee_new">
+			<p>姓：<input name="last_name" type="text" required></p>
+			<p>名：<input name="first_name" type="date" required></p>
+			<p>メールアドレス：<input name="email" type="text" required></p>
+			<p>パスワード：<input name="password" type="number" required></p>
+			<p>ロール：
+				<select name="role">
+					{% for role in get_roles() %}
+					<option value="{{role}}">{{role}}</option>
+					{% endfor %}
+				</select>	
+		</form>
+		<button type="submit" form="form_employee_new" formaction="../create_employee" formmethod="post">作成</button>
+	</section>
+{% endblock %}

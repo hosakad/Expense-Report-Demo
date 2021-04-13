@@ -107,6 +107,12 @@ def fullname_processor():
 		return full_name
 	return (dict(get_fullname=get_fullname))
 
+@app.context_processor
+def role_processor():
+	def get_roles():
+		return ROLES
+	return (dict(get_roles=get_roles))
+
 @app.route('/')
 def index():
 	# initialize
@@ -130,7 +136,7 @@ def index():
 									" from employee"\
 									" where company_id ='"+redis_client.get(REDIS_COMPANY_ID).decode('utf8')+"'"
 			results = sql_select(sql_string)
-			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, num_members= results[0])
+			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, num_employees= results[0])
 		elif role == ROLE_APPROVER:
 			sql_string = "select count(distinct report.id)"\
 					" from report join employee"\
@@ -205,6 +211,17 @@ def expense_list_html():
 
 	return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE)
 
+@app.route('/expense_detail_html', methods=['POST'])
+def expense_detail_html():
+	sql_string = "select id, name, date, amount, currency, description"\
+				" from expense"\
+				" where id = "+request.form['id']
+	results = sql_select(sql_string)
+	if len(results) == 1:
+		return render_template('expense_detail.html', params=getPendoParams(), expense=results[0], title=TITLE_EXPENSE_DETAIL)
+	else:
+		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH))
+
 @app.route('/expense_new_html')
 def expense_new_html():
 
@@ -222,17 +239,6 @@ def create_expense():
 	sql_execute(sql_string)
 
 	return redirect(url_for('expense_list_html'))
-
-@app.route('/expense_detail_html', methods=['POST'])
-def expense_detail_html():
-	sql_string = "select id, name, date, amount, currency, description"\
-				" from expense"\
-				" where id = "+request.form['id']
-	results = sql_select(sql_string)
-	if len(results) == 1:
-		return render_template('expense_detail.html', params=getPendoParams(), expense=results[0], title=TITLE_EXPENSE_DETAIL)
-	else:
-		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH))
 
 @app.route('/update_expense', methods=['POST'])
 def update_expense():
@@ -390,18 +396,59 @@ def approve_report():
 							" where report.id = '"+request.form['id']+"'"
 	sql_execute(sql_string)
 
-	return redirect(url_for('index'))
+	return redirect(url_for('approve_list_html'))
 
-@app.route('/member_list_html')
-def member_list_html():
-	# get all members in this company
+@app.route('/employee_list_html')
+def employee_list_html():
+	# get all employees in this company
 	sql_string = "select id, email, first_name, last_name, role"\
 							" from employee"\
 							" where company_id = '"+redis_client.get(REDIS_COMPANY_ID).decode('utf8')+"'"
-	members = sql_select(sql_string)
+	employees = sql_select(sql_string)
 	
-	return render_template('member_list.html', params=getPendoParams(), title=TITLE_MEMBER_LIST, members=members)
+	return render_template('employee_list.html', params=getPendoParams(), title=TITLE_MEMBER_LIST, employees=employees)
 
+@app.route('/employee_detail_html')
+def employee_detail_html():
+	# get details of the employee record
+	sql_string = "select id, first_name, last_name, email, password, role"\
+							" from employee"\
+							" where id = '"+request.form['id']+"'"
+	employees = sql_select(sql_string)
+
+	return render_template('employee_detail.html', param=getPendoParams(), title=TITLE_MEMBER_DETAIL, employee=employees[0])
+
+@app.route('/create_employee')
+def create_employee():
+	sql_string = "insert into employee(first_name, last_name, email, password, role)"\
+							" values('"+request.form['first_name']+"','"\
+											+request.form['last_name']+"',"\
+											+request.form['email']+",'"\
+											+request.form['password']+"','"\
+											+request.form['role']+"')"
+	sql_execute(sql_string)
+
+	return redirect(url_for('employee_list_html'))
+
+@app.route('/update_employee')
+def update_employee():
+	sql_string = "update employee set"\
+							" email = '"+request.form['email']+"',"\
+							" first_name = '"+request.form['first_name']+"',"\
+							" last_name = "+request.form['last_name']+","\
+							" role = '"+request.form['role']+"'"\
+							" where id = "+request.form['id']+""
+	sql_execute(sql_string)
+
+	return redirect(url_for('employee_list_html'))
+
+@app.route('/delete_employee')
+def delete_employee():
+	sql_string = "delete from employee"\
+							" where id = "+request.form['id']+""
+	sql_execute(sql_string)
+
+	return redirect(url_for('employee_list_html'))
 
 if __name__ == '__main__':
   main()
