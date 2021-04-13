@@ -43,8 +43,17 @@
 				{% endfor %}
 			</table>
 		</form>
-		<button type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">更新</button>
-		<button type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">申請</button>
-		<button type="submit" form="form_report_detail" formaction="../delete_report" formmethod="post">削除</button>
+		<div>
+			<button type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">更新</button>
+		</div>
+		<div>
+			<a href="../report_list_html">
+				<button type="button">一覧へ戻る</button>
+			</a>
+			<button type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">申請</button>
+		</div>
+		<div>
+			<button type="submit" form="form_report_detail" formaction="../delete_report" formmethod="post">削除</button>
+		</div>
 </section>
 {% endblock %}

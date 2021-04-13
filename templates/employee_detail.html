@@ -19,10 +19,14 @@
 			</p>
 			<input type="hidden" name="id" value="{{employee['id']}}">
 		</form>
-		<button type="submit" form="form_employee_detail" formaction="../update_employee" formmethod="post">更新</button>
-		<a href="../employee_list_html">
-			<button type="button">一覧へ戻る</button>
-		</a>
-		<button type="submit" form="form_employee_detail" formaction="../delete_employee" formmethod="post">削除</button>
+		<div>
+			<button type="submit" form="form_employee_detail" formaction="../update_employee" formmethod="post">更新</button>
+			<a href="../employee_list_html">
+				<button type="button">一覧へ戻る</button>
+			</a>
+		</div>
+		<div>
+			<button type="submit" form="form_employee_detail" formaction="../delete_employee" formmethod="post">削除</button>
+		</div>
 	</section>
 {% endblock %}

@@ -9,7 +9,14 @@
 			<p>説明：<input name="description" type="text" value="{{expense['description']}}"></p>
 			<input type="hidden" name="id" value="{{expense['id']}}">
 		</form>
-		<button type="submit" form="form_expense_detail" formaction="../update_expense" formmethod="post">更新</button>
-		<button type="submit" form="form_expense_detail" formaction="../delete_expense" formmethod="post">削除</button>
+		<div>
+			<button type="submit" form="form_expense_detail" formaction="../update_expense" formmethod="post">更新</button>
+			<a href="../expense_list_html">
+				<button type="button">一覧へ戻る</button>
+			</a>
+		</div>
+		<div>
+			<button type="submit" form="form_expense_detail" formaction="../delete_expense" formmethod="post">削除</button>
+		</div>
 	</section>
 {% endblock %}
