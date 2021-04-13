@@ -112,7 +112,7 @@ def index():
 	# initialize
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
-		results = None
+		sql_string = ""
 		# if the employee is already logged in, show index.html
 		role = redis_client.get(REDIS_ROLE).decode('utf8')
 		if role == ROLE_USER:
@@ -123,24 +123,23 @@ def index():
 					" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"\
 								" and report.submit_date is null and report.approve_date is null"
 			results = sql_select(sql_string)
-			print('results in index:', results[0])
 			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, num_records= results[0])
 		elif role == ROLE_ADMIN:
 			# list all employees
-			sql_string = "select employee.id, email, role, first_name, last_name, company.id as company_id,"\
-									" company.name as company_name, company.plan as company_plan"\
-									" from employee join company"\
-									" on employee.company_id = company.id"\
-									" where email='"+email+"' and password='"+password+"'"
+			sql_string = "select count(distinct employee.id)"\
+									" from employee"\
+									" where company_id ='"+redis_client.get(REDIS_COMPANY_ID).decode('utf8')+"'"
+			results = sql_select(sql_string)
+			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, num_members= results[0])
 		elif role == ROLE_APPROVER:
-			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
-					" from expense join report"\
-					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"\
-								" and report.submit_date is null and report.approve_date is null"
+			sql_string = "select count(distinct report.id)"\
+					" from report join employee"\
+					" on report.user_id = employee.id"\
+					" where employee.company_id ='"+redis_client.get(REDIS_COMPANY_ID).decode('utf8')+"'"
 
-		return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX)
-
+			results = sql_select(sql_string)
+			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, num_reports= results[0])
+	
 	return redirect(url_for('login'))
 
 @app.route('/error/<message_id>')
