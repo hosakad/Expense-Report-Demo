@@ -427,12 +427,13 @@ def employee_detail_html():
 
 @app.route('/create_employee', methods=['POST'])
 def create_employee():
-	sql_string = "insert into employee(first_name, last_name, email, password, role)"\
+	sql_string = "insert into employee(first_name, last_name, email, password, role, company_id)"\
 							" values('"+request.form['first_name']+"','"\
 											+request.form['last_name']+"','"\
 											+request.form['email']+"','"\
 											+request.form['password']+"','"\
-											+request.form['role']+"')"
+											+request.form['role']+"','"\
+											+redis_client.get(REDIS_COMPANY_ID).decode('utf8')+"')"
 	sql_execute(sql_string)
 
 	return redirect(url_for('employee_list_html'))
