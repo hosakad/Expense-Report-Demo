@@ -417,7 +417,7 @@ def employee_detail_html():
 							" where id = '"+request.form['id']+"'"
 	employees = sql_select(sql_string)
 
-	return render_template('employee_detail.html', param=getPendoParams(), title=TITLE_MEMBER_DETAIL, employee=employees[0])
+	return render_template('employee_detail.html', params=getPendoParams(), title=TITLE_MEMBER_DETAIL, employee=employees[0])
 
 @app.route('/create_employee', methods=['POST'])
 def create_employee():
