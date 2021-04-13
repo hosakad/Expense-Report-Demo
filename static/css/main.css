@@ -21,10 +21,12 @@ nav{
 		color:rgba(20, 20, 53, 0.85);
 		margin-left: auto;
 		margin-right: auto;
+		height: 80px;
 		background-image: url('../image/logo_sidebar.png');
 		background-position: center center;
-		background-size:auto;
+		background-size: 80px;
 		background-repeat: no-repeat;
+		mix-blend-mode: multiply;
 	}
 
 	nav .navigator{
