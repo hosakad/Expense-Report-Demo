@@ -27,6 +27,7 @@ nav{
 		mix-blend-mode: multiply;
 		display: grid;
 		place-items: center;
+		margin-top: 10pt;
 	}
 
 	nav .navigator{
