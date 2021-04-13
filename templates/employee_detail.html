@@ -9,7 +9,7 @@
 			<p>ロール：
 				<select name="role">
 					{% for role in get_roles() %}
-						{% if role = employee['role']%}
+						{% if role == employee['role'] %}
 							<option value="{{role}}" selected>{{role}}</option>
 						{% else %}
 							<option value="{{role}}">{{role}}</option>
