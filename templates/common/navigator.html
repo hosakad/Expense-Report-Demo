@@ -1,11 +1,12 @@
 <nav>
   <div id="logo">
-
+    <img  src="{{url_for('static', filename='image/logo_sidebar.png')}}">
+    <p id="logo_title">exPENDOse</p>
   </div>
   <div id="navigator">
     <ul>
-    <li><a href="{{url_for('index')}}">ホーム</a></li>
     {% if params['role'] == 'ユーザー' %}
+    <li><a href="{{url_for('index')}}">ホーム</a></li>
     <li><a href="{{url_for('expense_list_html')}}">経費</a></li>
     <li><a href="{{url_for('report_list_html')}}">レポート</a></li>
     {% elif params['role'] == '管理者' %}
