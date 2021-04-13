@@ -49,9 +49,12 @@ section{
 		padding-left: 20px;
 	}
 
-table td {
-	background-color: #fff5ee;
+table {
+	border: #3231357c;
 }
-table tr:nth-child(odd) td{
-	background-color: #f0eeffde;
+	table td {
+		background-color: #fff5ee;
+	}
+	table tr:nth-child(odd) td{
+		background-color: #f0eeffde;
 }

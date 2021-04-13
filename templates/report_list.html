@@ -19,12 +19,12 @@
 					<td><input type="radio" name="id" value="{{report['id']}}"></td>
 					<td>{{report['name']}}</td>
 					{% if report['submit_date'] == None %}
-					<td>未提出</td>
+					<td>-</td>
 					{% else %}
 					<td>{{report['submit_date']}}</td>
 					{% endif %}
 					{% if report['approve_date'] == None %}
-					<td>未承認</td>
+					<td>-</td>
 					{% else %}
 					<td>{{report['approve_date']}}</td>
 					{% endif %}

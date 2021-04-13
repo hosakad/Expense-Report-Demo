@@ -2,5 +2,24 @@
 {% block body %}
 	<section id="member_list">
 		<h2>メンバー リスト</h2>
+		<form id="form_member_list">
+			<table>
+				<tr>
+					<th></th>
+					<th>メンバー名</th>
+					<th>メールアドレス</th>
+					<th>ロール</th>
+				</tr>
+				{% for member in members %}
+				<tr>
+					<td><input type="radio" name="id" value="{{member['id']}}"></td>
+					<td>{{get_fullname(member['first_name'], member['last_name'])}}</td>
+					<td>{{member['email']}}</td>
+					<td>{{member['role']}}</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</form>
+		<button type="submit" form="form_member_list" formaction="../member_detail_html" formmethod="post">詳細表示</button>
 	</section>
 {% endblock %}

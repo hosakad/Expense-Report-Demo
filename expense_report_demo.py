@@ -47,6 +47,8 @@ TITLE_EXPENSE_DETAIL = '経費精算 経費編集画面'
 TITLE_REPORT = '経費精算 レポート一覧画面'
 TITLE_REPORT_NEW = '経費精算 新規レポート画面'
 TITLE_REPORT_DETAIL = '経費精算 レポート編集画面'
+TITLE_APPROVE_LIST = '経費精算 承認依頼一覧画面'
+TITLE_MEMBER_LIST = '経費精算 メンバー一覧画面'
 # report status
 STATUS_OPEN = '未提出'
 STATUS_SUBMITTED = '提出済/承認待'
@@ -97,6 +99,13 @@ def getPendoParams():
 	params['company_name'] = redis_client.get(REDIS_COMPANY_NAME).decode('utf8')
 	params['company_plan'] = redis_client.get(REDIS_COMPANY_PLAN).decode('utf8')
 	return params
+
+@app.context_processor
+def fullname_processor():
+	def get_fullname(first_name, last_name):
+		full_name = last_name+' '+first_name
+		return full_name
+	return (get_fullname=get_fullname)
 
 @app.route('/')
 def index():
@@ -372,17 +381,27 @@ def approve_list_html():
 				reports_submitted.append(result.copy())
 			elif result['status'] == STATUS_APRROVED:
 				reports_approved.append(result.copy())
-		return render_template('approve_list.html', params=getPendoParams(), title=TITLE_INDEX, reports_submitted=reports_submitted, reports_approved=reports_approved)
+		return render_template('approve_list.html', params=getPendoParams(), title=TITLE_APPROVE_LIST, reports_submitted=reports_submitted, reports_approved=reports_approved)
 
 @app.route('/approve_report', methods=['POST'])
 def approve_report():
 	sql_string = "update report set"\
-							" submit_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
+							" approve_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
 							" status = '"+STATUS_APRROVED+"'"\
 							" where report.id = '"+request.form['id']+"'"
 	sql_execute(sql_string)
 
 	return redirect(url_for('index'))
+
+@app.route('/member_list_html')
+def memmber_list_html():
+	# get all members in this company
+	sql_string = "select id, email, first_name, last_name, role"\
+							" from employee"\
+							" where company_id = '"+redis_client.get(REDIS_COMPANY_ID).decode('utf8')+"'"
+	members = sql_select(sql_string)
+	
+	return render_template('member_list.html', params=getPendoParams(), title=TITLE_MEMBER_LIST, members=members)
 
 
 if __name__ == '__main__':
