@@ -393,7 +393,7 @@ def approve_report():
 	return redirect(url_for('index'))
 
 @app.route('/member_list_html')
-def memmber_list_html():
+def member_list_html():
 	# get all members in this company
 	sql_string = "select id, email, first_name, last_name, role"\
 							" from employee"\
