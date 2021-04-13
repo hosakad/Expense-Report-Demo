@@ -381,10 +381,12 @@ def approve_list_html():
 
 @app.route('/approve_report', methods=['POST'])
 def approve_report():
-	sql_string = "update report set"\
-							" approve_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
-							" status = '"+STATUS_APRROVED+"'"\
-							" where report.id = '"+request.form['id']+"'"
+	report_id = request.get('id')
+	if report_id:
+		sql_string = "update report set"\
+								" approve_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
+								" status = '"+STATUS_APRROVED+"'"\
+								" where report.id = '"+report_id+"'"
 	sql_execute(sql_string)
 
 	return redirect(url_for('approve_list_html'))
