@@ -17,23 +17,12 @@ nav{
 	height: 100%;
 }
 
-	#logo{
+	nav .logo{
 		margin-left: auto;
 		margin-right: auto;
 		background-image: url('../image/logo_sidebar.png');
 		background-position: center center;
-		background-size: auto;
-	}
-
-	#logo_img {
-		width: 100px;
-		margin-left: auto;
-		margin-right: auto;
-		background-color:rgba(0, 0, 0, 0.5);
-	}
-
-	nav#logo_title {
-		color:ivory;
+		background-size:auto;
 	}
 
 	nav ul {
@@ -60,8 +49,10 @@ nav{
 				transition: none;
 			}
 
-	#footer{
+	nav .footer{
 		margin-bottom: 1em;
+		position: absolute;
+		bottom: 0;
 	}
 section{
 	margin-left: 200px;
