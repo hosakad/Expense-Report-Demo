@@ -22,7 +22,7 @@ nav{
 		margin-right: auto;
 		padding: auto;
 	}
-	
+
 	#logo_img {
 		width: 100px;
 		margin-left: auto;
@@ -57,7 +57,10 @@ nav{
 				-ms-transition: none;
 				transition: none;
 			}
-
+			
+	nav#footer{
+		bottom: 1em;
+	}
 section{
 	margin-left: 200px;
 	background-color:#f5fafa;
