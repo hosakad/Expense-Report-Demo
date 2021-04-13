@@ -423,8 +423,8 @@ def employee_detail_html():
 def create_employee():
 	sql_string = "insert into employee(first_name, last_name, email, password, role)"\
 							" values('"+request.form['first_name']+"','"\
-											+request.form['last_name']+"',"\
-											+request.form['email']+",'"\
+											+request.form['last_name']+"','"\
+											+request.form['email']+"','"\
 											+request.form['password']+"','"\
 											+request.form['role']+"')"
 	sql_execute(sql_string)
@@ -436,7 +436,7 @@ def update_employee():
 	sql_string = "update employee set"\
 							" email = '"+request.form['email']+"',"\
 							" first_name = '"+request.form['first_name']+"',"\
-							" last_name = "+request.form['last_name']+","\
+							" last_name = '"+request.form['last_name']+"',"\
 							" role = '"+request.form['role']+"'"\
 							" where id = "+request.form['id']+""
 	sql_execute(sql_string)
