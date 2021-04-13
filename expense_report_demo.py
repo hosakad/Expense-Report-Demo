@@ -49,6 +49,7 @@ TITLE_REPORT_NEW = '経費精算 新規レポート画面'
 TITLE_REPORT_DETAIL = '経費精算 レポート編集画面'
 TITLE_APPROVE_LIST = '経費精算 承認依頼一覧画面'
 TITLE_MEMBER_LIST = '経費精算 メンバー一覧画面'
+TITLE_MEMBER_DETAIL ='経費精算 メンバー編集画面'
 # report status
 STATUS_OPEN = '未提出'
 STATUS_SUBMITTED = '提出済/承認待'
