@@ -3,9 +3,9 @@
 	<a href="../employee_new_html">
 		<button type="button">メンバー追加</button>
 	</a>
-	<section id="member_list">
+	<section id="employee_list">
 		<h2>メンバー リスト</h2>
-		<form id="form_member_list">
+		<form id="form_employee_list">
 			<table>
 				<tr>
 					<th></th>
@@ -13,16 +13,16 @@
 					<th>メールアドレス</th>
 					<th>ロール</th>
 				</tr>
-				{% for member in members %}
+				{% for employee in employees %}
 				<tr>
-					<td><input type="radio" name="id" value="{{member['id']}}"></td>
-					<td>{{get_fullname(member['first_name'], member['last_name'])}}</td>
-					<td>{{member['email']}}</td>
-					<td>{{member['role']}}</td>
+					<td><input type="radio" name="id" value="{{employee['id']}}"></td>
+					<td>{{get_fullname(employee['first_name'], employee['last_name'])}}</td>
+					<td>{{employee['email']}}</td>
+					<td>{{employee['role']}}</td>
 				</tr>
 				{% endfor %}
 			</table>
 		</form>
-		<button type="submit" form="form_member_list" formaction="../member_detail_html" formmethod="post">詳細表示</button>
+		<button type="submit" form="form_employee_list" formaction="../employee_detail_html" formmethod="post">詳細表示</button>
 	</section>
 {% endblock %}
