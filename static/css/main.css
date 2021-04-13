@@ -8,7 +8,7 @@ html, body, div, nav, section{
 }
 
 nav{
-	color:rgba(20, 20, 53, 0.15);
+	color:rgba(20, 20, 53, 0.65);
 	background-color:rgba(0, 0, 0, 0.5);
 	position: absolute;
 	top: 0px;
@@ -18,11 +18,18 @@ nav{
 }
 
 	nav .logo{
+		color:rgba(20, 20, 53, 0.85);
 		margin-left: auto;
 		margin-right: auto;
 		background-image: url('../image/logo_sidebar.png');
 		background-position: center center;
 		background-size:auto;
+		background-repeat: no-repeat;
+		background
+	}
+
+	nav .navigator{
+		min-height: 100%;
 	}
 
 	nav ul {
@@ -43,9 +50,6 @@ nav{
 				text-decoration: none;
 				outline: 0;
 				border: 0;
-				-moz-transition: none;
-				-webkit-transition: none;
-				-ms-transition: none;
 				transition: none;
 			}
 
@@ -54,12 +58,12 @@ nav{
 		position: absolute;
 		bottom: 0;
 	}
-section{
+main{
 	margin-left: 200px;
 	background-color:#f5fafa;
 
 }
-	section p {
+	main p {
 		padding-left: 20px;
 	}
 
