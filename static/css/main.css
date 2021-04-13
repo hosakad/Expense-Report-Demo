@@ -22,6 +22,7 @@ nav{
 		margin-right: auto;
 		background-image: url('../image/logo_sidebar.png');
 		background-position: center center;
+		background-size: auto;
 	}
 
 	#logo_img {
