@@ -3,9 +3,9 @@
 	<section id="employee_new">
 		<form id="form_employee_new">
 			<p>姓：<input name="last_name" type="text" required></p>
-			<p>名：<input name="first_name" type="date" required></p>
+			<p>名：<input name="first_name" type="text" required></p>
 			<p>メールアドレス：<input name="email" type="text" required></p>
-			<p>パスワード：<input name="password" type="number" required></p>
+			<p>パスワード：<input name="password" type="text" required></p>
 			<p>ロール：
 				<select name="role">
 					{% for role in get_roles() %}

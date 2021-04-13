@@ -3,8 +3,8 @@
 	<section id="employee_detail">
 		<form id="form_employee_detail">
 			<p>姓：<input name="last_name" type="text" value="{{employee['last_name']}}" required></p>
-			<p>名：<input name="first_name" type="date" value="{{employee['first_name']}}" required></p>
-			<p>メールアドレス：<input name="email" type="date" value="{{employee['email']}}" required></p>
+			<p>名：<input name="first_name" type="text" value="{{employee['first_name']}}" required></p>
+			<p>メールアドレス：<input name="email" type="text" value="{{employee['email']}}" required></p>
 			<p>パスワード：<input name="password" type="text" value="{{employee['password']}}" required></p>
 			<p>ロール：
 				<select name="role">
@@ -18,7 +18,6 @@
 				</select>	
 			</p>
 			<input type="hidden" name="id" value="{{employee['id']}}">
-			<button type="submit">更新</button>
 		</form>
 		<button type="submit" form="form_employee_detail" formaction="../update_employee" formmethod="post">更新</button>
 		<button type="submit" form="form_employeee_detail" formaction="../delete_employee" formmethod="post">削除</button>
