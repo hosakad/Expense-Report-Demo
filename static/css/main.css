@@ -16,6 +16,7 @@ nav{
 	width: 200px;
 	height: 100%;
 }
+
 	nav ul {
 		list-style: none;
 		padding-left: 1em;
@@ -57,4 +58,12 @@ table {
 	}
 	table tr:nth-child(odd) td{
 		background-color: #f0eeffde;
+}
+
+#logo_img {
+	width: 200px;
+}
+
+#logo_title {
+	font: menu;
 }
