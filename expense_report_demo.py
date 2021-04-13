@@ -105,7 +105,7 @@ def fullname_processor():
 	def get_fullname(first_name, last_name):
 		full_name = last_name+' '+first_name
 		return full_name
-	return (get_fullname=get_fullname)
+	return (dict(get_fullname=get_fullname))
 
 @app.route('/')
 def index():
