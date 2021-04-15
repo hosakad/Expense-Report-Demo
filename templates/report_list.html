@@ -28,7 +28,7 @@
 					{% else %}
 					<td>{{report['approve_date']}}</td>
 					{% endif %}
-					<td>{{report['status']}}</td>
+					<td>{{get_text(report['status'])}}</td>
 				</tr>
 				{% endfor %}
 			</table>

@@ -8,13 +8,11 @@
 				<tr>
 					<th></th>
 					<th>レポート名</th>
-					<th>ステータス</th>
 				</tr>
 				{% for report in reports_submitted %}
 				<tr>
 					<td><input type="radio" name="id" value="{{report['id']}}" required></td>
 					<td>{{report['name']}}</td>
-					<td>{{report['status']}}</td>
 				</tr>
 				{% endfor %}
 			</table>
@@ -23,13 +21,11 @@
 				<tr>
 					<th></th>
 					<th>レポート名</th>
-					<th>ステータス</th>
 				</tr>
 				{% for report in reports_approved %}
 				<tr>
 					<td></td>
 					<td>{{report['name']}}</td>
-					<td>{{report['status']}}</td>
 				</tr>
 				{% endfor %}
 			</table>
