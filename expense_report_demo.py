@@ -125,7 +125,7 @@ def get_language(language):
 def get_message_dict():
 	# load messages
 	messages = {}
-	path = 'https://expense-report-demo.herokuapp.com/static/json/messages_'+redis_client.get(REDIS_LANGUAGE).decode('utf8'))+'.json'
+	path = 'https://expense-report-demo.herokuapp.com/static/json/messages_'+redis_client.get(REDIS_LANGUAGE).decode('utf8')+'.json'
 	print('path:', path)
 	print('current path:', os.getcwd())
 #	with open("test.json", mode='w') as f:
