@@ -136,20 +136,24 @@ def get_message_dict():
 	return messages
 
 @app.context_processor
-def utility_processor():
+def fullname_processor():
 	def get_fullname(first_name, last_name):
 		full_name = last_name+' '+first_name
 		return full_name
-	def get_roles():
-		return ROLES
+	return dict(get_fullname=get_fullname)
+
+@app.context_processor
+def role_processor():
+	return dict(roles=ROLES)
+
+@app.context_processor
+def text_processor():
 	def get_text(msg_key):
 		if redis_client.hexists(REDIS_MESSAGES, msg_key):
 			return redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
 		else: 
 			return ''
-	return (dict(get_fullname=get_fullname, 
-								get_roles=get_roles,
-								get_text=get_text))
+	return dict(get_text=get_text)
 
 @app.context_processor
 def role_processor():
