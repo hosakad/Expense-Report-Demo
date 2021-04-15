@@ -149,7 +149,7 @@ def text_processor():
 #		message = ''
 #		if redis_client.hexists(REDIS_MESSAGES, msg_key):
 #			message = redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
-		message  msg_key
+		message = msg_key
 		return message
 	return dict(get_text=get_text)
 
