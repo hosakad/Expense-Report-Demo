@@ -113,7 +113,7 @@ def get_language(language):
 	# ja_JP
 	# en_US
 
-	lang = 'en_US'" # set en_US as default
+	lang = 'en_US' # set en_US as default
 	if (langage == 'ja' or language == 'ja_JP'):
 		# ja_JP as Japanese
 		lang = 'ja_JP'
