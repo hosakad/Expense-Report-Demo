@@ -1,6 +1,6 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<section id="employee_new">
+	<article id="employee_new">
 		<form id="form_employee_new">
 			<p>姓：<input name="last_name" type="text" required></p>
 			<p>名：<input name="first_name" type="text" required></p>
@@ -14,5 +14,5 @@
 				</select>	
 		</form>
 		<button type="submit" form="form_employee_new" formaction="../create_employee" formmethod="post">作成</button>
-	</section>
+	</article>
 {% endblock %}

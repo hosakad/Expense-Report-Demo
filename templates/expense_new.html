@@ -1,6 +1,6 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<section id="expense_new">
+	<article id="expense_new">
 		<form id="form_expense_new">
 			<p>経費名：<input name="name" type="text" required></p>
 			<p>日付：<input name="date" type="date" required></p>
@@ -9,5 +9,5 @@
 			<p>説明：<input name="description" type="text"></p>
 		</form>
 		<button type="submit" form="form_expense_new" formaction="../create_expense" formmethod="post">作成</button>
-	</section>
+	</article>
 {% endblock %}

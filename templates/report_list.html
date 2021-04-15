@@ -1,6 +1,6 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<section id="report_list">
+	<article id="report_list">
 		<a href="../report_new_html">
 			<button type="button">新規レポート</button>
 		</a>
@@ -34,5 +34,5 @@
 			</table>
 		</form>
 		<button type="submit" form="form_report_list" formaction="../report_detail_html" formmethod="post">詳細表示</button>
-	</section>
+	</article>
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<section id="expense_list">
+	<article id="expense_list">
 		<a href="../expense_new_html">
 			<button type="button">新規経費</button>
 		</a>
@@ -26,5 +26,5 @@
 			</table>
 		</form>
 		<button type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post">詳細表示</button>
-	</section>
+	</article>
 {% endblock %}

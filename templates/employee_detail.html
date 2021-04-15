@@ -1,6 +1,6 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<section id="employee_detail">
+	<article id="employee_detail">
 		<form id="form_employee_detail">
 			<p>姓：<input name="last_name" type="text" value="{{employee['last_name']}}" required></p>
 			<p>名：<input name="first_name" type="text" value="{{employee['first_name']}}" required></p>
@@ -28,5 +28,5 @@
 		<div>
 			<button type="submit" form="form_employee_detail" formaction="../delete_employee" formmethod="post">削除</button>
 		</div>
-	</section>
+	</article>
 {% endblock %}

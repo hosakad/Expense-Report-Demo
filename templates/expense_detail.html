@@ -1,6 +1,6 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<section id="expense_detail">
+	<article id="expense_detail">
 		<form id="form_expense_detail">
 			<p>経費名：<input name="name" type="text" value="{{expense['name']}}" required></p>
 			<p>日付：<input name="date" type="date" value="{{expense['date']}}" required></p>
@@ -18,5 +18,5 @@
 		<div>
 			<button type="submit" form="form_expense_detail" formaction="../delete_expense" formmethod="post">削除</button>
 		</div>
-	</section>
+	</article>
 {% endblock %}

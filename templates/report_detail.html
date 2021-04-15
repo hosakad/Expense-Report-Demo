@@ -1,6 +1,6 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<section id="report_edit">
+	<article id="report_edit">
 		<form id="form_report_detail">
 			<p>レポート名：<input name="name" type="text" value="{{report['name']}}" required></p>
 			<input type="hidden" name="id" value="{{report['id']}}">
@@ -55,5 +55,5 @@
 		<div>
 			<button type="submit" form="form_report_detail" formaction="../delete_report" formmethod="post">削除</button>
 		</div>
-</section>
+</article>
 {% endblock %}

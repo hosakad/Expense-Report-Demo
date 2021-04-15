@@ -7,8 +7,8 @@
 	{% elif params['role'] == '承認者' %}
 		{% include "home_approver.html" %}
 	{% else %}
-		<section id="home">
+		<article id="home">
 			<li>エラー：params['role']</li>
-		</section>
+		</article>
 	{% endif %}
 {% endblock %}
