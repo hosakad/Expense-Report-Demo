@@ -125,10 +125,10 @@ def get_language(language):
 def get_message_dict():
 	# load messages
 	messages = {}
-	path = '..'+url_for('static', filename='json/messages_'+redis_client.get(REDIS_LANGUAGE).decode('utf8'))+'.json'
+	path = url_for('static', filename='json/messages_'+redis_client.get(REDIS_LANGUAGE).decode('utf8'))+'.json'
 	print('path:', path)
 	print('current path:', os.getcwd())
-	with open(path, mode='w') as f:
+	with open("test.json", mode='w') as f:
 		f.write('test')
 	with open(path) as message_file:
 		messages = json.load(message_file)
