@@ -130,7 +130,9 @@ def get_message_dict():
 	try:
 		with open(path) as message_file:
 			messages = json.load(message_file)
+			print('messages:', messages)
 	except:
+		print("exception")
 		pass
 	return messages
 
