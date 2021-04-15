@@ -146,7 +146,7 @@ def utility_processor():
 		else: 
 			return ''
 	return (dict(get_fullname=get_fullname, 
-								get_roles=getroles,
+								get_roles=get_roles,
 								get_text=get_text))
 
 @app.context_processor
