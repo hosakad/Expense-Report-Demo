@@ -1,0 +1,7 @@
+{
+  "STATUS_OPEN": "未提出",
+  "STATUS_SUBMITTED": "提出済/承認待",
+  "STATUS_APRROVED": "承認済",
+
+  "end": "end"
+}

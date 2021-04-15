@@ -1,5 +1,6 @@
 import os
 import datetime
+import json
 
 from flask import Flask, redirect, request, url_for, render_template
 import redis
@@ -27,9 +28,12 @@ REDIS_EMPLOYEE_ID = 'EMPLOYEE_ID'
 REDIS_EMAIL = 'EMPLOYEE_EMAIL' # visitor ID
 REDIS_ROLE = 'EMPLOYEE_ROLE'
 REDIS_FULL_NAME = 'EMPLOYEE_FULL_NAME'
+REDIS_LANGUAGE = 'EMPLOYEE_LANGUAGE'
 REDIS_COMPANY_ID = 'COMPANY_ID' # account ID
 REDIS_COMPANY_NAME = 'COMPANY_NAME'
 REDIS_COMPANY_PLAN = 'COMPANY_PLAN'
+REDIS_MESSAGES = "MESSAGES" # dict for messages
+
 
 # constant values to be used in app
 # employee roles
@@ -52,9 +56,9 @@ TITLE_EMPLOYEE_LIST = '経費精算 メンバー一覧画面'
 TITLE_EMPLOYEE_NEW = '経費精算 メンバー新規作成画面'
 TITLE_EMPLOYEE_DETAIL ='経費精算 メンバー編集画面'
 # report status
-STATUS_OPEN = '未提出'
-STATUS_SUBMITTED = '提出済/承認待'
-STATUS_APRROVED= '承認済'
+STATUS_OPEN = 'STATUS_OPEN'
+STATUS_SUBMITTED = 'STATUS_SUBMITTED'
+STATUS_APRROVED= 'STATUS_APRROVED'
 
 # error messages
 MSG_EMAIL_MISMATCH = 'msg0'
@@ -97,23 +101,66 @@ def getPendoParams():
 	params['email'] = redis_client.get(REDIS_EMAIL).decode('utf8')
 	params['role'] = redis_client.get(REDIS_ROLE).decode('utf8')
 	params['full_name'] = redis_client.get(REDIS_FULL_NAME).decode('utf8')
+	params['language'] = redis_client.get(REDIS_LANGUAGE).decode('utf8')
 	params['company_id'] = redis_client.get(REDIS_COMPANY_ID).decode('utf8')
 	params['company_name'] = redis_client.get(REDIS_COMPANY_NAME).decode('utf8')
 	params['company_plan'] = redis_client.get(REDIS_COMPANY_PLAN).decode('utf8')
 	return params
 
+def get_language(language):
+
+	# currently supported language
+	# ja_JP
+	# en_US
+
+	lang = 'en_US'" # set en_US as default
+	if (langage == 'ja' or language == 'ja_JP'):
+		# ja_JP as Japanese
+		lang = 'ja_JP'
+	elif (language == 'en'):
+		# if 'en' is specified, set en_US
+		lang = 'en_US
+		'
+	return lang
+
+def get_message_dict():
+	# load messages
+	messages = {}
+	path = url_for('static', filename='json/messages_'+redis_client.get(REDIS_LANGUAGE).decode('utf8'))+'.json'
+	try:
+		with open(path) as message_file:
+			messages = json.load(message_file)
+	except:
+		pass
+	return messages
+
 @app.context_processor
-def fullname_processor():
+def utility_processor():
 	def get_fullname(first_name, last_name):
 		full_name = last_name+' '+first_name
 		return full_name
-	return (dict(get_fullname=get_fullname))
+	def get_roles():
+		return ROLES
+	def get_text(msg_key):
+		if redis_client.hexists(REDIS_MESSAGES, msg_key):
+			return redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
+		else: 
+			return ''
+	return (dict(get_fullname=get_fullname, 
+								get_roles=getroles,
+								get_text=get_text))
 
 @app.context_processor
 def role_processor():
 	def get_roles():
 		return ROLES
 	return (dict(get_roles=get_roles))
+
+@app.context_processor
+def text_processor():
+	def get_text():
+		return ROLES
+	return (dict(get_text=get_text, ))
 
 @app.route('/')
 def index():
@@ -129,9 +176,25 @@ def index():
 					" from expense join report"\
 					" on expense.report_id = report.id"\
 					" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"\
-								" and report.submit_date is null and report.approve_date is null"
-			results = sql_select(sql_string)
-			return render_template('index.html', params=getPendoParams(), title=TITLE_INDEX, num_records= results[0])
+								" and report.status = '"+STATUS_OPEN+"'"
+			inprogress_records = sql_select(sql_string)
+			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
+					" from expense join report"\
+					" on expense.report_id = report.id"\
+					" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"\
+								" and report.status = '"+STATUS_SUBMITTED+"'"
+			submitted_records = sql_select(sql_string)
+			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
+					" from expense join report"\
+					" on expense.report_id = report.id"\
+					" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"\
+								" and report.status = '"+STATUS_APRROVED+"'"
+			approved_records = sql_select(sql_string)
+			return render_template('index.html', params=getPendoParams(),
+																				title=TITLE_INDEX,
+																				inprogress_records=inprogress_records[0],
+																				submitted_records=submitted_records[0],
+																				approved_records=approved_records[0])
 		elif role == ROLE_ADMIN:
 			return redirect('employee_list_html')
 		elif role == ROLE_APPROVER:
@@ -154,6 +217,7 @@ def logout():
 	redis_client.delete(REDIS_EMAIL)
 	redis_client.delete(REDIS_ROLE)
 	redis_client.delete(REDIS_FULL_NAME)
+	redis_client.delete(REDIS_LANGUAGE)
 	redis_client.delete(REDIS_COMPANY_ID)
 	redis_client.delete(REDIS_COMPANY_NAME)
 	redis_client.delete(REDIS_COMPANY_PLAN)
@@ -165,24 +229,26 @@ def authenticate():
 	email = request.form['email']
 	password = request.form['password']
 	if email and password:
+		# login succeeds
 		sql_string = "select employee.id, email, role, first_name, last_name, company.id as company_id,"\
 					" company.name as company_name, company.plan as company_plan"\
 					" from employee join company"\
 					" on employee.company_id = company.id"\
 					" where email='"+email+"' and password='"+password+"'"
 		results = sql_select(sql_string)
-		print('results:', results)
 		if len(results) == 1:
-			employee_id, email, role, first_name, last_name, company_id, company_name, company_plan = results[0]
-			print('email:', email)
-			print('company_id:', company_id)
+			employee_id, email, role, first_name, last_name, language, company_id, company_name, company_plan = results[0]
+			print('login as email:', email, ', company: ', company_name)
+			# set Pendo parameters
 			redis_client.set(REDIS_EMPLOYEE_ID, employee_id)
 			redis_client.set(REDIS_EMAIL, email)
 			redis_client.set(REDIS_ROLE, role)
 			redis_client.set(REDIS_FULL_NAME, last_name + ' ' + first_name)
+			redis_client.set(REDIS_LANGUAGE, get_language(language))
 			redis_client.set(REDIS_COMPANY_ID, company_id)
 			redis_client.set(REDIS_COMPANY_NAME, company_name)
 			redis_client.set(REDIS_COMPANY_PLAN, company_plan)
+			redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 			return redirect(url_for('index'))
 		else:
 			# login failed
