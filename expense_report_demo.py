@@ -125,11 +125,8 @@ def get_language(language):
 def get_message_dict():
 	# load messages
 	messages = {}
-#	path = 'https://expense-report-demo.herokuapp.com/static/json/messages_'+redis_client.get(REDIS_LANGUAGE).decode('utf8')+'.json'
-	path = 'static/json/messages_ja-JP.json'
+	path = 'static/json/messages_'+redis_client.get(REDIS_LANGUAGE).decode('utf8')+'.json'
 	print('current path:', os.getcwd())
-#	with open("test.json", mode='w') as f:
-#		f.write('test')
 	with open(path) as message_file:
 		messages = json.load(message_file)
 		print('messages:', messages)
@@ -149,10 +146,11 @@ def role_processor():
 @app.context_processor
 def text_processor():
 	def get_text(msg_key):
-		if redis_client.hexists(REDIS_MESSAGES, msg_key):
-			return redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
-		else: 
-			return ''
+#		message = ''
+#		if redis_client.hexists(REDIS_MESSAGES, msg_key):
+#			message = redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
+		message  msg_key
+		return message
 	return dict(get_text=get_text)
 
 @app.context_processor
