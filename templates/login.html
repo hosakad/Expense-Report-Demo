@@ -12,6 +12,11 @@
 			<li>メールアドレス<input type="text" name="email" required=""></li>
 			<li>パスワード<input type="text" name="password" required=""></li>
 		</ul>
+		<script>
+			str = "<input type=hidden name=language value="+window.navigator.language+">";
+			document.write(str);
+		</script>
+		
 		<button type="submit">ログイン</button>
 	</form>
 </body>

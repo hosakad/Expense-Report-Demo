@@ -238,14 +238,14 @@ def authenticate():
 					" where email='"+email+"' and password='"+password+"'"
 		results = sql_select(sql_string)
 		if len(results) == 1:
-			employee_id, email, role, first_name, last_name, language, company_id, company_name, company_plan = results[0]
+			employee_id, email, role, first_name, last_name, company_id, company_name, company_plan = results[0]
 			print('login as email:', email, ', company: ', company_name)
 			# set Pendo parameters
 			redis_client.set(REDIS_EMPLOYEE_ID, employee_id)
 			redis_client.set(REDIS_EMAIL, email)
 			redis_client.set(REDIS_ROLE, role)
 			redis_client.set(REDIS_FULL_NAME, last_name + ' ' + first_name)
-			redis_client.set(REDIS_LANGUAGE, get_language(language))
+			redis_client.set(REDIS_LANGUAGE, get_language(request.form['language']))
 			redis_client.set(REDIS_COMPANY_ID, company_id)
 			redis_client.set(REDIS_COMPANY_NAME, company_name)
 			redis_client.set(REDIS_COMPANY_PLAN, company_plan)
