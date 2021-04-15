@@ -3,5 +3,9 @@
   "STATUS_SUBMITTED": "Submitted",
   "STATUS_APRROVED": "Approved",
 
+  "ROLE_ADMIN": "管理者",
+  "ROLE_APPROVER": "承認者",
+  "ROLE_USER": "ユーザー",
+
   "end": "end"
 }
