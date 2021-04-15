@@ -119,8 +119,7 @@ def get_language(language):
 		lang = 'ja_JP'
 	elif (language == 'en'):
 		# if 'en' is specified, set en_US
-		lang = 'en_US
-		'
+		lang = 'en_US'
 	return lang
 
 def get_message_dict():
