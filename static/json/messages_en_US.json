@@ -1,0 +1,7 @@
+{
+  "STATUS_OPEN": "Not submitted",
+  "STATUS_SUBMITTED": "Submitted",
+  "STATUS_APRROVED": "Approved",
+
+  "end": "end"
+}

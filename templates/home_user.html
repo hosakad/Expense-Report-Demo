@@ -1,5 +1,17 @@
 <article id="home_user">
-  <h2>未申請</h2>
-  <p>経費数:{{num_records[0]}}</p>
-  <p>レポート数:{{num_records[1]}}</p>
+  <section>
+    <h2>{{get_text("STATUS_OPEN")}}</h2>
+    <p>レポート数:{{inprogress_records[1]}}</p>
+    <p>経費数:{{inprogress_records[0]}}</p>
+  </section>
+  <section>
+    <h2>{{get_text("STATUS_SUBMITTED")}}</h2>
+    <p>レポート数:{{submitted_records[1]}}</p>
+    <p>経費数:{{submitted_records[0]}}</p>
+  </section>
+  <section>
+    <h2>{{get_text("STATUS_APRROVED")}}</h2>
+    <p>レポート数:{{approved_records[1]}}</p>
+    <p>経費数:{{approved_records[0]}}</p>
+  </section>
 </article>
