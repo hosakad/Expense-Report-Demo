@@ -114,7 +114,7 @@ def get_language(language):
 	# en_US
 
 	lang = 'en_US' # set en_US as default
-	if (langage == 'ja' or language == 'ja_JP'):
+	if (language == 'ja' or language == 'ja_JP'):
 		# ja_JP as Japanese
 		lang = 'ja_JP'
 	elif (language == 'en'):
