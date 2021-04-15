@@ -112,7 +112,7 @@ def get_language(language):
 	# currently supported language
 	# ja_JP
 	# en_US
-
+	print('language:',language)
 	lang = 'en_US' # set en_US as default
 	if (language == 'ja' or language == 'ja_JP'):
 		# ja_JP as Japanese
@@ -126,6 +126,7 @@ def get_message_dict():
 	# load messages
 	messages = {}
 	path = url_for('static', filename='json/messages_'+redis_client.get(REDIS_LANGUAGE).decode('utf8'))+'.json'
+	print('path:', path)
 	try:
 		with open(path) as message_file:
 			messages = json.load(message_file)
