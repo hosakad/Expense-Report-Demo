@@ -1,11 +1,7 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	{% if params['role'] == 'ユーザー' %}
+	{% if params['role'] == get_text('ROLE_USER') %}
 		{% include "home_user.html" %}
-	{% elif params['role'] == '管理者' %}
-		{% include "home_admin.html" %}
-	{% elif params['role'] == '承認者' %}
-		{% include "home_approver.html" %}
 	{% else %}
 		<article id="home">
 			<li>エラー：params['role']</li>

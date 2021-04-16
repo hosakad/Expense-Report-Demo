@@ -151,7 +151,6 @@ def index():
 	# initialize
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
-		sql_string = ""
 		# if the employee is already logged in, show index.html
 		role = redis_client.get(REDIS_ROLE).decode('utf8')
 		if role == ROLE_USER:
