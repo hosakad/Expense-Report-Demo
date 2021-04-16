@@ -2,7 +2,7 @@
 	<meta charset="UTF-8">
 	<link rel="icon" type="image/jpg" href={{url_for('static', filename='image/favicon.jpg')}} />
 	<link rel="stylesheet" href={{url_for('static', filename='css/main.css')}}>
-	<title>{{title}}</title>
+	<title>{{get_text(title)}}</title>
 	<script type="text/javascript">
 		var email = "{{params['email']}}";
 		var role = "{{params['role']}}";

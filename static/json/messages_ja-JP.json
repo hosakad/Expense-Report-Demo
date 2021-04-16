@@ -1,4 +1,17 @@
 {
+  "APP_NAME": "経費精算",
+  "TITLE_INDEX": "ホーム",
+  "TITLE_EXPENSE": "経費一覧",
+  "TITLE_EXPENSE_NEW": "新規経費",
+  "TITLE_EXPENSE_DETAIL": "経費編集",
+  "TITLE_REPORT": "レポート一覧",
+  "TITLE_REPORT_NEW": "新規レポート",
+  "TITLE_REPORT_DETAIL": "レポート編集",
+  "TITLE_APPROVE_LIST": "承認依頼一覧",
+  "TITLE_EMPLOYEE_LIST": "メンバー一覧",
+  "TITLE_EMPLOYEE_NEW": "メンバー新規作成",
+  "TITLE_EMPLOYEE_DETAIL": "メンバー編集",
+
   "STATUS_OPEN": "未提出",
   "STATUS_SUBMITTED": "提出済/承認待",
   "STATUS_APRROVED": "承認済",

@@ -1,4 +1,18 @@
 {
+  "APP_NAME": "exPENDOse",
+  
+  "TITLE_INDEX": "Home",
+  "TITLE_EXPENSE": "Expense List",
+  "TITLE_EXPENSE_NEW": "New Expense",
+  "TITLE_EXPENSE_DETAIL": "Expense Detail",
+  "TITLE_REPORT": "Report List",
+  "TITLE_REPORT_NEW": "New Report",
+  "TITLE_REPORT_DETAIL": "Report Detail",
+  "TITLE_APPROVE_LIST": "Approve List",
+  "TITLE_EMPLOYEE_LIST": "Member List",
+  "TITLE_EMPLOYEE_NEW": "New Member",
+  "TITLE_EMPLOYEE_DETAIL": "Member Detail",
+
   "STATUS_OPEN": "Not submitted",
   "STATUS_SUBMITTED": "Submitted",
   "STATUS_APRROVED": "Approved",
