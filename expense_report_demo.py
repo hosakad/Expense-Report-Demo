@@ -141,7 +141,7 @@ def function_processor():
 		if redis_client.hexists(REDIS_MESSAGES, msg_key):
 			return redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
 		else:
-			return message
+			return 'MSG_MISMATCH'
 	return dict(get_fullname=get_fullname,
 							role_list=ROLES,
 							get_text=get_text)
