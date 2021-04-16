@@ -1,6 +1,6 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	{% if params['role'] == get_text('ROLE_USER') %}
+	{% if params['role'] == 'ROLE_USER' %}
 		{% include "home_user.html" %}
 	{% else %}
 		<article id="home">
