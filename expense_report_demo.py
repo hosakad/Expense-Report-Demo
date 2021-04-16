@@ -37,9 +37,9 @@ REDIS_MESSAGES = "MESSAGES" # dict for messages
 
 # constant values to be used in app
 # employee roles
-ROLE_ADMIN = '管理者'
-ROLE_APPROVER = '承認者'
-ROLE_USER = 'ユーザー'
+ROLE_ADMIN = 'ROLE_ADMIN'
+ROLE_APPROVER = 'ROLE_APPROVER'
+ROLE_USER = 'ROLE_USER'
 ROLES = [ROLE_ADMIN, ROLE_APPROVER, ROLE_USER]
 # account plan
 ACCOUNT_PLAN = ['Advanced', 'Standard']
@@ -143,17 +143,8 @@ def function_processor():
 		else:
 			return message
 	return dict(get_fullname=get_fullname,
+							role_list=ROLES,
 							get_text=get_text)
-
-@app.context_processor
-def role_processor():
-	return dict(roles=ROLES)
-
-@app.context_processor
-def role_processor():
-	def get_roles():
-		return ROLES
-	return (dict(get_roles=get_roles))
 
 @app.route('/')
 def index():

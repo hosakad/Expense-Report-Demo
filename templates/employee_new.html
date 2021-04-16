@@ -8,8 +8,8 @@
 			<p>パスワード：<input name="password" type="text" required></p>
 			<p>ロール：
 				<select name="role">
-					{% for role in get_roles() %}
-					<option value="{{role}}">{{role}}</option>
+					{% for role in role_list %}
+					<option value="{{role}}">{{get_text(role)}}</option>
 					{% endfor %}
 				</select>	
 		</form>

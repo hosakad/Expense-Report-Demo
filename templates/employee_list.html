@@ -20,7 +20,7 @@
 					<td><input type="radio" name="id" value="{{employee['id']}}" required></td>
 					<td>{{get_fullname(employee['first_name'], employee['last_name'])}}</td>
 					<td>{{employee['email']}}</td>
-					<td>{{employee['role']}}</td>
+					<td>{{get_text(employee['role'])}}</td>
 				</tr>
 				{% endfor %}
 			</table>
