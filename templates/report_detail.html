@@ -8,10 +8,10 @@
 				<caption>既に含まれる経費</caption>
 				<tr>
 					<th>レポートから削除</th>
-					<th>経費名</th>
-					<th>日付</th>
-					<th>金額</th>
-					<th>説明</th>
+					<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
+					<th>{{get_text('LABEL_MAIN_DATE')}}</th>
+					<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
+					<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
 				</tr>
 				{% for expense_included in expenses_included %}
 				<tr>
@@ -27,10 +27,10 @@
 				<caption>経費の選択</caption>
 				<tr>
 					<th>追加可能な経費</th>
-					<th>経費名</th>
-					<th>日付</th>
-					<th>金額</th>
-					<th>説明</th>
+					<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
+					<th>{{get_text('LABEL_MAIN_DATE')}}</th>
+					<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
+					<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
 				</tr>
 				{% for expense_open in expenses_open %}
 				<tr>
@@ -44,16 +44,16 @@
 			</table>
 		</form>
 		<div>
-			<button type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">更新</button>
+			<button type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
 		</div>
 		<div>
 			<a href="../report_list_html">
-				<button type="button">一覧へ戻る</button>
+				<button type="button">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
 			</a>
-			<button type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">申請</button>
+			<button type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">{{get_text('BUTTON_SUBMIT_REPORT')}}</button>
 		</div>
 		<div>
-			<button type="submit" form="form_report_detail" formaction="../delete_report" formmethod="post">削除</button>
+			<button type="submit" form="form_report_detail" formaction="../delete_report" formmethod="post">{{get_text('BUTTON_DELETE')}}</button>
 		</div>
 </article>
 {% endblock %}
