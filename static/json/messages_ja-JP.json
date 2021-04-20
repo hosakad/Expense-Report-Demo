@@ -55,6 +55,7 @@
   "BUTTON_BACK_TO_LIST": "一覧へ戻る",
   "BUTTON_ADD_EMPLOYEE": "新規メンバー追加",
   "BUTTON_SHOW_DETAIL": "詳細情報表示",
+  "BUTTON_SUBMIT_REPORT": "申請",
   "BUTTON_APPROVE_REPORT": "レポート承認",
   "BUTTON_LOGIN": "ログイン",
   "BUTTON_LOGIN_AGAIN": "再ログイン",
