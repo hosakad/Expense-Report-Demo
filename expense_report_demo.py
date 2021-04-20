@@ -63,17 +63,10 @@ STATUS_SUBMITTED = 'STATUS_SUBMITTED'
 STATUS_APRROVED= 'STATUS_APRROVED'
 
 # error messages
-MSG_EMAIL_MISMATCH = 'msg0'
-MSG_NO_EMAIL_PASSWORD = 'msg1'
-MSG_NO_EXPENSE_ID_MATCH = 'msg2'
-MSG_NO_REPORT_ID_MATCH = 'msg3'
-ERROR_MESSAGES = {
-	MSG_EMAIL_MISMATCH : 'メールアドレスとパスワードが一致しません',
-	MSG_NO_EMAIL_PASSWORD : 'メールアドレスまたはパスワードが入力されませんでした',
-	MSG_NO_EXPENSE_ID_MATCH: '一致する経費IDがありません',
-	MSG_NO_REPORT_ID_MATCH: '一致するレポートIDがありません'
-	
-}
+MSG_EMAIL_MISMATCH = 'MSG_EMAIL_MISMATCH'
+MSG_NO_EMAIL_PASSWORD = 'MSG_NO_EMAIL_PASSWORD'
+MSG_NO_EXPENSE_ID_MATCH = 'MSG_NO_EXPENSE_ID_MATCH'
+MSG_NO_REPORT_ID_MATCH = 'MSG_NO_REPORT_ID_MATCH'
 
 def getDBConnection():
 	global DATABASE_CONNECTION
@@ -187,10 +180,9 @@ def index():
 	
 	return redirect(url_for('login'))
 
-@app.route('/error/<message_id>')
-def error(message_id):
-	message = ERROR_MESSAGES[message_id]
-	return render_template('error.html', message=message)
+@app.route('/error/<message_key>')
+def error(message_key):
+	return render_template('error.html', message_key=message_key)
 
 @app.route('/login')
 def login():
