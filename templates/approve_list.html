@@ -1,10 +1,10 @@
 {% extends "common/framework.html" %}
 {% block body %}
 	<article id="approve_list">
-		<h2>レポート リスト</h2>
+		<h2>{{get_text('LABEL_MAIN_HEADER_REPORT_APPROVAL_LIST')}}</h2>
 		<form id="form_approve_list">
 			<table>
-				<caption>承認待ちレポート</caption>
+				<caption>{{get_text('LABEL_MAIN_REPORTS_TO_APPROVE')}}</caption>
 				{% for report in reports_submitted %}
 				<tr>
 					<td><input type="radio" name="id" value="{{report['id']}}" required></td>
@@ -13,7 +13,7 @@
 				{% endfor %}
 			</table>
 			<table>
-				<caption>承認済みレポート</caption>
+				<caption>{{get_text('LABEL_MAIN_REPORTS_APPROVED')}}</caption>
 				{% for report in reports_approved %}
 				<tr>
 					<td></td>
@@ -24,7 +24,7 @@
 		</form>
 		<div>
 			{% if reports_submitted|length != 0 or reports_approved|length != 0 %}
-				<button type="submit" form="form_approve_list" formaction="../approve_report" formmethod="post">レポート承認</button>
+				<button type="submit" form="form_approve_list" formaction="../approve_report" formmethod="post">{{get_text('BUTTON_APPROVE_REPORT')}}</button>
 			{% endif %}
 		</div>
 	</article>

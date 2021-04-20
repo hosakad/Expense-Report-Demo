@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta rel="stylesheet" href="../static/css/main.css">
-  <title>Pendoデモ 経費精算</title>
+  <title>{{get_text('TITLE_APP')}}</title>
 </head>
 <body>
 	<form action="../authenticate" method="post">
-		<h1>ログイン画面</h1>
+		<h1>{{get_text('TITLE_LOGIN')}}</h1>
 		<ul>
-			<li>メールアドレス<input type="text" name="email" required=""></li>
-			<li>パスワード<input type="text" name="password" required=""></li>
+			<li>{{get_text('LABEL_MAIN_EMAIL')}}:<input type="text" name="email" required=""></li>
+			<li>{{get_text('LABEL_MAIN_PASSWORD')}}:<input type="text" name="password" required=""></li>
 		</ul>
 		<script>
 			str = "<input type=hidden name=language value="+window.navigator.language+">";
 			document.write(str);
 		</script>
 		
-		<button type="submit">ログイン</button>
+		<button type="submit">{{get_text('BUTTON_LOGIN')}}</button>
 	</form>
 </body>
 </html>

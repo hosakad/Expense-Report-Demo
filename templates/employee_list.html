@@ -1,19 +1,19 @@
 {% extends "common/framework.html" %}
 {% block body %}
 	<article id="employee_list">
-		<h2>メンバー リスト</h2>
+		<h2>{{get_text('LABEL_MAIN_HEADER_EMPLOYEE_LIST')}}</h2>
 		<div>
 			<a href="../employee_new_html">
-				<button type="button">メンバー追加</button>
+				<button type="button">{{get_text('BUTTON_ADD_EMPLOYEE')}}</button>
 			</a>
 		</div>
 		<form id="form_employee_list">
 			<table>
 				<tr>
 					<th></th>
-					<th>メンバー名</th>
-					<th>メールアドレス</th>
-					<th>ロール</th>
+					<th>{{get_text('LABEL_MAIN_FULLNAME')}}</th>
+					<th>{{get_text('LABEL_MAIN_EMAIL')}}</th>
+					<th>{{get_text('LABEL_MAIN_ROLE')}}</th>
 				</tr>
 				{% for employee in employees %}
 				<tr>
@@ -25,6 +25,6 @@
 				{% endfor %}
 			</table>
 		</form>
-		<button type="submit" form="form_employee_list" formaction="../employee_detail_html" formmethod="post">詳細表示</button>
+		<button type="submit" form="form_employee_list" formaction="../employee_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
 	</article>
 {% endblock %}

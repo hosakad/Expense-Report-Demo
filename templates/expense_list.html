@@ -9,10 +9,10 @@
 			<table>
 				<tr>
 					<th></th>
-					<th>経費名</th>
-					<th>日付</th>
-					<th>金額</th>
-					<th>説明</th>
+					<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
+					<th>{{get_text('LABEL_MAIN_DATE')}}</th>
+					<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
+					<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
 				</tr>
 				{% for expense in expenses %}
 				<tr>
@@ -25,6 +25,6 @@
 				{% endfor %}
 			</table>
 		</form>
-		<button type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post">詳細表示</button>
+		<button type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
 	</article>
 {% endblock %}

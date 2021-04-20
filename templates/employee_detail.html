@@ -1,12 +1,13 @@
 {% extends "common/framework.html" %}
 {% block body %}
 	<article id="employee_detail">
+		<h2>{{get_text('LABEL_MAIN_HEADER_EMPLOYEE_DETAIL')}}</h2>
 		<form id="form_employee_detail">
-			<p>姓：<input name="last_name" type="text" value="{{employee['last_name']}}" required></p>
-			<p>名：<input name="first_name" type="text" value="{{employee['first_name']}}" required></p>
-			<p>メールアドレス：<input name="email" type="text" value="{{employee['email']}}" required></p>
-			<p>パスワード：<input name="password" type="text" value="{{employee['password']}}" required></p>
-			<p>ロール：
+			<p>{{get_text('LABEL_MAIN_LAST_NAME')}}:<input name="last_name" type="text" value="{{employee['last_name']}}" required></p>
+			<p>{{get_text('LABEL_MAIN_FIRST_NAME')}}:<input name="first_name" type="text" value="{{employee['first_name']}}" required></p>
+			<p>{{get_text('LABEL_MAIN_EMAIL')}}:<input name="email" type="text" value="{{employee['email']}}" required></p>
+			<p>{{get_text('LABEL_MAIN_PASSWORD')}}:<input name="password" type="text" value="{{employee['password']}}" required></p>
+			<p>{{get_text('LABEL_MAIN_ROLE')}}:
 				<select name="role">
 					{% for role in role_list %}
 						{% if role == employee['role'] %}
@@ -22,7 +23,7 @@
 		<div>
 			<button type="submit" form="form_employee_detail" formaction="../update_employee" formmethod="post">更新</button>
 			<a href="../employee_list_html">
-				<button type="button">一覧へ戻る</button>
+				<button type="button">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
 			</a>
 		</div>
 		<div>
