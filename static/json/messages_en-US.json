@@ -13,6 +13,15 @@
   "TITLE_EMPLOYEE_NEW": "New Member",
   "TITLE_EMPLOYEE_DETAIL": "Member Detail",
 
+  "LABEL_NAV_HOME": "Home",
+  "LABEL_NAV_EXPENSE": "Expense",
+  "LABEL_NAV_REPORT": "Report",
+  "LABEL_NAV_LOGOUT": "Logout",
+  "LABEL_FOOTER_LOGIN_INFO": "User Information",
+  "LABEL_FOOTER_COMPANY_NAME": "Company",
+  "LABEL_FOOTER_USER_NAME": "Name",
+  "LABEL_FOOTER_ROLE": "Role",
+
   "STATUS_OPEN": "Not submitted",
   "STATUS_SUBMITTED": "Submitted",
   "STATUS_APRROVED": "Approved",
@@ -21,10 +30,10 @@
   "ROLE_APPROVER": "Approver",
   "ROLE_USER": "User",
 
-	"MSG_EMAIL_MISMATCH": "メールアドレスとパスワードが一致しません",
-	"MSG_NO_EMAIL_PASSWORD": "メールアドレスまたはパスワードが入力されませんでした",
-	"MSG_NO_EXPENSE_ID_MATCH": "一致する経費IDがありません",
-	"MSG_NO_REPORT_ID_MATCH": "一致するレポートIDがありません",
+	"MSG_EMAIL_MISMATCH": "Email address and password don't match",
+	"MSG_NO_EMAIL_PASSWORD": "Email address or password is empty",
+	"MSG_NO_EXPENSE_ID_MATCH": "There is no expemse ID matched",
+	"MSG_NO_REPORT_ID_MATCH": "There is no report ID matched",
 
   "end": "end"
 }

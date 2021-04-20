@@ -13,6 +13,15 @@
   "TITLE_EMPLOYEE_NEW": "メンバー新規作成",
   "TITLE_EMPLOYEE_DETAIL": "メンバー編集",
 
+  "LABEL_NAV_HOME": "ホーム",
+  "LABEL_NAV_EXPENSE": "経費",
+  "LABEL_NAV_REPORT": "レポート",
+  "LABEL_NAV_LOGOUT": "ログアウト",
+  "LABEL_FOOTER_LOGIN_INFO": "ログイン情報",
+  "LABEL_FOOTER_COMPANY_NAME": "会社名",
+  "LABEL_FOOTER_USER_NAME": "ユーザー名",
+  "LABEL_FOOTER_ROLE": "ロール",
+
   "STATUS_OPEN": "未提出",
   "STATUS_SUBMITTED": "提出済/承認待",
   "STATUS_APRROVED": "承認済",
@@ -21,5 +30,10 @@
   "ROLE_APPROVER": "承認者",
   "ROLE_USER": "ユーザー",
   
+	"MSG_EMAIL_MISMATCH": "メールアドレスとパスワードが一致しません",
+	"MSG_NO_EMAIL_PASSWORD": "メールアドレスまたはパスワードが入力されませんでした",
+	"MSG_NO_EXPENSE_ID_MATCH": "一致する経費IDがありません",
+	"MSG_NO_REPORT_ID_MATCH": "一致するレポートIDがありません",
+
   "end": "end"
 }
