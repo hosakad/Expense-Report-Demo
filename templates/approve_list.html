@@ -5,10 +5,6 @@
 		<form id="form_approve_list">
 			<table>
 				<caption>承認待ちレポート</caption>
-				<tr>
-					<th></th>
-					<th>レポート名</th>
-				</tr>
 				{% for report in reports_submitted %}
 				<tr>
 					<td><input type="radio" name="id" value="{{report['id']}}" required></td>
@@ -18,10 +14,6 @@
 			</table>
 			<table>
 				<caption>承認済みレポート</caption>
-				<tr>
-					<th></th>
-					<th>レポート名</th>
-				</tr>
 				{% for report in reports_approved %}
 				<tr>
 					<td></td>
