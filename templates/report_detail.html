@@ -57,7 +57,7 @@
 				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
 				if (result) {
 					form_report = document.getElementById("form_report_detail");
-					form_report.target="../delete_report";
+					form_report.action="../delete_report";
 					form_report.method="post";
 					form_report.submit();
 				}
