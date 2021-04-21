@@ -144,9 +144,9 @@ def generate_fullname(first_name, last_name):
 def generate_currency_expression(amount, currency):
 	language = redis_client.get(REDIS_LANGUAGE).decode('utf8')
 	if language == 'ja-JP':
-		return amount + ' ' + currency
+		return "{:,}".format(str(amount)) + ' ' + currency
 	else:
-		return currency + ' ' + amount
+		return currency + ' ' + "{:,.2f}".format(str(amount))
 
 def get_message_dict():
 	# load messages
