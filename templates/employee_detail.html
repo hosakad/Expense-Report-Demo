@@ -27,5 +27,19 @@
 	<div>
 		<button type="submit" form="form_employee_detail" formaction="../delete_employee" formmethod="post">{{get_text('BUTTON_DELETE')}}</button>
 	</div>
+	<div>
+		<script>
+			function are_you_sure() {
+				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
+				if (result) {
+					form_report = document.getElementById("form_employee_detail");
+					form_report.action="../delete_employee";
+					form_report.method="post";
+					form_report.submit();
+				}
+			}
+		</script>
+		<button onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
+	</div>
 </article>
 {% endblock %}

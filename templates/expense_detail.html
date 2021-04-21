@@ -16,7 +16,18 @@
 		<button onclick="location.href='../expense_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
 	</div>
 	<div>
-		<button type="submit" form="form_expense_detail" formaction="../delete_expense" formmethod="post">{{get_text('BUTTON_DELETE')}}</button>
+		<script>
+			function are_you_sure() {
+				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
+				if (result) {
+					form_report = document.getElementById("form_expense_detail");
+					form_report.action="../delete_expense";
+					form_report.method="post";
+					form_report.submit();
+				}
+			}
+		</script>
+		<button onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
 	</div>
 </article>
 {% endblock %}
