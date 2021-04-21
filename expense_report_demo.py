@@ -143,8 +143,6 @@ def function_processor():
 
 @app.route('/')
 def index():
-	# initialize
-	redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
 		# if the employee is already logged in, show index.html
@@ -187,6 +185,7 @@ def error(message_key):
 
 @app.route('/login')
 def login():
+	redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 	return render_template('login.html')
 
 @app.route('/logout')
