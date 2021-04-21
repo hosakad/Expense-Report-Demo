@@ -109,29 +109,34 @@ def get_language(language):
 	# en-US
 	print('language:',language)
 	lang = 'en-US' # set en_US as default
-	if (language == 'ja' or language == 'ja-JP'):
+	if language == 'ja' or language == 'ja-JP':
 		# ja_JP as Japanese
 		lang = 'ja-JP'
-	elif (language == 'en'):
+	elif language == 'en':
 		# if 'en' is specified, set en_US
 		lang = 'en-US'
 	return lang
+
+def generate_fullname(first_name, last_name):
+	language = redis_client.get(REDIS_LANGUAGE).decode('utf8')
+	if language == 'ja-JP':
+		# in case Japanese is used, last name comes first
+		return last_name + ' ' + first_name
+	else:
+		return first_name + ' ' + last_name
 
 def get_message_dict():
 	# load messages
 	messages = {}
 	path = 'static/json/messages_'+redis_client.get(REDIS_LANGUAGE).decode('utf8')+'.json'
-	print('current path:', os.getcwd())
 	with open(path) as message_file:
 		messages = json.load(message_file)
-		print('messages:', messages)
 	return messages
 
 @app.context_processor
 def function_processor():
 	def get_fullname(first_name, last_name):
-		full_name = last_name+' '+first_name
-		return full_name
+		return generate_fullname(first_name, last_name)
 	def get_text(msg_key):
 		if redis_client.hexists(REDIS_MESSAGES, msg_key):
 			return redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
@@ -190,9 +195,14 @@ def login():
 
 @app.route('/logout')
 def logout():
-	# flush Pendo parameters and keep messages
-	redis_client.flushall()
-	redis_client.hmset(REDIS_MESSAGES, get_message_dict())
+	# flush Pendo parameters, and keep messages and language
+	redis_client.delete(REDIS_EMPLOYEE_ID)
+	redis_client.delete(REDIS_EMAIL)
+	redis_client.delete(REDIS_ROLE)
+	redis_client.delete(REDIS_FULL_NAME)
+	redis_client.delete(REDIS_COMPANY_ID)
+	redis_client.delete(REDIS_COMPANY_NAME)
+	redis_client.delete(REDIS_COMPANY_PLAN)
 	return render_template('logout.html')
 
 @app.route('/authenticate', methods=['POST'])
@@ -215,8 +225,8 @@ def authenticate():
 			redis_client.set(REDIS_EMPLOYEE_ID, employee_id)
 			redis_client.set(REDIS_EMAIL, email)
 			redis_client.set(REDIS_ROLE, role)
-			redis_client.set(REDIS_FULL_NAME, last_name + ' ' + first_name)
 			redis_client.set(REDIS_LANGUAGE, get_language(request.form['language']))
+			redis_client.set(REDIS_FULL_NAME, generate_fullname(first_name, last_name)) # this must come after language has been set
 			redis_client.set(REDIS_COMPANY_ID, company_id)
 			redis_client.set(REDIS_COMPANY_NAME, company_name)
 			redis_client.set(REDIS_COMPANY_PLAN, company_plan)
@@ -347,7 +357,6 @@ def report_detail_html():
 @app.route('/update_report', methods=['POST'])
 def update_report():
 
-	print("request.form in /update_report :", request.form)
 	sql_string = "update report set"\
 							" name = '"+request.form['name']+"'"\
 							" where id = "+request.form['id']+""
