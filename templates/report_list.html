@@ -2,9 +2,7 @@
 {% block body %}
 <h1>{{get_text('TITLE_REPORT_LIST')}}</h1>
 <article id="report_list">
-	<a href="../report_new_html">
-		<button type="button">{{get_text('BUTTON_NEW_REPORT')}}</button>
-	</a>
+	<button onclick="location.href='../report_new_html'">{{get_text('BUTTON_NEW_REPORT')}}</button>
 	<form id="form_report_list">
 		<table>
 			<tr>

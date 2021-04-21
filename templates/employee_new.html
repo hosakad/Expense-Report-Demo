@@ -14,6 +14,7 @@
 				{% endfor %}
 			</select>	
 	</form>
-	<button type="submit" form="form_employee_new" formaction="../create_employee" formmethod="post">作成</button>
+	<button type="submit" form="form_employee_new" formaction="../create_employee" formmethod="post">{{get_text('BUTTON_CREATE')}}</button>
+	<button onclick="location.href='../employee_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
 </article>
 {% endblock %}

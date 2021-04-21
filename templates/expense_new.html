@@ -10,5 +10,6 @@
 		<p>{{get_text('LABEL_MAIN_DESCRIPTION')}}:<input name="description" type="text"></p>
 	</form>
 	<button type="submit" form="form_expense_new" formaction="../create_expense" formmethod="post">{{get_text('BUTTON_CREATE')}}</button>
+	<button onclick="location.href='../expense_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
 </article>
 {% endblock %}

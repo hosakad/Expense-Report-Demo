@@ -22,9 +22,7 @@
 	</form>
 	<div>
 		<button type="submit" form="form_employee_detail" formaction="../update_employee" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
-		<a href="../employee_list_html">
-			<button type="button">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
-		</a>
+		<button onclick="location.href='../employee_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
 	</div>
 	<div>
 		<button type="submit" form="form_employee_detail" formaction="../delete_employee" formmethod="post">{{get_text('BUTTON_DELETE')}}</button>
