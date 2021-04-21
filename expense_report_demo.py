@@ -231,10 +231,10 @@ def authenticate():
 			return redirect(url_for('index'))
 		else:
 			# login failed
-			return redirect(url_for('error', message_id=MSG_EMAIL_MISMATCH))
+			return redirect(url_for('error', message_key=MSG_EMAIL_MISMATCH))
 	else:
 		# email or password was null
-		return redirect(url_for('error', message_id=MSG_NO_EMAIL_PASSWORD))
+		return redirect(url_for('error', message_key=MSG_NO_EMAIL_PASSWORD))
 
 @app.route('/expense_list_html')
 def expense_list_html():
@@ -256,7 +256,7 @@ def expense_detail_html():
 	if len(results) == 1:
 		return render_template('expense_detail.html', params=getPendoParams(), expense=results[0], title=TITLE_EXPENSE_DETAIL)
 	else:
-		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH))
+		return redirect(url_for('error', message_key=MSG_NO_EXPENSE_ID_MATCH))
 
 @app.route('/expense_new_html')
 def expense_new_html():
@@ -350,7 +350,7 @@ def report_detail_html():
 	if len(reports) == 1:
 		return render_template('report_detail.html', params=getPendoParams(), report=reports[0], expenses_open=expenses_open, expenses_included=expenses_included, title=TITLE_REPORT_DETAIL)
 	else:
-		return redirect(url_for('error', message_id=MSG_NO_REPORT_ID_MATCH))
+		return redirect(url_for('error', message_key=MSG_NO_REPORT_ID_MATCH))
 
 @app.route('/update_report', methods=['POST'])
 def update_report():
