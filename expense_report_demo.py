@@ -150,6 +150,7 @@ def function_processor():
 def index():
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
+		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 		# if the employee is already logged in, show index.html
 		role = redis_client.get(REDIS_ROLE).decode('utf8')
 		if role == ROLE_USER:
@@ -190,7 +191,8 @@ def error(message_key):
 
 @app.route('/login')
 def login():
-	redis_client.hmset(REDIS_MESSAGES, get_message_dict())
+	languages = request.accept_languages
+	print('languages:', languages)
 	return render_template('login.html')
 
 @app.route('/logout')
