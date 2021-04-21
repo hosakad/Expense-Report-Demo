@@ -52,7 +52,18 @@
 		<button type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">{{get_text('BUTTON_SUBMIT_REPORT')}}</button>
 	</div>
 	<div>
-		<button type="submit" form="form_report_detail" formaction="../delete_report" formmethod="post">{{get_text('BUTTON_DELETE')}}</button>
+		<script>
+			are_you_sure() {
+				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
+				if (result) {
+					form_report = document.getElementById("form_report_detail");
+					form_report.target="../delete/report";
+					form_report.method="post";
+					form_report.submit();
+				}
+			}
+		</script>
+		<button onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
 	</div>
 </article>
 {% endblock %}

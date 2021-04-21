@@ -74,6 +74,7 @@
   "ROLE_APPROVER": "Approver",
   "ROLE_USER": "User",
 
+  "MSG_CONFIRM_DELETE": "Are you sure to delete？",
 	"MSG_EMAIL_MISMATCH": "Email address and password don't match",
 	"MSG_NO_EMAIL_PASSWORD": "Email address or password is empty",
 	"MSG_NO_EXPENSE_ID_MATCH": "There is no expemse ID matched",
