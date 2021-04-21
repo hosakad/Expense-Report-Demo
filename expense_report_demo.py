@@ -193,6 +193,7 @@ def error(message_key):
 def login():
 	languages = request.accept_languages
 	print('languages:', languages)
+	best_match = request.accept_languages.best_match('ja', 'ja_JP', 'en', 'en_US')
 	return render_template('login.html')
 
 @app.route('/logout')
