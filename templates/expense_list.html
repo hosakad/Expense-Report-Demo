@@ -1,30 +1,30 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<article id="expense_list">
-		<a href="../expense_new_html">
-			<button type="button">新規経費</button>
-		</a>
-		<h2>経費リスト</h2>
-		<form id="form_expense_list">
-			<table>
-				<tr>
-					<th></th>
-					<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
-					<th>{{get_text('LABEL_MAIN_DATE')}}</th>
-					<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
-					<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
-				</tr>
-				{% for expense in expenses %}
-				<tr>
-					<td><input type="radio" name="id" value="{{expense['id']}}" required></td>
-					<td>{{expense['name']}}</td>
-					<td>{{expense['date']}}</td>
-					<td>{{expense['amount']}} {{expense['currency']}}</td>
-					<td>{{expense['description']}}</td>
-				</tr>
-				{% endfor %}
-			</table>
-		</form>
-		<button type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
-	</article>
+<h1>{{get_text('TITLE_EXPENSE_LIST')}}</h1>
+<article id="expense_list">
+	<a href="../expense_new_html">
+		<button type="button">{{get_text('BUTTON_NEW_EXPENSE')}}</button>
+	</a>
+	<form id="form_expense_list">
+		<table>
+			<tr>
+				<th></th>
+				<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
+				<th>{{get_text('LABEL_MAIN_DATE')}}</th>
+				<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
+				<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
+			</tr>
+			{% for expense in expenses %}
+			<tr>
+				<td><input type="radio" name="id" value="{{expense['id']}}" required></td>
+				<td>{{expense['name']}}</td>
+				<td>{{expense['date']}}</td>
+				<td>{{expense['amount']}} {{expense['currency']}}</td>
+				<td>{{expense['description']}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</form>
+	<button type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
+</article>
 {% endblock %}

@@ -1,59 +1,60 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<article id="report_edit">
-		<form id="form_report_detail">
-			<p>レポート名：<input name="name" type="text" value="{{report['name']}}" required></p>
-			<input type="hidden" name="id" value="{{report['id']}}">
-			<table>
-				<caption>既に含まれる経費</caption>
-				<tr>
-					<th>レポートから削除</th>
-					<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
-					<th>{{get_text('LABEL_MAIN_DATE')}}</th>
-					<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
-					<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
-				</tr>
-				{% for expense_included in expenses_included %}
-				<tr>
-					<td><input type="checkbox" name="id_removed" value="{{expense_included['id']}}"></td>
-					<td>{{expense_included['name']}}</td>
-					<td>{{expense_included['date']}}</td>
-					<td>{{expense_included['currency']}} {{expense_included['amount']}}</td>
-					<td>{{expense_included['description']}}</td>
-				</tr>
-				{% endfor %}
-			</table>
-			<table>
-				<caption>経費の選択</caption>
-				<tr>
-					<th>追加可能な経費</th>
-					<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
-					<th>{{get_text('LABEL_MAIN_DATE')}}</th>
-					<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
-					<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
-				</tr>
-				{% for expense_open in expenses_open %}
-				<tr>
-					<td><input type="checkbox" name="id_added" value="{{expense_open['id']}}"></td>
-					<td>{{expense_open['name']}}</td>
-					<td>{{expense_open['date']}}</td>
-					<td>{{expense_open['currency']}} {{expense_open['amount']}}</td>
-					<td>{{expense_open['description']}}</td>
-				</tr>
-				{% endfor %}
-			</table>
-		</form>
-		<div>
-			<button type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
-		</div>
-		<div>
-			<a href="../report_list_html">
-				<button type="button">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
-			</a>
-			<button type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">{{get_text('BUTTON_SUBMIT_REPORT')}}</button>
-		</div>
-		<div>
-			<button type="submit" form="form_report_detail" formaction="../delete_report" formmethod="post">{{get_text('BUTTON_DELETE')}}</button>
-		</div>
+<h1>{{get_text('TITLE_REPORT_DETAIL')}}</h1>
+<article id="report_edit">
+	<form id="form_report_detail">
+		<p>{{get_text('LABEL_MAIN_REPORT_NAME')}}:<input name="name" type="text" value="{{report['name']}}" required></p>
+		<input type="hidden" name="id" value="{{report['id']}}">
+		<table>
+			<caption>{{get_text('LABEL_MAIN_EXPENSE_ADDED')}}</caption>
+			<tr>
+				<th>{{get_text('LABEL_MAIN_EXPENSE_TO_DELETE')}}</th>
+				<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
+				<th>{{get_text('LABEL_MAIN_DATE')}}</th>
+				<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
+				<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
+			</tr>
+			{% for expense_included in expenses_included %}
+			<tr>
+				<td><input type="checkbox" name="id_removed" value="{{expense_included['id']}}"></td>
+				<td>{{expense_included['name']}}</td>
+				<td>{{expense_included['date']}}</td>
+				<td>{{expense_included['currency']}} {{expense_included['amount']}}</td>
+				<td>{{expense_included['description']}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		<table>
+			<caption>{{get_text('LABEL_MAIN_EXPENSE_TO_ADD')}}</caption>
+			<tr>
+				<th>{{get_text('LABEL_MAIN_CHOOSE_EXPENSE')}}</th>
+				<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
+				<th>{{get_text('LABEL_MAIN_DATE')}}</th>
+				<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
+				<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
+			</tr>
+			{% for expense_open in expenses_open %}
+			<tr>
+				<td><input type="checkbox" name="id_added" value="{{expense_open['id']}}"></td>
+				<td>{{expense_open['name']}}</td>
+				<td>{{expense_open['date']}}</td>
+				<td>{{expense_open['currency']}} {{expense_open['amount']}}</td>
+				<td>{{expense_open['description']}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</form>
+	<div>
+		<button type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
+	</div>
+	<div>
+		<a href="../report_list_html">
+			<button type="button">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
+		</a>
+		<button type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">{{get_text('BUTTON_SUBMIT_REPORT')}}</button>
+	</div>
+	<div>
+		<button type="submit" form="form_report_detail" formaction="../delete_report" formmethod="post">{{get_text('BUTTON_DELETE')}}</button>
+	</div>
 </article>
 {% endblock %}

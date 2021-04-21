@@ -1,38 +1,38 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<article id="report_list">
-		<a href="../report_new_html">
-			<button type="button">新規レポート</button>
-		</a>
-		<h2>レポート リスト</h2>
-		<form id="form_report_list">
-			<table>
-				<tr>
-					<th></th>
-					<th>レポート名</th>
-					<th>提出日</th>
-					<th>承認日</th>
-					<th>ステータス</th>
-				</tr>
-				{% for report in reports %}
-				<tr>
-					<td><input type="radio" name="id" value="{{report['id']}}" required></td>
-					<td>{{report['name']}}</td>
-					{% if report['submit_date'] == None %}
-					<td>-</td>
-					{% else %}
-					<td>{{report['submit_date']}}</td>
-					{% endif %}
-					{% if report['approve_date'] == None %}
-					<td>-</td>
-					{% else %}
-					<td>{{report['approve_date']}}</td>
-					{% endif %}
-					<td>{{get_text(report['status'])}}</td>
-				</tr>
-				{% endfor %}
-			</table>
-		</form>
-		<button type="submit" form="form_report_list" formaction="../report_detail_html" formmethod="post">詳細表示</button>
-	</article>
+<h1>{{get_text('TITLE_REPORT_LIST')}}</h1>
+<article id="report_list">
+	<a href="../report_new_html">
+		<button type="button">{{get_text('BUTTON_NEW_REPORT')}}</button>
+	</a>
+	<form id="form_report_list">
+		<table>
+			<tr>
+				<th></th>
+				<th>{{get_text('LABEL_MAIN_REPORT_NAME')}}</th>
+				<th>{{get_text('LABEL_MAIN_SUBMITTED_DATE')}}</th>
+				<th>{{get_text('LABEL_MAIN_APPROVED_DATE')}}</th>
+				<th>{{get_text('LABEL_MAIN_STATUS')}}</th>
+			</tr>
+			{% for report in reports %}
+			<tr>
+				<td><input type="radio" name="id" value="{{report['id']}}" required></td>
+				<td>{{report['name']}}</td>
+				{% if report['submit_date'] == None %}
+				<td>-</td>
+				{% else %}
+				<td>{{report['submit_date']}}</td>
+				{% endif %}
+				{% if report['approve_date'] == None %}
+				<td>-</td>
+				{% else %}
+				<td>{{report['approve_date']}}</td>
+				{% endif %}
+				<td>{{get_text(report['status'])}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</form>
+	<button type="submit" form="form_report_list" formaction="../report_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
+</article>
 {% endblock %}

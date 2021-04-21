@@ -2,8 +2,8 @@
 {% block body %}
 	<article id="report_new">
 		<form id="form_report_new">
-			<p>レポート名：<input name="name" type="text" required></p>
+			<p>{{get_text('LABEL_MAIN_REPORT_NAME')}:<input name="name" type="text" required></p>
 		</form>
-		<button type="submit" form="form_report_new" formaction="../create_report" formmethod="post">作成</button>
+		<button type="submit" form="form_report_new" formaction="../create_report" formmethod="post">{{get_text('BUTTON_CREATE')}}</button>
 	</article>
 {% endblock %}

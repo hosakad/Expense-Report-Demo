@@ -1,22 +1,23 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<article id="expense_detail">
-		<form id="form_expense_detail">
-			<p>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}:<input name="name" type="text" value="{{expense['name']}}" required></p>
-			<p>{{get_text('LABEL_MAIN_DATE')}}:<input name="date" type="date" value="{{expense['date']}}" required></p>
-			<p>{{get_text('LABEL_MAIN_CURRENCY')}}:<input name="currency" type="text" value="{{expense['currency']}}" required></p>
-			<p>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}:<input name="amount" type="number" value="{{expense['amount']}}" required></p>
-			<p>{{get_text('LABEL_MAIN_DESCRIPTION')}}:<input name="description" type="text" value="{{expense['description']}}"></p>
-			<input type="hidden" name="id" value="{{expense['id']}}">
-		</form>
-		<div>
-			<button type="submit" form="form_expense_detail" formaction="../update_expense" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
-			<a href="../expense_list_html">
-				<button type="button">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
-			</a>
-		</div>
-		<div>
-			<button type="submit" form="form_expense_detail" formaction="../delete_expense" formmethod="post">{{get_text('BUTTON_DELETE')}}</button>
-		</div>
-	</article>
+<h1>{{get_text('TITLE_EXPENSE_DETAIL')}}</h1>
+<article id="expense_detail">
+	<form id="form_expense_detail">
+		<p>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}:<input name="name" type="text" value="{{expense['name']}}" required></p>
+		<p>{{get_text('LABEL_MAIN_DATE')}}:<input name="date" type="date" value="{{expense['date']}}" required></p>
+		<p>{{get_text('LABEL_MAIN_CURRENCY')}}:<input name="currency" type="text" value="{{expense['currency']}}" required></p>
+		<p>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}:<input name="amount" type="number" value="{{expense['amount']}}" required></p>
+		<p>{{get_text('LABEL_MAIN_DESCRIPTION')}}:<input name="description" type="text" value="{{expense['description']}}"></p>
+		<input type="hidden" name="id" value="{{expense['id']}}">
+	</form>
+	<div>
+		<button type="submit" form="form_expense_detail" formaction="../update_expense" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
+		<a href="../expense_list_html">
+			<button type="button">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
+		</a>
+	</div>
+	<div>
+		<button type="submit" form="form_expense_detail" formaction="../delete_expense" formmethod="post">{{get_text('BUTTON_DELETE')}}</button>
+	</div>
+</article>
 {% endblock %}

@@ -49,10 +49,10 @@ ACCOUNT_PLAN = ['Advanced', 'Standard']
 APP_NAME = 'APP_NAME'
 # page titles
 TITLE_INDEX = 'TITLE_INDEX'
-TITLE_EXPENSE = 'TITLE_EXPENSE'
+TITLE_EXPENSE_LIST = 'TITLE_EXPENSE_LIST'
 TITLE_EXPENSE_NEW = 'TITLE_EXPENSE_NEW'
 TITLE_EXPENSE_DETAIL = 'TITLE_EXPENSE_DETAIL'
-TITLE_REPORT = 'TITLE_REPORT'
+TITLE_REPORT_LIST = 'TITLE_REPORT_LIST'
 TITLE_REPORT_NEW = 'TITLE_REPORT_NEW'
 TITLE_REPORT_DETAIL = 'TITLE_REPORT_DETAIL'
 TITLE_APPROVE_LIST = 'TITLE_APPROVE_LIST'
@@ -249,7 +249,7 @@ def expense_list_html():
 				" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
 	expenses = sql_select(sql_string)
 
-	return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE)
+	return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
 
 @app.route('/expense_detail_html', methods=['POST'])
 def expense_detail_html():
@@ -309,7 +309,7 @@ def report_list_html():
 				" where report.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
 	reports = sql_select(sql_string)
 
-	return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT)
+	return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT_LIST)
 
 @app.route('/report_new_html')
 def report_new_html():

@@ -1,30 +1,31 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<article id="employee_list">
-		<h2>{{get_text('LABEL_MAIN_HEADER_EMPLOYEE_LIST')}}</h2>
-		<div>
-			<a href="../employee_new_html">
-				<button type="button">{{get_text('BUTTON_ADD_EMPLOYEE')}}</button>
-			</a>
-		</div>
-		<form id="form_employee_list">
-			<table>
-				<tr>
-					<th></th>
-					<th>{{get_text('LABEL_MAIN_FULLNAME')}}</th>
-					<th>{{get_text('LABEL_MAIN_EMAIL')}}</th>
-					<th>{{get_text('LABEL_MAIN_ROLE')}}</th>
-				</tr>
-				{% for employee in employees %}
-				<tr>
-					<td><input type="radio" name="id" value="{{employee['id']}}" required></td>
-					<td>{{get_fullname(employee['first_name'], employee['last_name'])}}</td>
-					<td>{{employee['email']}}</td>
-					<td>{{get_text(employee['role'])}}</td>
-				</tr>
-				{% endfor %}
-			</table>
-		</form>
-		<button type="submit" form="form_employee_list" formaction="../employee_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
-	</article>
+<h1>{{get_text('TITLE_EMPLOYEE_LIST')}}</h1>
+<article id="employee_list">
+	<h2>{{get_text('LABEL_MAIN_HEADER_EMPLOYEE_LIST')}}</h2>
+	<div>
+		<a href="../employee_new_html">
+			<button type="button">{{get_text('BUTTON_ADD_EMPLOYEE')}}</button>
+		</a>
+	</div>
+	<form id="form_employee_list">
+		<table>
+			<tr>
+				<th></th>
+				<th>{{get_text('LABEL_MAIN_FULLNAME')}}</th>
+				<th>{{get_text('LABEL_MAIN_EMAIL')}}</th>
+				<th>{{get_text('LABEL_MAIN_ROLE')}}</th>
+			</tr>
+			{% for employee in employees %}
+			<tr>
+				<td><input type="radio" name="id" value="{{employee['id']}}" required></td>
+				<td>{{get_fullname(employee['first_name'], employee['last_name'])}}</td>
+				<td>{{employee['email']}}</td>
+				<td>{{get_text(employee['role'])}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</form>
+	<button type="submit" form="form_employee_list" formaction="../employee_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
+</article>
 {% endblock %}
