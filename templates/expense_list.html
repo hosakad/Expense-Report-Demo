@@ -17,7 +17,7 @@
 				<td><input type="radio" name="id" value="{{expense['id']}}" required></td>
 				<td>{{expense['name']}}</td>
 				<td>{{expense['date']}}</td>
-				<td>{{expense['amount']}} {{expense['currency']}}</td>
+				<td>{{get_currency_expression(expense['amount'], get_text(expense['currency']))}}</td>
 				<td>{{expense['description']}}</td>
 			</tr>
 			{% endfor %}

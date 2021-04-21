@@ -74,6 +74,9 @@
   "ROLE_APPROVER": "承認者",
   "ROLE_USER": "ユーザー",
   
+  "CURRENCY_DOLLAR": "ドル",
+  "CURRENCY_YEN": "円",
+
   "MSG_CONFIRM_DELETE": "削除してよろしいですか？",
 	"MSG_EMAIL_MISMATCH": "メールアドレスとパスワードが一致しません",
 	"MSG_NO_EMAIL_PASSWORD": "メールアドレスまたはパスワードが入力されませんでした",

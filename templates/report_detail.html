@@ -19,7 +19,7 @@
 				<td><input type="checkbox" name="id_removed" value="{{expense_included['id']}}"></td>
 				<td>{{expense_included['name']}}</td>
 				<td>{{expense_included['date']}}</td>
-				<td>{{expense_included['currency']}} {{expense_included['amount']}}</td>
+				<td>{{get_currency_expression(expense['amount'], get_text(expense['currency']))}}</td>
 				<td>{{expense_included['description']}}</td>
 			</tr>
 			{% endfor %}
@@ -38,7 +38,7 @@
 				<td><input type="checkbox" name="id_added" value="{{expense_open['id']}}"></td>
 				<td>{{expense_open['name']}}</td>
 				<td>{{expense_open['date']}}</td>
-				<td>{{expense_open['currency']}} {{expense_open['amount']}}</td>
+				<td>{{get_currency_expression(expense['amount'], get_text(expense['currency']))}}</td>
 				<td>{{expense_open['description']}}</td>
 			</tr>
 			{% endfor %}

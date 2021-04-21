@@ -43,6 +43,10 @@ ROLE_ADMIN = 'ROLE_ADMIN'
 ROLE_APPROVER = 'ROLE_APPROVER'
 ROLE_USER = 'ROLE_USER'
 ROLES = [ROLE_ADMIN, ROLE_APPROVER, ROLE_USER]
+# currencies
+CURRENCY_DOLLAR = 'CURRENCY_DOLLAR'
+CURRENCY_YEN = 'CURRENCY_DOLLAR'
+CURRENCIES = [CURRENCY_DOLLAR, CURRENCY_YEN]
 # account plan
 ACCOUNT_PLAN = ['Advanced', 'Standard']
 # app name
@@ -119,6 +123,15 @@ def get_language(language):
 		lang = 'en-US'
 	return lang
 
+# this should be called after language is set
+def get_default_currency():
+	language = redis_client.get(REDIS_LANGUAGE).decode('utf8')
+	if language == 'ja-JP':
+		return CURRENCY_YEN
+	else:
+		return CURRENCY_DOLLAR
+
+# this should be called after language is set
 def generate_fullname(first_name, last_name):
 	language = redis_client.get(REDIS_LANGUAGE).decode('utf8')
 	if language == 'ja-JP':
@@ -126,6 +139,14 @@ def generate_fullname(first_name, last_name):
 		return last_name + ' ' + first_name
 	else:
 		return first_name + ' ' + last_name
+
+# this should be called after language is set
+def generate_currency_expression(amount, currency):
+	language = redis_client(REDIS_LANGUAGE).decode('utf8')
+	if language == 'ja-JP':
+		return amount + ' ' + currency
+	else:
+		return currency + ' ' + amount
 
 def get_message_dict():
 	# load messages
@@ -144,6 +165,8 @@ def function_processor():
 			return redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
 		else:
 			return 'MSG_MISMATCH'
+	def get_currency_expression(amount, currency):
+		return generate_currency_expression(amount, currency)
 	return dict(get_fullname=get_fullname,
 							role_list=ROLES,
 							get_text=get_text)
@@ -248,7 +271,6 @@ def expense_list_html():
 				" on expense.user_id = employee.id"\
 				" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
 	expenses = sql_select(sql_string)
-
 	return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
 
 @app.route('/expense_detail_html', methods=['POST'])
@@ -263,9 +285,8 @@ def expense_detail_html():
 		return redirect(url_for('error', message_key=MSG_NO_EXPENSE_ID_MATCH))
 
 @app.route('/expense_new_html')
-def expense_new_html():
-
-	return render_template('expense_new.html', params=getPendoParams(), title=TITLE_EXPENSE_NEW)
+def expense_new_html():		
+	return render_template('expense_new.html', params=getPendoParams(), title=TITLE_EXPENSE_NEW, currencies=CURRENCIES, default_currency=get_default_currency())
 
 @app.route('/create_expense', methods=['POST'])
 def create_expense():

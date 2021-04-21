@@ -12,7 +12,8 @@
 				{% for role in role_list %}
 				<option value="{{role}}">{{get_text(role)}}</option>
 				{% endfor %}
-			</select>	
+			</select>
+		</p>
 	</form>
 	<button type="submit" form="form_employee_new" formaction="../create_employee" formmethod="post">{{get_text('BUTTON_CREATE')}}</button>
 	<button onclick="location.href='../employee_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
