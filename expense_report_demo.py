@@ -169,7 +169,9 @@ def function_processor():
 		return generate_currency_expression(amount, currency)
 	return dict(get_fullname=get_fullname,
 							role_list=ROLES,
-							get_text=get_text)
+							currency_list=CURRENCIES,
+							get_text=get_text,
+							get_currency_expression=get_currency_expression)
 
 @app.route('/')
 def index():
@@ -286,7 +288,7 @@ def expense_detail_html():
 
 @app.route('/expense_new_html')
 def expense_new_html():		
-	return render_template('expense_new.html', params=getPendoParams(), title=TITLE_EXPENSE_NEW, currencies=CURRENCIES, default_currency=get_default_currency())
+	return render_template('expense_new.html', params=getPendoParams(), title=TITLE_EXPENSE_NEW, default_currency=get_default_currency())
 
 @app.route('/create_expense', methods=['POST'])
 def create_expense():

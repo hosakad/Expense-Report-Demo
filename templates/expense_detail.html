@@ -7,7 +7,7 @@
 		<p>{{get_text('LABEL_MAIN_DATE')}}:<input name="date" type="date" value="{{expense['date']}}" required></p>
 		<p>{{get_text('LABEL_MAIN_CURRENCY')}}:
 			<select name="currency">
-				{% for currency in currencies %}
+				{% for currency in currency_list %}
 					{% if currency == expense['currency'] %}
 					<option value="{{currency}}" selected>{{get_text(currency)}}</option>
 					{% else %}
