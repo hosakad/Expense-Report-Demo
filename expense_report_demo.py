@@ -142,7 +142,7 @@ def generate_fullname(first_name, last_name):
 
 # this should be called after language is set
 def generate_currency_expression(amount, currency):
-	language = redis_client(REDIS_LANGUAGE).decode('utf8')
+	language = redis_client.get(REDIS_LANGUAGE).decode('utf8')
 	if language == 'ja-JP':
 		return amount + ' ' + currency
 	else:
