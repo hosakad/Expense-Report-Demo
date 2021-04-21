@@ -144,6 +144,7 @@ def function_processor():
 @app.route('/')
 def index():
 	# initialize
+	redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
 		# if the employee is already logged in, show index.html
@@ -190,16 +191,9 @@ def login():
 
 @app.route('/logout')
 def logout():
+	# flush Pendo parameters and keep messages
 	redis_client.flushall()
-#	redis_client.delete(REDIS_EMPLOYEE_ID)
-#	redis_client.delete(REDIS_EMAIL)
-#	redis_client.delete(REDIS_ROLE)
-#	redis_client.delete(REDIS_FULL_NAME)
-#	redis_client.delete(REDIS_LANGUAGE)
-#	redis_client.delete(REDIS_COMPANY_ID)
-#	redis_client.delete(REDIS_COMPANY_NAME)
-#	redis_client.delete(REDIS_COMPANY_PLAN)
-#	redis_client.delete(REDIS_MESSAGES)
+	redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 	return render_template('logout.html')
 
 @app.route('/authenticate', methods=['POST'])
@@ -227,7 +221,6 @@ def authenticate():
 			redis_client.set(REDIS_COMPANY_ID, company_id)
 			redis_client.set(REDIS_COMPANY_NAME, company_name)
 			redis_client.set(REDIS_COMPANY_PLAN, company_plan)
-			redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 			return redirect(url_for('index'))
 		else:
 			# login failed
