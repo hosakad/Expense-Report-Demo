@@ -34,6 +34,8 @@ REDIS_COMPANY_NAME = 'COMPANY_NAME'
 REDIS_COMPANY_PLAN = 'COMPANY_PLAN'
 REDIS_MESSAGES = "MESSAGES" # dict for messages
 
+# supported languages
+SUPPORTED_LANGUAGES = ['ja-JP', 'ja', 'en-US', 'en']
 
 # constant values to be used in app
 # employee roles
@@ -191,10 +193,7 @@ def error(message_key):
 
 @app.route('/login')
 def login():
-	languages = request.accept_languages
-	print('languages:', languages)
-	best_match = request.accept_languages.best_match(['ja', 'ja_JP', 'en', 'en_US'])
-	print('best_match:', best_match)
+	redis_client.set(REDIS_LANGUAGE, get_language(request.accept_languages.best_match(SUPPORTED_LANGUAGES)))
 	return render_template('login.html')
 
 @app.route('/logout')
@@ -229,8 +228,7 @@ def authenticate():
 			redis_client.set(REDIS_EMPLOYEE_ID, employee_id)
 			redis_client.set(REDIS_EMAIL, email)
 			redis_client.set(REDIS_ROLE, role)
-			redis_client.set(REDIS_LANGUAGE, get_language(request.form['language']))
-			redis_client.set(REDIS_FULL_NAME, generate_fullname(first_name, last_name)) # this must come after language has been set
+			redis_client.set(REDIS_FULL_NAME, generate_fullname(first_name, last_name)) # this requires that language has been already set
 			redis_client.set(REDIS_COMPANY_ID, company_id)
 			redis_client.set(REDIS_COMPANY_NAME, company_name)
 			redis_client.set(REDIS_COMPANY_PLAN, company_plan)
