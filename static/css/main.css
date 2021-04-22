@@ -13,7 +13,7 @@ html, body, div, nav, section{
 }
 
 button {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 700;
   line-height: 1.5;
   position: relative;
@@ -41,7 +41,7 @@ nav{
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	width: 250px;
+	width: 220px;
 	height: 100%;
 }
 
@@ -61,37 +61,40 @@ nav{
 .navigator{
 	margin-top: 0;
 }
-
-.navigator ul {
-	list-style: none;
-	padding-left: 1em;
-	margin-bottom: 0;
-	color: rgba(255, 255, 255, 0.5);
-	background: rgba(0, 0, 0, 0.15);
-}
-
-	.navigator ul li {
-		border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+	.navigator ul {
+		list-style: none;
+		padding-left: 1em;
+		margin-bottom: 0;
+		color: rgba(255, 255, 255, 0.5);
+		background: rgba(0, 0, 0, 0.15);
 	}
-		.navigator ul li a {
-			display: block;
-			padding: 0.5em 1.5em 0.5em 1.5em;
-			color: rgba(255, 255, 255, 0.5);
-			text-decoration: none;
-			outline: 0;
-			border: 0;
-			transition: none;
+		.navigator ul li {
+			border-bottom: 2px solid rgba(0, 0, 0, 0.5);
 		}
+			.navigator ul li a {
+				display: block;
+				padding: 0.5em 1.5em 0.5em 1.5em;
+				color: rgba(255, 255, 255, 0.5);
+				text-decoration: none;
+				outline: 0;
+				border: 0;
+				transition: none;
+			}
 
 .footer{
 	margin-bottom: 1em;
 	position: absolute;
 	bottom: 0;
-	border-bottom: 2px solid rgba(0, 0, 0, 0.267);
 }
+	.footer ul{
+		list-style: none;
+	}
+		.footer ul li{
+			border-bottom: 2px solid rgba(0, 0, 0, 0.267);
+		}
 	
 main{
-	margin-left: 250px;
+	margin-left: 220px;
 	background-color:#f5fafa;
 
 }
