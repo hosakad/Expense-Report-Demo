@@ -181,25 +181,25 @@ def index():
 		email = session[SESSION_EMAIL]
 		redis_client.hmset(REDISDIS_MESSAGES, get_message_dict())
 		# if the employee is already logged in, show index.html
-		role = session[SESSION_ROLE].decode('utf8')
+		role = session[SESSION_ROLE]
 		if role == ROLE_USER:
 			# get number of expenses and reports that the user has
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID].decode('utf8')+"'"\
+					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
 								" and report.status = '"+STATUS_OPEN+"'"
 			inprogress_records = sql_select(sql_string)
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID].decode('utf8')+"'"\
+					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
 								" and report.status = '"+STATUS_SUBMITTED+"'"
 			submitted_records = sql_select(sql_string)
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID].decode('utf8')+"'"\
+					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
 								" and report.status = '"+STATUS_APRROVED+"'"
 			approved_records = sql_select(sql_string)
 			return render_template('index.html', params=getPendoParams(),
@@ -301,7 +301,7 @@ def create_expense():
 											+request.form['amount']+",'"\
 											+request.form['currency']+"','"\
 											+request.form['description']+"','"\
-											+session[SESSION_EMPLOYEE_ID].decode('utf8')+"')"
+											+session[SESSION_EMPLOYEE_ID]+"')"
 	sql_execute(sql_string)
 
 	return redirect(url_for('expense_list_html'))
@@ -439,7 +439,7 @@ def approve_list_html():
 	sql_string = "select report.id as id, report.name as name, report.status as status"\
 							" from report join employee"\
 							" on report.user_id = employee.id"\
-							" where employee.company_id = '"+session[SESSION_COMPANY_ID].decode('utf8')+"' and"\
+							" where employee.company_id = '"+session[SESSION_COMPANY_ID]+"' and"\
 									" (report.status = '"+STATUS_SUBMITTED+"' or report.status = '"+STATUS_APRROVED+"')"
 	results = sql_select(sql_string)
 	reports_submitted = []
@@ -469,7 +469,7 @@ def employee_list_html():
 	# get all employees in this company
 	sql_string = "select id, email, first_name, last_name, role"\
 							" from employee"\
-							" where company_id = '"+session[SESSION_COMPANY_ID].decode('utf8')+"'"
+							" where company_id = '"+session[SESSION_COMPANY_ID]+"'"
 	employees = sql_select(sql_string)
 	
 	return render_template('employee_list.html', params=getPendoParams(), title=TITLE_EMPLOYEE_LIST, employees=employees)
@@ -497,7 +497,7 @@ def create_employee():
 											+request.form['email']+"','"\
 											+request.form['password']+"','"\
 											+request.form['role']+"','"\
-											+session[SESSION_COMPANY_ID].decode('utf8')+"')"
+											+session[SESSION_COMPANY_ID]+"')"
 	sql_execute(sql_string)
 
 	return redirect(url_for('employee_list_html'))
