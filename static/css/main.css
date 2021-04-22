@@ -13,7 +13,7 @@ html, body, div, nav, section{
 }
 
 button {
-  font-size: 1.6rem;
+  font-size: 1rem;
   font-weight: 700;
   line-height: 1.5;
   position: relative;
@@ -58,36 +58,36 @@ nav{
 		margin-top: 10pt;
 	}
 
-	nav .navigator{
-		margin-top: 0;
-	}
+.navigator{
+	margin-top: 0;
+}
 
-	nav ul {
-		list-style: none;
-		padding-left: 1em;
-		margin-bottom: 0;
-		color: rgba(255, 255, 255, 0.5);
-		background: rgba(0, 0, 0, 0.15);
-	}
+.navigator ul {
+	list-style: none;
+	padding-left: 1em;
+	margin-bottom: 0;
+	color: rgba(255, 255, 255, 0.5);
+	background: rgba(0, 0, 0, 0.15);
+}
 
-		nav ul li {
-			border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+	.navigator ul li {
+		border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+	}
+		.navigator ul li a {
+			display: block;
+			padding: 0.5em 1.5em 0.5em 1.5em;
+			color: rgba(255, 255, 255, 0.5);
+			text-decoration: none;
+			outline: 0;
+			border: 0;
+			transition: none;
 		}
-			nav ul li a {
-				display: block;
-				padding: 0.5em 1.5em 0.5em 1.5em;
-				color: rgba(255, 255, 255, 0.5);
-				text-decoration: none;
-				outline: 0;
-				border: 0;
-				transition: none;
-			}
 
-	nav .footer{
-		margin-bottom: 1em;
-		position: absolute;
-		bottom: 0;
-	}
+.footer{
+	margin-bottom: 1em;
+	position: absolute;
+	bottom: 0;
+}
 	
 main{
 	margin-left: 200px;
