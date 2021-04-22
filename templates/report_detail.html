@@ -3,7 +3,11 @@
 <h1>{{get_text('TITLE_REPORT_DETAIL')}}</h1>
 <article id="report_edit">
 	<form id="form_report_detail">
-		<p>{{get_text('LABEL_MAIN_REPORT_NAME')}}:<input name="name" type="text" value="{{report['name']}}" required></p>
+		<div>
+			<p>{{get_text('LABEL_MAIN_REPORT_NAME')}}:<input name="name" type="text" value="{{report['name']}}" required></p>
+			<button type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
+		</div>
+		<hr>
 		<input type="hidden" name="id" value="{{report['id']}}">
 		<table>
 			<caption>{{get_text('LABEL_MAIN_EXPENSE_ADDED')}}</caption>
@@ -44,9 +48,6 @@
 			{% endfor %}
 		</table>
 	</form>
-	<div>
-		<button type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
-	</div>
 	<div>
 		<button onclick="location.href='../report_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
 		<button type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">{{get_text('BUTTON_SUBMIT_REPORT')}}</button>
