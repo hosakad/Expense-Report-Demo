@@ -41,7 +41,7 @@ nav{
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	width: 200px;
+	width: 250px;
 	height: 100%;
 }
 
@@ -87,10 +87,11 @@ nav{
 	margin-bottom: 1em;
 	position: absolute;
 	bottom: 0;
+	border-bottom: 2px solid rgba(0, 0, 0, 0.267);
 }
 	
 main{
-	margin-left: 200px;
+	margin-left: 250px;
 	background-color:#f5fafa;
 
 }
