@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta rel="stylesheet" href="../static/css/main.css">
-  <title>Pendoデモ 経費精算 ログアウト画面</title>
+  <title>{{get_text('TITLE_APP')}}</title>
 </head>
 <body>
-	<h1>ログアウトしました</h1>
-	<button onclick="location.href='../'">再ログイン</button>
+	<h1>{{get_text('TITLE_LOGOUT')}}</h1>
+  <p>{{get_text('LABEL_MAIN_LOGOUT')}}</p>
+	<button onclick="location.href='../'">{{get_text('BUTTON_LOGIN_AGAIN')}}</button>
 </body>
 </html>

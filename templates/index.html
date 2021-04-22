@@ -4,7 +4,7 @@
 		{% include "home_user.html" %}
 	{% else %}
 		<article id="home">
-			<li>エラー：params['role']</li>
+			<li>{{get_text('LABEL_ERROR')}}:params['role']</li>
 		</article>
 	{% endif %}
 {% endblock %}

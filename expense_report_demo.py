@@ -34,6 +34,8 @@ REDIS_COMPANY_NAME = 'COMPANY_NAME'
 REDIS_COMPANY_PLAN = 'COMPANY_PLAN'
 REDIS_MESSAGES = "MESSAGES" # dict for messages
 
+# supported languages
+SUPPORTED_LANGUAGES = ['ja-JP', 'ja', 'en-US', 'en']
 
 # constant values to be used in app
 # employee roles
@@ -41,16 +43,20 @@ ROLE_ADMIN = 'ROLE_ADMIN'
 ROLE_APPROVER = 'ROLE_APPROVER'
 ROLE_USER = 'ROLE_USER'
 ROLES = [ROLE_ADMIN, ROLE_APPROVER, ROLE_USER]
+# currencies
+CURRENCY_DOLLAR = 'CURRENCY_DOLLAR'
+CURRENCY_YEN = 'CURRENCY_YEN'
+CURRENCIES = [CURRENCY_DOLLAR, CURRENCY_YEN]
 # account plan
 ACCOUNT_PLAN = ['Advanced', 'Standard']
 # app name
 APP_NAME = 'APP_NAME'
 # page titles
 TITLE_INDEX = 'TITLE_INDEX'
-TITLE_EXPENSE = 'TITLE_EXPENSE'
+TITLE_EXPENSE_LIST = 'TITLE_EXPENSE_LIST'
 TITLE_EXPENSE_NEW = 'TITLE_EXPENSE_NEW'
 TITLE_EXPENSE_DETAIL = 'TITLE_EXPENSE_DETAIL'
-TITLE_REPORT = 'TITLE_REPORT'
+TITLE_REPORT_LIST = 'TITLE_REPORT_LIST'
 TITLE_REPORT_NEW = 'TITLE_REPORT_NEW'
 TITLE_REPORT_DETAIL = 'TITLE_REPORT_DETAIL'
 TITLE_APPROVE_LIST = 'TITLE_APPROVE_LIST'
@@ -63,17 +69,10 @@ STATUS_SUBMITTED = 'STATUS_SUBMITTED'
 STATUS_APRROVED= 'STATUS_APRROVED'
 
 # error messages
-MSG_EMAIL_MISMATCH = 'msg0'
-MSG_NO_EMAIL_PASSWORD = 'msg1'
-MSG_NO_EXPENSE_ID_MATCH = 'msg2'
-MSG_NO_REPORT_ID_MATCH = 'msg3'
-ERROR_MESSAGES = {
-	MSG_EMAIL_MISMATCH : 'メールアドレスとパスワードが一致しません',
-	MSG_NO_EMAIL_PASSWORD : 'メールアドレスまたはパスワードが入力されませんでした',
-	MSG_NO_EXPENSE_ID_MATCH: '一致する経費IDがありません',
-	MSG_NO_REPORT_ID_MATCH: '一致するレポートIDがありません'
-	
-}
+MSG_EMAIL_MISMATCH = 'MSG_EMAIL_MISMATCH'
+MSG_NO_EMAIL_PASSWORD = 'MSG_NO_EMAIL_PASSWORD'
+MSG_NO_EXPENSE_ID_MATCH = 'MSG_NO_EXPENSE_ID_MATCH'
+MSG_NO_REPORT_ID_MATCH = 'MSG_NO_REPORT_ID_MATCH'
 
 def getDBConnection():
 	global DATABASE_CONNECTION
@@ -116,43 +115,69 @@ def get_language(language):
 	# en-US
 	print('language:',language)
 	lang = 'en-US' # set en_US as default
-	if (language == 'ja' or language == 'ja-JP'):
+	if language == 'ja' or language == 'ja-JP':
 		# ja_JP as Japanese
 		lang = 'ja-JP'
-	elif (language == 'en'):
+	elif language == 'en':
 		# if 'en' is specified, set en_US
 		lang = 'en-US'
 	return lang
+
+# this should be called after language is set
+def get_default_currency():
+	language = redis_client.get(REDIS_LANGUAGE).decode('utf8')
+	if language == 'ja-JP':
+		return CURRENCY_YEN
+	else:
+		return CURRENCY_DOLLAR
+
+# this should be called after language is set
+def generate_fullname(first_name, last_name):
+	language = redis_client.get(REDIS_LANGUAGE).decode('utf8')
+	if language == 'ja-JP':
+		# in case Japanese is used, last name comes first
+		return last_name + ' ' + first_name
+	else:
+		return first_name + ' ' + last_name
+
+# this should be called after language is set
+def generate_currency_expression(amount, currency):
+	language = redis_client.get(REDIS_LANGUAGE).decode('utf8')
+	if language == 'ja-JP':
+		return "{:,}".format(amount) + ' ' + currency
+	else:
+		return currency + ' ' + "{:,.2f}".format(amount)
 
 def get_message_dict():
 	# load messages
 	messages = {}
 	path = 'static/json/messages_'+redis_client.get(REDIS_LANGUAGE).decode('utf8')+'.json'
-	print('current path:', os.getcwd())
 	with open(path) as message_file:
 		messages = json.load(message_file)
-		print('messages:', messages)
 	return messages
 
 @app.context_processor
 def function_processor():
 	def get_fullname(first_name, last_name):
-		full_name = last_name+' '+first_name
-		return full_name
+		return generate_fullname(first_name, last_name)
 	def get_text(msg_key):
 		if redis_client.hexists(REDIS_MESSAGES, msg_key):
 			return redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
 		else:
 			return 'MSG_MISMATCH'
+	def get_currency_expression(amount, currency):
+		return generate_currency_expression(amount, currency)
 	return dict(get_fullname=get_fullname,
 							role_list=ROLES,
-							get_text=get_text)
+							currency_list=CURRENCIES,
+							get_text=get_text,
+							get_currency_expression=get_currency_expression)
 
 @app.route('/')
 def index():
-	# initialize
 	email = redis_client.get(REDIS_EMAIL)
 	if email:
+		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 		# if the employee is already logged in, show index.html
 		role = redis_client.get(REDIS_ROLE).decode('utf8')
 		if role == ROLE_USER:
@@ -187,27 +212,25 @@ def index():
 	
 	return redirect(url_for('login'))
 
-@app.route('/error/<message_id>')
-def error(message_id):
-	message = ERROR_MESSAGES[message_id]
-	return render_template('error.html', message=message)
+@app.route('/error/<message_key>')
+def error(message_key):
+	return render_template('error.html', message_key=message_key)
 
 @app.route('/login')
 def login():
+	redis_client.set(REDIS_LANGUAGE, get_language(request.accept_languages.best_match(SUPPORTED_LANGUAGES)))
 	return render_template('login.html')
 
 @app.route('/logout')
 def logout():
-	redis_client.flushall()
-#	redis_client.delete(REDIS_EMPLOYEE_ID)
-#	redis_client.delete(REDIS_EMAIL)
-#	redis_client.delete(REDIS_ROLE)
-#	redis_client.delete(REDIS_FULL_NAME)
-#	redis_client.delete(REDIS_LANGUAGE)
-#	redis_client.delete(REDIS_COMPANY_ID)
-#	redis_client.delete(REDIS_COMPANY_NAME)
-#	redis_client.delete(REDIS_COMPANY_PLAN)
-#	redis_client.delete(REDIS_MESSAGES)
+	# flush Pendo parameters, and keep messages and language
+	redis_client.delete(REDIS_EMPLOYEE_ID)
+	redis_client.delete(REDIS_EMAIL)
+	redis_client.delete(REDIS_ROLE)
+	redis_client.delete(REDIS_FULL_NAME)
+	redis_client.delete(REDIS_COMPANY_ID)
+	redis_client.delete(REDIS_COMPANY_NAME)
+	redis_client.delete(REDIS_COMPANY_PLAN)
 	return render_template('logout.html')
 
 @app.route('/authenticate', methods=['POST'])
@@ -230,19 +253,17 @@ def authenticate():
 			redis_client.set(REDIS_EMPLOYEE_ID, employee_id)
 			redis_client.set(REDIS_EMAIL, email)
 			redis_client.set(REDIS_ROLE, role)
-			redis_client.set(REDIS_FULL_NAME, last_name + ' ' + first_name)
-			redis_client.set(REDIS_LANGUAGE, get_language(request.form['language']))
+			redis_client.set(REDIS_FULL_NAME, generate_fullname(first_name, last_name)) # this requires that language has been already set
 			redis_client.set(REDIS_COMPANY_ID, company_id)
 			redis_client.set(REDIS_COMPANY_NAME, company_name)
 			redis_client.set(REDIS_COMPANY_PLAN, company_plan)
-			redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 			return redirect(url_for('index'))
 		else:
 			# login failed
-			return redirect(url_for('error', message_id=MSG_EMAIL_MISMATCH))
+			return redirect(url_for('error', message_key=MSG_EMAIL_MISMATCH))
 	else:
 		# email or password was null
-		return redirect(url_for('error', message_id=MSG_NO_EMAIL_PASSWORD))
+		return redirect(url_for('error', message_key=MSG_NO_EMAIL_PASSWORD))
 
 @app.route('/expense_list_html')
 def expense_list_html():
@@ -252,8 +273,7 @@ def expense_list_html():
 				" on expense.user_id = employee.id"\
 				" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
 	expenses = sql_select(sql_string)
-
-	return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE)
+	return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
 
 @app.route('/expense_detail_html', methods=['POST'])
 def expense_detail_html():
@@ -264,12 +284,11 @@ def expense_detail_html():
 	if len(results) == 1:
 		return render_template('expense_detail.html', params=getPendoParams(), expense=results[0], title=TITLE_EXPENSE_DETAIL)
 	else:
-		return redirect(url_for('error', message_id=MSG_NO_EXPENSE_ID_MATCH))
+		return redirect(url_for('error', message_key=MSG_NO_EXPENSE_ID_MATCH))
 
 @app.route('/expense_new_html')
-def expense_new_html():
-
-	return render_template('expense_new.html', params=getPendoParams(), title=TITLE_EXPENSE_NEW)
+def expense_new_html():		
+	return render_template('expense_new.html', params=getPendoParams(), title=TITLE_EXPENSE_NEW, default_currency=get_default_currency())
 
 @app.route('/create_expense', methods=['POST'])
 def create_expense():
@@ -313,7 +332,7 @@ def report_list_html():
 				" where report.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
 	reports = sql_select(sql_string)
 
-	return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT)
+	return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT_LIST)
 
 @app.route('/report_new_html')
 def report_new_html():
@@ -358,12 +377,11 @@ def report_detail_html():
 	if len(reports) == 1:
 		return render_template('report_detail.html', params=getPendoParams(), report=reports[0], expenses_open=expenses_open, expenses_included=expenses_included, title=TITLE_REPORT_DETAIL)
 	else:
-		return redirect(url_for('error', message_id=MSG_NO_REPORT_ID_MATCH))
+		return redirect(url_for('error', message_key=MSG_NO_REPORT_ID_MATCH))
 
 @app.route('/update_report', methods=['POST'])
 def update_report():
 
-	print("request.form in /update_report :", request.form)
 	sql_string = "update report set"\
 							" name = '"+request.form['name']+"'"\
 							" where id = "+request.form['id']+""

@@ -2,10 +2,11 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Pendoデモ 経費精算: Error</title>
+  <title>{{get_text('TITLE_ERROR')}}</title>
 </head>
 <body>
-	<h1>エラー</h1>
-	<p>{{message}}</p>
+	<h1>{{get_text('LABEL_ERROR')}}</h1>
+	<p>{{get_text(message_key)}}</p>
+	<button onclick="location.href='../'">{{get_text('BUTTON_LOGIN_AGAIN')}}</button>
 </body>
 </html>

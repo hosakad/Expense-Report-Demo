@@ -1,13 +1,25 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<article id="expense_new">
-		<form id="form_expense_new">
-			<p>経費名：<input name="name" type="text" required></p>
-			<p>日付：<input name="date" type="date" required></p>
-			<p>通貨：<input name="currency" type="text" required></p>
-			<p>金額：<input name="amount" type="number" required></p>
-			<p>説明：<input name="description" type="text"></p>
-		</form>
-		<button type="submit" form="form_expense_new" formaction="../create_expense" formmethod="post">作成</button>
-	</article>
+<h1>{{get_text('TITLE_EXPENSE_NEW')}}</h1>
+<article id="expense_new">
+	<form id="form_expense_new">
+		<p>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}:<input name="name" type="text" required></p>
+		<p>{{get_text('LABEL_MAIN_DATE')}}:<input name="date" type="date" required></p>
+		<p>{{get_text('LABEL_MAIN_CURRENCY')}}:
+			<select name="currency">
+				{% for currency in currency_list %}
+					{% if currency == default_currency%}
+					<option value="{{currency}}" selected>{{get_text(currency)}}</option>
+					{% else %}
+					<option value="{{currency}}">{{get_text(currency)}}</option>
+					{% endif %}
+				{% endfor %}
+			</select>	
+		</p>
+		<p>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}:<input name="amount" type="number" required></p>
+		<p>{{get_text('LABEL_MAIN_DESCRIPTION')}}:<input name="description" type="text"></p>
+	</form>
+	<button type="submit" form="form_expense_new" formaction="../create_expense" formmethod="post">{{get_text('BUTTON_CREATE')}}</button>
+	<button onclick="location.href='../expense_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
+</article>
 {% endblock %}

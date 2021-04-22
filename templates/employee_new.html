@@ -1,18 +1,21 @@
 {% extends "common/framework.html" %}
 {% block body %}
-	<article id="employee_new">
-		<form id="form_employee_new">
-			<p>姓：<input name="last_name" type="text" required></p>
-			<p>名：<input name="first_name" type="text" required></p>
-			<p>メールアドレス：<input name="email" type="text" required></p>
-			<p>パスワード：<input name="password" type="text" required></p>
-			<p>ロール：
-				<select name="role">
-					{% for role in role_list %}
-					<option value="{{role}}">{{get_text(role)}}</option>
-					{% endfor %}
-				</select>	
-		</form>
-		<button type="submit" form="form_employee_new" formaction="../create_employee" formmethod="post">作成</button>
-	</article>
+<h1>{{get_text('TITLE_EMPLOYEE_NEW')}}</h1>
+<article id="employee_new">
+	<form id="form_employee_new">
+		<p>{{get_text('LABEL_MAIN_LAST_NAME')}}:<input name="last_name" type="text" required></p>
+		<p>{{get_text('LABEL_MAIN_FIRST_NAME')}}:<input name="first_name" type="text" required></p>
+		<p>{{get_text('LABEL_MAIN_EMAIL')}}:<input name="email" type="text" required></p>
+		<p>{{get_text('LABEL_MAIN_PASSWORD')}}:<input name="password" type="text" required></p>
+		<p>{{get_text('LABEL_MAIN_ROLE')}}:
+			<select name="role">
+				{% for role in role_list %}
+				<option value="{{role}}">{{get_text(role)}}</option>
+				{% endfor %}
+			</select>
+		</p>
+	</form>
+	<button type="submit" form="form_employee_new" formaction="../create_employee" formmethod="post">{{get_text('BUTTON_CREATE')}}</button>
+	<button onclick="location.href='../employee_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
+</article>
 {% endblock %}

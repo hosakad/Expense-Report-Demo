@@ -4,20 +4,20 @@
   </div>
   <div class="navigator">
     <ul>
-    <li><a href="{{url_for('index')}}">ホーム</a></li>
+    <li><a href="{{url_for('index')}}">{{get_text('LABEL_NAV_HOME')}}</a></li>
     {% if params['role'] == 'ROLE_USER' %}
-    <li><a href="{{url_for('expense_list_html')}}">経費</a></li>
-    <li><a href="{{url_for('report_list_html')}}">レポート</a></li>
+    <li><a href="{{url_for('expense_list_html')}}">{{get_text('LABEL_NAV_EXPENSE')}}</a></li>
+    <li><a href="{{url_for('report_list_html')}}">{{get_text('LABEL_NAV_REPORT')}}</a></li>
     {% endif %}
-    <li><a href="{{url_for('logout')}}">ログアウト</a></li>
+    <li><a href="{{url_for('logout')}}">{{get_text('LABEL_NAV_LOGOUT')}}</a></li>
     </ul>
   </div>
   <div class="footer">
-      <h4>ログイン情報</h4>
+      <h4>{{get_text('LABEL_NAV_FOOTER_LOGIN_INFO')}}</h4>
       <ul>
-        <li>会社名：{{params['company_name']}}</li>
-        <li>ユーザー名：{{params['full_name']}}</li>
-        <li>ロール：{{get_text(params['role'])}}</li>
+        <li>{{get_text('LABEL_NAV_FOOTER_COMPANY_NAME')}}:{{params['company_name']}}</li>
+        <li>{{get_text('LABEL_NAV_FOOTER_USER_NAME')}}:{{params['full_name']}}</li>
+        <li>{{get_text('LABEL_NAV_FOOTER_ROLE')}}:{{get_text(params['role'])}}</li>
       </ul>
   </div>
 </nav>
