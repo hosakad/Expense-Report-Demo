@@ -86,6 +86,9 @@ nav{
 	position: absolute;
 	bottom: 0;
 }
+	.footer h4 {
+		margin-left: 1em;
+	}
 	.footer ul{
 		list-style: none;
 	}
