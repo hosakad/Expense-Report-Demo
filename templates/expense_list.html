@@ -2,7 +2,8 @@
 {% block body %}
 <h1>{{get_text('TITLE_EXPENSE_LIST')}}</h1>
 <article id="expense_list">
-	<button onclick="location.href='../expense_new_html'">{{get_text('BUTTON_NEW_EXPENSE')}}</button>
+	<h2>{{get_text('LABEL_MAIN_EXPENSE_NOT_IN_REPORT')}}</h2>
+	<button id="button_create_expense" onclick="location.href='../expense_new_html'">{{get_text('BUTTON_NEW_EXPENSE')}}</button>
 	<form id="form_expense_list">
 		<table>
 			<tr>
@@ -23,6 +24,6 @@
 			{% endfor %}
 		</table>
 	</form>
-	<button type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
+	<button id="button_expense_detail" type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
 </article>
 {% endblock %}

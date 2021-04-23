@@ -7,6 +7,7 @@
 			<p>{{get_text('LABEL_MAIN_REPORT_NAME')}}:<input name="name" type="text" value="{{report['name']}}" required></p>
 		</div>
 		<input type="hidden" name="id" value="{{report['id']}}">
+		{% if expense_included %}
 		<table>
 			<caption>{{get_text('LABEL_MAIN_EXPENSE_ADDED')}}</caption>
 			<tr>
@@ -26,6 +27,10 @@
 			</tr>
 			{% endfor %}
 		</table>
+		{% else %}
+		<p>{{get_text(LABEL_MAIN_NO_EXPENSE_ADDED)}}</p>
+		{% endif %}
+		{% if expenses_open %}
 		<table>
 			<caption>{{get_text('LABEL_MAIN_EXPENSE_TO_ADD')}}</caption>
 			<tr>
@@ -45,11 +50,14 @@
 			</tr>
 			{% endfor %}
 		</table>
+		{% else %}
+		<p>{{get_text(LABEL_MAIN_NO_EXPENSE_TO_ADD)}}</p>
+		{% endif %}
 	</form>
-	<button type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
+	<button id="button_update_report" type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
 	<hr>
 	<div>
-		<button type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">{{get_text('BUTTON_SUBMIT_REPORT')}}</button>
+		<button id="button_submit_report" type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">{{get_text('BUTTON_SUBMIT_REPORT')}}</button>
 		<script>
 			function are_you_sure() {
 				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
@@ -61,10 +69,10 @@
 				}
 			}
 		</script>
-		<button onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
+		<button id="button_delete_report" onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
 	</div>
 	<div>
-		<button onclick="location.href='../report_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
+		<button id="button_list_report" onclick="location.href='../report_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
 	</div>
 </article>
 {% endblock %}

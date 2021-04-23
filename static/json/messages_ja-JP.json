@@ -36,6 +36,7 @@
   "LABEL_MAIN_EMAIL": "メールアドレス",
   "LABEL_MAIN_PASSWORD": "パスワード",
   "LABEL_MAIN_ROLE": "ロール",
+  "LABEL_MAIN_EXPENSE_NOT_IN_REPORT": "レポートに紐づけられていない経費",
   "LABEL_MAIN_REPORTS_TO_APPROVE": "承認待ちレポート",
   "LABEL_MAIN_REPORTS_APPROVED": "承認済みレポート",
   "LABEL_MAIN_EXPENSE_NAME": "経費名",
@@ -48,8 +49,10 @@
   "LABEL_MAIN_APPROVED_DATE": "承認日",
   "LABEL_MAIN_STATUS": "ステータス",
   "LABEL_MAIN_EXPENSE_ADDED": "既に追加されている経費",
+  "LABEL_MAIN_NO_EXPENSE_ADDED": "このレポートに追加されている経費はありません",
   "LABEL_MAIN_EXPENSE_TO_DELETE": "レポートから削除",
   "LABEL_MAIN_EXPENSE_TO_ADD": "レポートに追加可能な経費",
+  "LABEL_MAIN_NO_EXPENSE_TO_ADD": "このレポートに追加できる経費はありません",
   "LABEL_MAIN_CHOOSE_EXPENSE": "経費の選択",
   "LABEL_MAIN_LOGOUT": "ログアウトしました",
 
