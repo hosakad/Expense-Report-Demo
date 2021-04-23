@@ -2,7 +2,7 @@
 {% block body %}
 <h1>{{get_text('TITLE_REPORT_LIST')}}</h1>
 <article id="report_list">
-	<button onclick="location.href='../report_new_html'">{{get_text('BUTTON_NEW_REPORT')}}</button>
+	<button id="button_create_report" onclick="location.href='../report_new_html'">{{get_text('BUTTON_NEW_REPORT')}}</button>
 	<form id="form_report_list">
 		<table>
 			<tr>
@@ -31,6 +31,6 @@
 			{% endfor %}
 		</table>
 	</form>
-	<button type="submit" form="form_report_list" formaction="../report_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
+	<button id="button_report_detail" type="submit" form="form_report_list" formaction="../report_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
 </article>
 {% endblock %}

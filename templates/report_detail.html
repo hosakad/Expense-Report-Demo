@@ -8,48 +8,56 @@
 		</div>
 		<input type="hidden" name="id" value="{{report['id']}}">
 		<table>
+			{% if expenses_included %}
 			<caption>{{get_text('LABEL_MAIN_EXPENSE_ADDED')}}</caption>
-			<tr>
-				<th>{{get_text('LABEL_MAIN_EXPENSE_TO_DELETE')}}</th>
-				<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
-				<th>{{get_text('LABEL_MAIN_DATE')}}</th>
-				<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
-				<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
-			</tr>
-			{% for expense_included in expenses_included %}
-			<tr>
-				<td><input type="checkbox" name="id_removed" value="{{expense_included['id']}}"></td>
-				<td>{{expense_included['name']}}</td>
-				<td>{{expense_included['date']}}</td>
-				<td>{{get_currency_expression(expense_included['amount'], get_text(expense_included['currency']))}}</td>
-				<td>{{expense_included['description']}}</td>
-			</tr>
-			{% endfor %}
+				<tr>
+					<th>{{get_text('LABEL_MAIN_EXPENSE_TO_DELETE')}}</th>
+					<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
+					<th>{{get_text('LABEL_MAIN_DATE')}}</th>
+					<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
+					<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
+				</tr>
+				{% for expense_included in expenses_included %}
+				<tr>
+					<td><input type="checkbox" name="id_removed" value="{{expense_included['id']}}"></td>
+					<td>{{expense_included['name']}}</td>
+					<td>{{expense_included['date']}}</td>
+					<td>{{get_currency_expression(expense_included['amount'], get_text(expense_included['currency']))}}</td>
+					<td>{{expense_included['description']}}</td>
+				</tr>
+				{% endfor %}
+			{% else %}
+			<caption>{{get_text('LABEL_MAIN_NO_EXPENSE_ADDED')}}</caption>
+			{% endif %}
 		</table>
 		<table>
+			{% if expenses_open %}
 			<caption>{{get_text('LABEL_MAIN_EXPENSE_TO_ADD')}}</caption>
-			<tr>
-				<th>{{get_text('LABEL_MAIN_CHOOSE_EXPENSE')}}</th>
-				<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
-				<th>{{get_text('LABEL_MAIN_DATE')}}</th>
-				<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
-				<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
-			</tr>
-			{% for expense_open in expenses_open %}
-			<tr>
-				<td><input type="checkbox" name="id_added" value="{{expense_open['id']}}"></td>
-				<td>{{expense_open['name']}}</td>
-				<td>{{expense_open['date']}}</td>
-				<td>{{get_currency_expression(expense_open['amount'], get_text(expense_open['currency']))}}</td>
-				<td>{{expense_open['description']}}</td>
-			</tr>
-			{% endfor %}
+				{% for expense_open in expenses_open %}
+				<tr>
+					<th>{{get_text('LABEL_MAIN_CHOOSE_EXPENSE')}}</th>
+					<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
+					<th>{{get_text('LABEL_MAIN_DATE')}}</th>
+					<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
+					<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
+				</tr>
+				<tr>
+					<td><input type="checkbox" name="id_added" value="{{expense_open['id']}}"></td>
+					<td>{{expense_open['name']}}</td>
+					<td>{{expense_open['date']}}</td>
+					<td>{{get_currency_expression(expense_open['amount'], get_text(expense_open['currency']))}}</td>
+					<td>{{expense_open['description']}}</td>
+				</tr>
+				{% endfor %}
+			{% else %}
+			<caption>{{get_text('LABEL_MAIN_NO_EXPENSE_TO_ADD')}}</caption>
+			{% endif %}
 		</table>
 	</form>
-	<button type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
+	<button id="button_update_report" type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
 	<hr>
 	<div>
-		<button type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">{{get_text('BUTTON_SUBMIT_REPORT')}}</button>
+		<button id="button_submit_report" type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">{{get_text('BUTTON_SUBMIT_REPORT')}}</button>
 		<script>
 			function are_you_sure() {
 				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
@@ -61,10 +69,10 @@
 				}
 			}
 		</script>
-		<button onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
+		<button id="button_delete_report" onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
 	</div>
 	<div>
-		<button onclick="location.href='../report_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
+		<button id="button_list_report" onclick="location.href='../report_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
 	</div>
 </article>
 {% endblock %}

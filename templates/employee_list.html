@@ -2,7 +2,6 @@
 {% block body %}
 <h1>{{get_text('TITLE_EMPLOYEE_LIST')}}</h1>
 <article id="employee_list">
-	<h2>{{get_text('LABEL_MAIN_HEADER_EMPLOYEE_LIST')}}</h2>
 	<div>
 		<button onclick="location.href='../employee_new_html'">{{get_text('BUTTON_ADD_EMPLOYEE')}}</button>
 	</div>
@@ -24,6 +23,6 @@
 			{% endfor %}
 		</table>
 	</form>
-	<button type="submit" form="form_employee_list" formaction="../employee_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
+	<button id="button_employee_detail" type="submit" form="form_employee_list" formaction="../employee_detail_html" formmethod="post">{{get_text('BUTTON_SHOW_DETAIL')}}</button>
 </article>
 {% endblock %}

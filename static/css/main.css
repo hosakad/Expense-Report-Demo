@@ -86,10 +86,14 @@ nav{
 	position: absolute;
 	bottom: 0;
 }
+	.footer h4 {
+		margin-left: 1em;
+	}
 	.footer ul{
 		list-style: none;
 	}
 		.footer ul li{
+			margin-left: -1.5em;
 			border-bottom: 2px solid rgba(0, 0, 0, 0.267);
 		}
 	
@@ -108,6 +112,8 @@ main{
 		border-spacing: 0;
 		padding-right: auto;
 		padding-left: auto;
+		margin-top: 1.5rem;
+    margin-bottom: 1rem;
 	}
 	
 	table th:first-child{

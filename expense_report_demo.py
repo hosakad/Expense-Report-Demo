@@ -2,7 +2,7 @@ import os
 import datetime
 import json
 
-from flask import Flask, redirect, request, url_for, render_template
+from flask import Flask, redirect, request, url_for, render_template, session
 import redis
 import psycopg2
 from psycopg2.extras import DictCursor
@@ -20,19 +20,21 @@ app.secret_key = os.environ['FLASK_SECRET_KEY']
 
 # Redis settings
 redis_url = os.environ['REDIS_URL']
-pool= redis.ConnectionPool(decode_responses=True)
+pool = redis.ConnectionPool(decode_responses=True)
 redis_client = redis.StrictRedis(connection_pool=pool).from_url(redis_url)
 
 # Redis keys
-REDIS_EMPLOYEE_ID = 'EMPLOYEE_ID'
-REDIS_EMAIL = 'EMPLOYEE_EMAIL' # visitor ID
-REDIS_ROLE = 'EMPLOYEE_ROLE'
-REDIS_FULL_NAME = 'EMPLOYEE_FULL_NAME'
-REDIS_LANGUAGE = 'EMPLOYEE_LANGUAGE'
-REDIS_COMPANY_ID = 'COMPANY_ID' # account ID
-REDIS_COMPANY_NAME = 'COMPANY_NAME'
-REDIS_COMPANY_PLAN = 'COMPANY_PLAN'
-REDIS_MESSAGES = "MESSAGES" # dict for messages
+REDISDIS_LANGUAGE = 'EMPLOYEE_LANGUAGE'
+REDISDIS_MESSAGES = "MESSAGES" # dict for messages
+
+# Session keys
+SESSION_EMPLOYEE_ID = 'EMPLOYEE_ID'
+SESSION_EMAIL = 'EMPLOYEE_EMAIL' # visitor ID
+SESSION_ROLE = 'EMPLOYEE_ROLE'
+SESSION_FULL_NAME = 'EMPLOYEE_FULL_NAME'
+SESSION_COMPANY_ID = 'COMPANY_ID' # account ID
+SESSION_COMPANY_NAME = 'COMPANY_NAME'
+SESSION_COMPANY_PLAN = 'COMPANY_PLAN'
 
 # supported languages
 SUPPORTED_LANGUAGES = ['ja-JP', 'ja', 'en-US', 'en']
@@ -99,20 +101,17 @@ def sql_execute(sql_string):
 
 def getPendoParams():
 	params = {}
-	params['email'] = redis_client.get(REDIS_EMAIL).decode('utf8')
-	params['role'] = redis_client.get(REDIS_ROLE).decode('utf8')
-	params['full_name'] = redis_client.get(REDIS_FULL_NAME).decode('utf8')
-	params['language'] = redis_client.get(REDIS_LANGUAGE).decode('utf8')
-	params['company_id'] = redis_client.get(REDIS_COMPANY_ID).decode('utf8')
-	params['company_name'] = redis_client.get(REDIS_COMPANY_NAME).decode('utf8')
-	params['company_plan'] = redis_client.get(REDIS_COMPANY_PLAN).decode('utf8')
+	params['email'] = session[SESSION_EMAIL]
+	params['role'] = session[SESSION_ROLE]
+	params['full_name'] = session[SESSION_FULL_NAME]
+	params['language'] = session[REDISDIS_LANGUAGE]
+	params['company_id'] = session[SESSION_COMPANY_ID]
+	params['company_name'] = session[SESSION_COMPANY_NAME]
+	params['company_plan'] = session[SESSION_COMPANY_PLAN]
 	return params
 
-def get_language(language):
-
-	# currently supported language
-	# ja-JP
-	# en-US
+def set_language(language):
+	# currently supported language; ja-JP, en-US
 	print('language:',language)
 	lang = 'en-US' # set en_US as default
 	if language == 'ja' or language == 'ja-JP':
@@ -121,19 +120,21 @@ def get_language(language):
 	elif language == 'en':
 		# if 'en' is specified, set en_US
 		lang = 'en-US'
-	return lang
+	session[REDISDIS_LANGUAGE] = lang
 
 # this should be called after language is set
+# return default currenct to be used in expense
 def get_default_currency():
-	language = redis_client.get(REDIS_LANGUAGE).decode('utf8')
+	language = session[REDISDIS_LANGUAGE]
 	if language == 'ja-JP':
 		return CURRENCY_YEN
 	else:
 		return CURRENCY_DOLLAR
 
 # this should be called after language is set
+# generage full name according to the language choosen
 def generate_fullname(first_name, last_name):
-	language = redis_client.get(REDIS_LANGUAGE).decode('utf8')
+	language = session[REDISDIS_LANGUAGE]
 	if language == 'ja-JP':
 		# in case Japanese is used, last name comes first
 		return last_name + ' ' + first_name
@@ -141,8 +142,9 @@ def generate_fullname(first_name, last_name):
 		return first_name + ' ' + last_name
 
 # this should be called after language is set
+# generage an expression in html according to the language choosen
 def generate_currency_expression(amount, currency):
-	language = redis_client.get(REDIS_LANGUAGE).decode('utf8')
+	language = session[REDISDIS_LANGUAGE]
 	if language == 'ja-JP':
 		return "{:,}".format(amount) + ' ' + currency
 	else:
@@ -151,7 +153,7 @@ def generate_currency_expression(amount, currency):
 def get_message_dict():
 	# load messages
 	messages = {}
-	path = 'static/json/messages_'+redis_client.get(REDIS_LANGUAGE).decode('utf8')+'.json'
+	path = 'static/json/messages_'+session[REDISDIS_LANGUAGE]+'.json'
 	with open(path) as message_file:
 		messages = json.load(message_file)
 	return messages
@@ -161,8 +163,8 @@ def function_processor():
 	def get_fullname(first_name, last_name):
 		return generate_fullname(first_name, last_name)
 	def get_text(msg_key):
-		if redis_client.hexists(REDIS_MESSAGES, msg_key):
-			return redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
+		if redis_client.hexists(REDISDIS_MESSAGES, msg_key):
+			return redis_client.hget(REDISDIS_MESSAGES, msg_key).decode('utf8')
 		else:
 			return 'MSG_MISMATCH'
 	def get_currency_expression(amount, currency):
@@ -175,29 +177,29 @@ def function_processor():
 
 @app.route('/')
 def index():
-	email = redis_client.get(REDIS_EMAIL)
-	if email:
-		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
+	if SESSION_EMAIL in session:
+		email = session[SESSION_EMAIL]
+		redis_client.hmset(REDISDIS_MESSAGES, get_message_dict())
 		# if the employee is already logged in, show index.html
-		role = redis_client.get(REDIS_ROLE).decode('utf8')
+		role = session[SESSION_ROLE]
 		if role == ROLE_USER:
 			# get number of expenses and reports that the user has
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"\
+					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
 								" and report.status = '"+STATUS_OPEN+"'"
 			inprogress_records = sql_select(sql_string)
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"\
+					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
 								" and report.status = '"+STATUS_SUBMITTED+"'"
 			submitted_records = sql_select(sql_string)
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"\
+					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
 								" and report.status = '"+STATUS_APRROVED+"'"
 			approved_records = sql_select(sql_string)
 			return render_template('index.html', params=getPendoParams(),
@@ -218,19 +220,19 @@ def error(message_key):
 
 @app.route('/login')
 def login():
-	redis_client.set(REDIS_LANGUAGE, get_language(request.accept_languages.best_match(SUPPORTED_LANGUAGES)))
+	set_language(request.accept_languages.best_match(SUPPORTED_LANGUAGES))
 	return render_template('login.html')
 
 @app.route('/logout')
 def logout():
 	# flush Pendo parameters, and keep messages and language
-	redis_client.delete(REDIS_EMPLOYEE_ID)
-	redis_client.delete(REDIS_EMAIL)
-	redis_client.delete(REDIS_ROLE)
-	redis_client.delete(REDIS_FULL_NAME)
-	redis_client.delete(REDIS_COMPANY_ID)
-	redis_client.delete(REDIS_COMPANY_NAME)
-	redis_client.delete(REDIS_COMPANY_PLAN)
+	session.pop(SESSION_EMPLOYEE_ID, None)
+	session.pop(SESSION_EMAIL, None)
+	session.pop(SESSION_ROLE, None)
+	session.pop(SESSION_FULL_NAME, None)
+	session.pop(SESSION_COMPANY_ID, None)
+	session.pop(SESSION_COMPANY_NAME, None)
+	session.pop(SESSION_COMPANY_PLAN, None)
 	return render_template('logout.html')
 
 @app.route('/authenticate', methods=['POST'])
@@ -238,6 +240,7 @@ def authenticate():
 
 	email = request.form['email']
 	password = request.form['password']
+	
 	if email and password:
 		# login succeeds
 		sql_string = "select employee.id, email, role, first_name, last_name, company.id as company_id,"\
@@ -250,13 +253,13 @@ def authenticate():
 			employee_id, email, role, first_name, last_name, company_id, company_name, company_plan = results[0]
 			print('login as email:', email, ', company: ', company_name)
 			# set Pendo parameters
-			redis_client.set(REDIS_EMPLOYEE_ID, employee_id)
-			redis_client.set(REDIS_EMAIL, email)
-			redis_client.set(REDIS_ROLE, role)
-			redis_client.set(REDIS_FULL_NAME, generate_fullname(first_name, last_name)) # this requires that language has been already set
-			redis_client.set(REDIS_COMPANY_ID, company_id)
-			redis_client.set(REDIS_COMPANY_NAME, company_name)
-			redis_client.set(REDIS_COMPANY_PLAN, company_plan)
+			session[SESSION_EMPLOYEE_ID] = str(employee_id)
+			session[SESSION_EMAIL] = email
+			session[SESSION_ROLE] = role
+			session[SESSION_FULL_NAME] = generate_fullname(first_name, last_name) # this requires that language has been already set
+			session[SESSION_COMPANY_ID] = str(company_id)
+			session[SESSION_COMPANY_NAME] = company_name
+			session[SESSION_COMPANY_PLAN] = company_plan
 			return redirect(url_for('index'))
 		else:
 			# login failed
@@ -271,7 +274,8 @@ def expense_list_html():
 	sql_string = "select expense.id, name, date, amount, currency, description"\
 				" from expense join employee"\
 				" on expense.user_id = employee.id"\
-				" where expense.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
+				" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
+							" and expense.report_id = null"
 	expenses = sql_select(sql_string)
 	return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
 
@@ -298,7 +302,7 @@ def create_expense():
 											+request.form['amount']+",'"\
 											+request.form['currency']+"','"\
 											+request.form['description']+"','"\
-											+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"')"
+											+session[SESSION_EMPLOYEE_ID]+"')"
 	sql_execute(sql_string)
 
 	return redirect(url_for('expense_list_html'))
@@ -329,7 +333,7 @@ def report_list_html():
 	sql_string = "select report.id, name, submit_date, approve_date, status"\
 				" from report join employee"\
 				" on report.user_id = employee.id"\
-				" where report.user_id = '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"'"
+				" where report.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"
 	reports = sql_select(sql_string)
 
 	return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT_LIST)
@@ -344,7 +348,7 @@ def create_report():
 	# create a report record
 	sql_string = "insert into report(name, user_id, status)"\
 							" values('"+request.form['name']+"',"\
-											" '"+redis_client.get(REDIS_EMPLOYEE_ID).decode('utf8')+"',"\
+											" '"+session[SESSION_EMPLOYEE_ID]+"',"\
 											"	'"+STATUS_OPEN+"')"
 	sql_execute(sql_string)
 
@@ -358,18 +362,17 @@ def report_detail_html():
 	reports = sql_select(sql_string)
 
 	expenses = []
-	employee_id = redis_client.get(REDIS_EMPLOYEE_ID)
 	sql_string = "select expense.id, name, date, amount, currency, description"\
 				" from expense"\
 				" join employee on expense.user_id = employee.id"\
-				" where expense.user_id = '"+employee_id.decode('utf8')+"' and expense.report_id is null"
+				" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"' and expense.report_id is null"
 	expenses_open = sql_select(sql_string)
 
 	sql_string = "select expense.id, expense.name, date, amount, currency, description"\
 				" from expense"\
 				" join employee on expense.user_id = employee.id"\
 				" join report on expense.report_id = report.id"\
-				" where expense.user_id = '"+employee_id.decode('utf8')+"'"\
+				" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
 							" and expense.report_id = '"+request.form['id']+"'"\
 							" and report.status = '"+STATUS_OPEN+"'"
 	expenses_included = sql_select(sql_string)
@@ -437,7 +440,7 @@ def approve_list_html():
 	sql_string = "select report.id as id, report.name as name, report.status as status"\
 							" from report join employee"\
 							" on report.user_id = employee.id"\
-							" where employee.company_id = '"+redis_client.get(REDIS_COMPANY_ID).decode('utf8')+"' and"\
+							" where employee.company_id = '"+session[SESSION_COMPANY_ID]+"' and"\
 									" (report.status = '"+STATUS_SUBMITTED+"' or report.status = '"+STATUS_APRROVED+"')"
 	results = sql_select(sql_string)
 	reports_submitted = []
@@ -467,7 +470,7 @@ def employee_list_html():
 	# get all employees in this company
 	sql_string = "select id, email, first_name, last_name, role"\
 							" from employee"\
-							" where company_id = '"+redis_client.get(REDIS_COMPANY_ID).decode('utf8')+"'"
+							" where company_id = '"+session[SESSION_COMPANY_ID]+"'"
 	employees = sql_select(sql_string)
 	
 	return render_template('employee_list.html', params=getPendoParams(), title=TITLE_EMPLOYEE_LIST, employees=employees)
@@ -495,7 +498,7 @@ def create_employee():
 											+request.form['email']+"','"\
 											+request.form['password']+"','"\
 											+request.form['role']+"','"\
-											+redis_client.get(REDIS_COMPANY_ID).decode('utf8')+"')"
+											+session[SESSION_COMPANY_ID]+"')"
 	sql_execute(sql_string)
 
 	return redirect(url_for('employee_list_html'))

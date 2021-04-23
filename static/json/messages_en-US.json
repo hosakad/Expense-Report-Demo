@@ -36,6 +36,7 @@
   "LABEL_MAIN_EMAIL": "Email address",
   "LABEL_MAIN_PASSWORD": "Password",
   "LABEL_MAIN_ROLE": "Role",
+  "LABEL_MAIN_EXPENSE_NOT_IN_REPORT": "Expense(s) not associated with Report",
   "LABEL_MAIN_REPORTS_TO_APPROVE": "Report(s) to Approve",
   "LABEL_MAIN_REPORTS_APPROVED": "Report(s) Approved",
   "LABEL_MAIN_EXPENSE_NAME": "Name",
@@ -48,8 +49,10 @@
   "LABEL_MAIN_APPROVED_DATE": "Approved Date",
   "LABEL_MAIN_STATUS": "Status",
   "LABEL_MAIN_EXPENSE_ADDED": "Expense(s) already added",
+  "LABEL_MAIN_NO_EXPENSE_ADDED": "There is no expense added in this report",
   "LABEL_MAIN_EXPENSE_TO_DELETE": "Remove from Report",
   "LABEL_MAIN_EXPENSE_TO_ADD": "Expense(s) to add to this report",
+  "LABEL_MAIN_NO_EXPENSE_TO_ADD": "There is no expense that can be added to this report",
   "LABEL_MAIN_CHOOSE_EXPENSE": "Choose Expense(s)",
   "LABEL_MAIN_LOGOUT": "Logged out",
 

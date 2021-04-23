@@ -21,8 +21,8 @@
 		<input type="hidden" name="id" value="{{employee['id']}}">
 	</form>
 	<div>
-		<button type="submit" form="form_employee_detail" formaction="../update_employee" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
-		<button onclick="location.href='../employee_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
+		<button id="button_update_employee" type="submit" form="form_employee_detail" formaction="../update_employee" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
+		<button id="button_list employee" onclick="location.href='../employee_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
 	</div>
 	<div>
 		<button type="submit" form="form_employee_detail" formaction="../delete_employee" formmethod="post">{{get_text('BUTTON_DELETE')}}</button>
@@ -39,7 +39,7 @@
 				}
 			}
 		</script>
-		<button onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
+		<button id="button_delete_employee" onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
 	</div>
 </article>
 {% endblock %}
