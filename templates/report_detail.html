@@ -51,7 +51,7 @@
 			{% endfor %}
 		</table>
 		{% else %}
-		<p>{{get_text(LABEL_MAIN_NO_EXPENSE_TO_ADD)}}</p>
+		<p>{{get_text('LABEL_MAIN_NO_EXPENSE_TO_ADD')}}</p>
 		{% endif %}
 	</form>
 	<button id="button_update_report" type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
