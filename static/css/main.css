@@ -112,6 +112,8 @@ main{
 		border-spacing: 0;
 		padding-right: auto;
 		padding-left: auto;
+		margin-top: 1.5rem;
+    margin-bottom: 1rem;
 	}
 	
 	table th:first-child{
