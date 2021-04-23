@@ -49,7 +49,7 @@
   "LABEL_MAIN_APPROVED_DATE": "承認日",
   "LABEL_MAIN_STATUS": "ステータス",
   "LABEL_MAIN_EXPENSE_ADDED": "既に追加されている経費",
-  "LABEL_MAIN_NO_EXPENSE_ADDED": "このレポートに追加されている経費はありません",
+  "LABEL_MAIN_NO_EXPENSE_ADDED": "このレポートに新たに追加されている経費はありません",
   "LABEL_MAIN_EXPENSE_TO_DELETE": "レポートから削除",
   "LABEL_MAIN_EXPENSE_TO_ADD": "レポートに追加可能な経費",
   "LABEL_MAIN_NO_EXPENSE_TO_ADD": "このレポートに追加できる経費はありません",
