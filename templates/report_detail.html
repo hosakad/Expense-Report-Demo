@@ -7,29 +7,29 @@
 			<p>{{get_text('LABEL_MAIN_REPORT_NAME')}}:<input name="name" type="text" value="{{report['name']}}" required></p>
 		</div>
 		<input type="hidden" name="id" value="{{report['id']}}">
-		{% if expenses_included %}
 		<table>
+			{% if expenses_included %}
 			<caption>{{get_text('LABEL_MAIN_EXPENSE_ADDED')}}</caption>
-			<tr>
-				<th>{{get_text('LABEL_MAIN_EXPENSE_TO_DELETE')}}</th>
-				<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
-				<th>{{get_text('LABEL_MAIN_DATE')}}</th>
-				<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
-				<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
-			</tr>
-			{% for expense_included in expenses_included %}
-			<tr>
-				<td><input type="checkbox" name="id_removed" value="{{expense_included['id']}}"></td>
-				<td>{{expense_included['name']}}</td>
-				<td>{{expense_included['date']}}</td>
-				<td>{{get_currency_expression(expense_included['amount'], get_text(expense_included['currency']))}}</td>
-				<td>{{expense_included['description']}}</td>
-			</tr>
-			{% endfor %}
-		</table>
-		{% else %}
-		<p>{{get_text('LABEL_MAIN_NO_EXPENSE_ADDED')}}</p>
-		{% endif %}
+				<tr>
+					<th>{{get_text('LABEL_MAIN_EXPENSE_TO_DELETE')}}</th>
+					<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
+					<th>{{get_text('LABEL_MAIN_DATE')}}</th>
+					<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
+					<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
+				</tr>
+				{% for expense_included in expenses_included %}
+				<tr>
+					<td><input type="checkbox" name="id_removed" value="{{expense_included['id']}}"></td>
+					<td>{{expense_included['name']}}</td>
+					<td>{{expense_included['date']}}</td>
+					<td>{{get_currency_expression(expense_included['amount'], get_text(expense_included['currency']))}}</td>
+					<td>{{expense_included['description']}}</td>
+				</tr>
+				{% endfor %}
+			{% else %}
+			<caption>{{get_text('LABEL_MAIN_NO_EXPENSE_ADDED')}}</caption>
+			{% endif %}
+			</table>
 		{% if expenses_open %}
 		<table>
 			<caption>{{get_text('LABEL_MAIN_EXPENSE_TO_ADD')}}</caption>
