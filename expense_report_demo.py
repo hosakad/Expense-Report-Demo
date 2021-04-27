@@ -260,6 +260,8 @@ def authenticate():
 			session[SESSION_COMPANY_ID] = str(company_id)
 			session[SESSION_COMPANY_NAME] = company_name
 			session[SESSION_COMPANY_PLAN] = company_plan
+			session.permanent = True
+   		app.permanent_session_lifetime = timedelta(hours=24)
 			return redirect(url_for('index'))
 		else:
 			# login failed
