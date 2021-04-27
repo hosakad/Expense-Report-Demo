@@ -13,6 +13,7 @@ html, body, div, nav, section{
 }
 
 button {
+	overflow:hidden;
   font-size: 1.2rem;
   font-weight: 700;
   line-height: 1.5;
