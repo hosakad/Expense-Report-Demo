@@ -29,11 +29,6 @@
 		</button>
 	</div>
 	<div>
-		<button class="button_motion" type="submit" form="form_employee_detail" formaction="../delete_employee" formmethod="post">
-			<span>{{get_text('BUTTON_DELETE')}}</span>
-		</button>
-	</div>
-	<div>
 		<script>
 			function are_you_sure() {
 				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
@@ -45,7 +40,9 @@
 				}
 			}
 		</script>
-		<button id="button_delete_employee" onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
+		<button id="button_delete_employee" onclick="are_you_sure();">
+			<span>{{get_text('BUTTON_DELETE')}}</span>
+		</button>
 	</div>
 </article>
 {% endblock %}
