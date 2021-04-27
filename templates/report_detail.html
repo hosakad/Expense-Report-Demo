@@ -59,9 +59,11 @@
 	</button>
 	<hr>
 	<div>
+		{% if expenses_included %}
 		<button class="button_motion" id="button_submit_report" type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">
 			<span>{{get_text('BUTTON_SUBMIT_REPORT')}}</span>
 		</button>
+		{% endif %}
 		<script>
 			function are_you_sure() {
 				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");

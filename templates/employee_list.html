@@ -3,8 +3,11 @@
 <h1>{{get_text('TITLE_EMPLOYEE_LIST')}}</h1>
 <article id="employee_list">
 	<div>
-		<button class="button_motion" onclick="location.href='../employee_new_html'"><span>{{get_text('BUTTON_ADD_EMPLOYEE')}}</span></button>
+		<button class="button_motion" onclick="location.href='../employee_new_html'">
+			<span>{{get_text('BUTTON_ADD_EMPLOYEE')}}</span>
+		</button>
 	</div>
+	{% if employees %}
 	<form id="form_employee_list">
 		<table>
 			<tr>
@@ -26,5 +29,6 @@
 	<button class="button_motion" id="button_employee_detail" type="submit" form="form_employee_list" formaction="../employee_detail_html" formmethod="post">
 		<span>{{get_text('BUTTON_SHOW_DETAIL')}}</span>
 	</button>
+	{% endif %}
 </article>
 {% endblock %}

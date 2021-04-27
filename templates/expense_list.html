@@ -5,6 +5,7 @@
 	<button class="button_motion" id="button_create_expense" onclick="location.href='../expense_new_html'">
 		<span>{{get_text('BUTTON_NEW_EXPENSE')}}</span>
 	</button>
+	{% if expenses %}
 	<h2>{{get_text('LABEL_MAIN_EXPENSE_NOT_IN_REPORT')}}</h2>
 	<form id="form_expense_list">
 		<table>
@@ -29,5 +30,6 @@
 	<button class="button_motion" id="button_expense_detail" type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post">
 		<span>{{get_text('BUTTON_SHOW_DETAIL')}}</span>
 	</button>
+	{% endif %}
 </article>
 {% endblock %}
