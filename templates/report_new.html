@@ -4,7 +4,11 @@
 		<form id="form_report_new">
 			<p>{{get_text('LABEL_MAIN_REPORT_NAME')}}:<input name="name" type="text" required></p>
 		</form>
-		<button id="button_create_report" type="submit" form="form_report_new" formaction="../create_report" formmethod="post">{{get_text('BUTTON_CREATE')}}</button>
-		<button id="button_list_report" onclick="location.href='../report_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
+		<button class="button_motion" id="button_create_report" type="submit" form="form_report_new" formaction="../create_report" formmethod="post">
+			<span>{{get_text('BUTTON_CREATE')}}</span>
+		</button>
+		<button class="button_motion" id="button_list_report" onclick="location.href='../report_list_html'">
+			<span>{{get_text('BUTTON_BACK_TO_LIST')}}</span>
+		</button>
 	</article>
 {% endblock %}

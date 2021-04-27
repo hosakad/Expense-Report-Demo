@@ -47,9 +47,12 @@ button.button_motion::before{
 	transition: all .5s ease-in-out;
 	-webkit-transform: translateX(-99%);
 	transform: translateX(-99%);
-	background: #eb6877;
+	background: #ec2059;
 }
 
+button.button_motion span {
+	position:relative;
+}
 
 button.button_motion:hover::before{
   -webkit-transform: translateX(0%);

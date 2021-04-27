@@ -54,10 +54,14 @@
 			{% endif %}
 		</table>
 	</form>
-	<button id="button_update_report" type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
+	<button class="button_motion" id="button_update_report" type="submit" form="form_report_detail" formaction="../update_report" formmethod="post">
+		<span>{{get_text('BUTTON_UPDATE')}}</span>
+	</button>
 	<hr>
 	<div>
-		<button id="button_submit_report" type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">{{get_text('BUTTON_SUBMIT_REPORT')}}</button>
+		<button class="button_motion" id="button_submit_report" type="submit" form="form_report_detail" formaction="../submit_report" formmethod="post">
+			<span>{{get_text('BUTTON_SUBMIT_REPORT')}}</span>
+		</button>
 		<script>
 			function are_you_sure() {
 				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
@@ -69,10 +73,14 @@
 				}
 			}
 		</script>
-		<button id="button_delete_report" onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
+		<button class="button_motion" id="button_delete_report" onclick="are_you_sure();">
+			<span>{{get_text('BUTTON_DELETE')}}</span>
+		</button>
 	</div>
 	<div>
-		<button id="button_list_report" onclick="location.href='../report_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
+		<button class="button_motion" id="button_list_report" onclick="location.href='../report_list_html'">
+			<span>{{get_text('BUTTON_BACK_TO_LIST')}}</span>
+		</button>
 	</div>
 </article>
 {% endblock %}

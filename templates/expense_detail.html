@@ -22,8 +22,12 @@
 	</form>
 	<form id="empty_form"></form>
 	<div>
-		<button id="button_update_expense" type="submit" form="form_expense_detail" formaction="../update_expense" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
-		<button id="button_list_expense" onclick="location.href='../expense_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
+		<button class="button_motion" id="button_update_expense" type="submit" form="form_expense_detail" formaction="../update_expense" formmethod="post">
+			<span>{{get_text('BUTTON_UPDATE')}}</span>
+		</button>
+		<button class="button_motion" id="button_list_expense" onclick="location.href='../expense_list_html'">
+			<span>{{get_text('BUTTON_BACK_TO_LIST')}}</span>
+		</button>
 	</div>
 	<div>
 		<script>
@@ -37,7 +41,9 @@
 				}
 			}
 		</script>
-		<button id="button_delete_expense" onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
+		<button class="button_motion" id="button_delete_expense" onclick="are_you_sure();">
+			<span>{{get_text('BUTTON_DELETE')}}</span>
+		</button>
 	</div>
 </article>
 {% endblock %}
