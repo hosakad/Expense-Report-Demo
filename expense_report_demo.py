@@ -277,7 +277,7 @@ def expense_list_html():
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
 					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
-								" and expense.report_id = null"
+								" and expense.report_id is null"
 		expenses = sql_select(sql_string)
 		return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
 	else:
