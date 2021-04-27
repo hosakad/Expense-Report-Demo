@@ -6,8 +6,8 @@ html, body, div, nav, section{
 }
 
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   -webkit-box-sizing: inherit;
   box-sizing: inherit;
 }
@@ -53,6 +53,7 @@ button.button_motion::before{
 button.button_motion:hover::before{
   -webkit-transform: translateX(0%);
   transform: translateX(0%);	
+	color:navy;
 }
 
 nav{
