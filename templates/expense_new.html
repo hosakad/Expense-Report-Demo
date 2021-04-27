@@ -19,7 +19,11 @@
 		<p>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}:<input name="amount" type="number" required></p>
 		<p>{{get_text('LABEL_MAIN_DESCRIPTION')}}:<input name="description" type="text"></p>
 	</form>
-	<button id="button_create_expense" type="submit" form="form_expense_new" formaction="../create_expense" formmethod="post">{{get_text('BUTTON_CREATE')}}</button>
-	<button id="button_list_expense" onclick="location.href='../expense_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
+	<button class="button_motion" id="button_create_expense" type="submit" form="form_expense_new" formaction="../create_expense" formmethod="post">
+		<span>{{get_text('BUTTON_CREATE')}}</span>
+	</button>
+	<button class="button_motion" id="button_list_expense" onclick="location.href='../expense_list_html'">
+		<span>{{get_text('BUTTON_BACK_TO_LIST')}}</span>
+	</button>
 </article>
 {% endblock %}

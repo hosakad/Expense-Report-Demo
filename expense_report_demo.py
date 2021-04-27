@@ -1,7 +1,6 @@
 import os
-import datetime
 import json
-
+from datetime import datetime, timedelta
 from flask import Flask, redirect, request, url_for, render_template, session
 import redis
 import psycopg2
@@ -260,6 +259,8 @@ def authenticate():
 			session[SESSION_COMPANY_ID] = str(company_id)
 			session[SESSION_COMPANY_NAME] = company_name
 			session[SESSION_COMPANY_PLAN] = company_plan
+			session.permanent = True
+			app.permanent_session_lifetime = timedelta(hours=24)
 			return redirect(url_for('index'))
 		else:
 			# login failed
@@ -270,258 +271,304 @@ def authenticate():
 
 @app.route('/expense_list_html')
 def expense_list_html():
-	expenses = []
-	sql_string = "select expense.id, name, date, amount, currency, description"\
-				" from expense join employee"\
-				" on expense.user_id = employee.id"\
-				" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
-							" and expense.report_id = null"
-	expenses = sql_select(sql_string)
-	return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
+	if SESSION_EMAIL in session:
+		expenses = []
+		sql_string = "select expense.id, name, date, amount, currency, description"\
+					" from expense join employee"\
+					" on expense.user_id = employee.id"\
+					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
+								" and expense.report_id = null"
+		expenses = sql_select(sql_string)
+		return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/expense_detail_html', methods=['POST'])
 def expense_detail_html():
-	sql_string = "select id, name, date, amount, currency, description"\
-				" from expense"\
-				" where id = "+request.form['id']
-	results = sql_select(sql_string)
-	if len(results) == 1:
-		return render_template('expense_detail.html', params=getPendoParams(), expense=results[0], title=TITLE_EXPENSE_DETAIL)
-	else:
-		return redirect(url_for('error', message_key=MSG_NO_EXPENSE_ID_MATCH))
+	if SESSION_EMAIL in session:
+		sql_string = "select id, name, date, amount, currency, description"\
+					" from expense"\
+					" where id = "+request.form['id']
+		results = sql_select(sql_string)
+		if len(results) == 1:
+			return render_template('expense_detail.html', params=getPendoParams(), expense=results[0], title=TITLE_EXPENSE_DETAIL)
+		else:
+			return redirect(url_for('error', message_key=MSG_NO_EXPENSE_ID_MATCH))
 
 @app.route('/expense_new_html')
 def expense_new_html():		
-	return render_template('expense_new.html', params=getPendoParams(), title=TITLE_EXPENSE_NEW, default_currency=get_default_currency())
+	if SESSION_EMAIL in session:
+		return render_template('expense_new.html', params=getPendoParams(), title=TITLE_EXPENSE_NEW, default_currency=get_default_currency())
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/create_expense', methods=['POST'])
 def create_expense():
-	sql_string = "insert into expense(name, date, amount, currency, description, user_id)"\
-							" values('"+request.form['name']+"','"\
-											+request.form['date']+"',"\
-											+request.form['amount']+",'"\
-											+request.form['currency']+"','"\
-											+request.form['description']+"','"\
-											+session[SESSION_EMPLOYEE_ID]+"')"
-	sql_execute(sql_string)
-
-	return redirect(url_for('expense_list_html'))
+	if SESSION_EMAIL in session:
+		sql_string = "insert into expense(name, date, amount, currency, description, user_id)"\
+								" values('"+request.form['name']+"','"\
+												+request.form['date']+"',"\
+												+request.form['amount']+",'"\
+												+request.form['currency']+"','"\
+												+request.form['description']+"','"\
+												+session[SESSION_EMPLOYEE_ID]+"')"
+		sql_execute(sql_string)
+		return redirect(url_for('expense_list_html'))
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/update_expense', methods=['POST'])
 def update_expense():
-	sql_string = "update expense set"\
-							" name = '"+request.form['name']+"',"\
-							" date = '"+request.form['date']+"',"\
-							" currency = '"+request.form['currency']+"',"\
-							" amount = "+request.form['amount']+","\
-							" description = '"+request.form['description']+"'"\
-							" where id = "+request.form['id']+""
-	sql_execute(sql_string)
+	if SESSION_EMAIL in session:
+		sql_string = "update expense set"\
+								" name = '"+request.form['name']+"',"\
+								" date = '"+request.form['date']+"',"\
+								" currency = '"+request.form['currency']+"',"\
+								" amount = "+request.form['amount']+","\
+								" description = '"+request.form['description']+"'"\
+								" where id = "+request.form['id']+""
+		sql_execute(sql_string)
 
-	return redirect(url_for('expense_list_html'))
+		return redirect(url_for('expense_list_html'))
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/delete_expense', methods=['POST'])
 def delete_expense():
-	sql_string = "delete from expense"\
-							" where id = "+request.form['id']+""
-	sql_execute(sql_string)
-
-	return redirect(url_for('expense_list_html'))
+	if SESSION_EMAIL in session:
+		sql_string = "delete from expense"\
+								" where id = "+request.form['id']+""
+		sql_execute(sql_string)
+		return redirect(url_for('expense_list_html'))
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/report_list_html')
 def report_list_html():
-	sql_string = "select report.id, name, submit_date, approve_date, status"\
-				" from report join employee"\
-				" on report.user_id = employee.id"\
-				" where report.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"
-	reports = sql_select(sql_string)
-
-	return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT_LIST)
+	if SESSION_EMAIL in session:
+		sql_string = "select report.id, name, submit_date, approve_date, status"\
+					" from report join employee"\
+					" on report.user_id = employee.id"\
+					" where report.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"
+		reports = sql_select(sql_string)
+		return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT_LIST)
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/report_new_html')
 def report_new_html():
-
-	return render_template('report_new.html', params=getPendoParams(), title=TITLE_REPORT_NEW)
+	if SESSION_EMAIL in session:
+		return render_template('report_new.html', params=getPendoParams(), title=TITLE_REPORT_NEW)
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/create_report', methods=['POST'])
 def create_report():
-	# create a report record
-	sql_string = "insert into report(name, user_id, status)"\
-							" values('"+request.form['name']+"',"\
-											" '"+session[SESSION_EMPLOYEE_ID]+"',"\
-											"	'"+STATUS_OPEN+"')"
-	sql_execute(sql_string)
-
-	return redirect(url_for('report_list_html'))
+	if SESSION_EMAIL in session:
+		# create a report record
+		sql_string = "insert into report(name, user_id, status)"\
+								" values('"+request.form['name']+"',"\
+												" '"+session[SESSION_EMPLOYEE_ID]+"',"\
+												"	'"+STATUS_OPEN+"')"
+		sql_execute(sql_string)
+		return redirect(url_for('report_list_html'))
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/report_detail_html', methods=['POST'])
 def report_detail_html():
-	sql_string = "select id, name"\
-				" from report"\
-				" where id = "+request.form['id']
-	reports = sql_select(sql_string)
+	if SESSION_EMAIL in session:
+		# get the specified report
+		sql_string = "select id, name"\
+					" from report"\
+					" where id = "+request.form['id']
+		reports = sql_select(sql_string)
+		# retrieve a list of expenses which haven't been assigned to the report
+		expenses = []
+		sql_string = "select expense.id, name, date, amount, currency, description"\
+					" from expense"\
+					" join employee on expense.user_id = employee.id"\
+					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"' and expense.report_id is null"
+		expenses_open = sql_select(sql_string)
+		# retrieve a list of expenses which have already been assigned in the report
+		sql_string = "select expense.id, expense.name, date, amount, currency, description"\
+					" from expense"\
+					" join employee on expense.user_id = employee.id"\
+					" join report on expense.report_id = report.id"\
+					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
+								" and expense.report_id = '"+request.form['id']+"'"\
+								" and report.status = '"+STATUS_OPEN+"'"
+		expenses_included = sql_select(sql_string)
 
-	expenses = []
-	sql_string = "select expense.id, name, date, amount, currency, description"\
-				" from expense"\
-				" join employee on expense.user_id = employee.id"\
-				" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"' and expense.report_id is null"
-	expenses_open = sql_select(sql_string)
-
-	sql_string = "select expense.id, expense.name, date, amount, currency, description"\
-				" from expense"\
-				" join employee on expense.user_id = employee.id"\
-				" join report on expense.report_id = report.id"\
-				" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
-							" and expense.report_id = '"+request.form['id']+"'"\
-							" and report.status = '"+STATUS_OPEN+"'"
-	expenses_included = sql_select(sql_string)
-
-	if len(reports) == 1:
-		return render_template('report_detail.html', params=getPendoParams(), report=reports[0], expenses_open=expenses_open, expenses_included=expenses_included, title=TITLE_REPORT_DETAIL)
+		if len(reports) == 1:
+			return render_template('report_detail.html', params=getPendoParams(), report=reports[0], expenses_open=expenses_open, expenses_included=expenses_included, title=TITLE_REPORT_DETAIL)
+		else:
+			return redirect(url_for('error', message_key=MSG_NO_REPORT_ID_MATCH))
 	else:
-		return redirect(url_for('error', message_key=MSG_NO_REPORT_ID_MATCH))
+		return redirect(url_for('login'))
 
 @app.route('/update_report', methods=['POST'])
 def update_report():
-
-	sql_string = "update report set"\
-							" name = '"+request.form['name']+"'"\
-							" where id = "+request.form['id']+""
-	sql_execute(sql_string)
-
-	id_added = request.form.getlist('id_added')
-	if id_added:
-		# add specified expenses to this report
-		sql_string = "update expense set"\
-								" report_id = '"+request.form['id']+"'"\
-								" where id in("+",".join(id_added)+")"
+	if SESSION_EMAIL in session:
+		# update the name of the report
+		sql_string = "update report set"\
+								" name = '"+request.form['name']+"'"\
+								" where id = "+request.form['id']+""
 		sql_execute(sql_string)
-
-	id_removed = request.form.getlist('id_removed')
-	if id_removed:
-		# remove specified expenses from this report
-		sql_string = "update expense set"\
-								" report_id = null"\
-								" where id in("+",".join(id_removed)+")"
-		sql_execute(sql_string)
-
-	return redirect(url_for('report_list_html'))
+		# update the report ID in the expenses
+		id_added = request.form.getlist('id_added')
+		if id_added:
+			# add specified expenses to this report
+			sql_string = "update expense set"\
+									" report_id = '"+request.form['id']+"'"\
+									" where id in("+",".join(id_added)+")"
+			sql_execute(sql_string)
+		# remove the report ID from the expenses
+		id_removed = request.form.getlist('id_removed')
+		if id_removed:
+			# remove specified expenses from this report
+			sql_string = "update expense set"\
+									" report_id = null"\
+									" where id in("+",".join(id_removed)+")"
+			sql_execute(sql_string)
+		return redirect(url_for('report_list_html'))
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/delete_report', methods=['POST'])
 def delete_report():
-	# remove specified expenses from this report
-	sql_string = "update expense set"\
-							" report_id = null"\
-							" where expense.report_id = '"+request.form['id']+"'"
-	sql_execute(sql_string)
-
-	# delete the specified report
-	sql_string = "delete from report"\
-							" where id = '"+request.form['id']+"'"
-	sql_execute(sql_string)
-
-	return redirect(url_for('report_list_html'))
+	if SESSION_EMAIL in session:
+		# remove specified expenses from this report
+		sql_string = "update expense set"\
+								" report_id = null"\
+								" where expense.report_id = '"+request.form['id']+"'"
+		sql_execute(sql_string)
+		# delete the specified report
+		sql_string = "delete from report"\
+								" where id = '"+request.form['id']+"'"
+		sql_execute(sql_string)
+		return redirect(url_for('report_list_html'))
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
-	# change the status of the report to submitted
-	sql_string = "update report set"\
-							" submit_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
-							" status = '"+STATUS_SUBMITTED+"'"\
-							" where report.id = '"+request.form['id']+"'"
-	sql_execute(sql_string)
-
-	return redirect(url_for('expense_list_html'))
+	if SESSION_EMAIL in session:
+		# change the status of the report to submitted
+		sql_string = "update report set"\
+								" submit_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
+								" status = '"+STATUS_SUBMITTED+"'"\
+								" where report.id = '"+request.form['id']+"'"
+		sql_execute(sql_string)
+		return redirect(url_for('expense_list_html'))
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/approve_list_html')
 def approve_list_html():
-	# get all reports submitted
-	sql_string = "select report.id as id, report.name as name, report.status as status"\
-							" from report join employee"\
-							" on report.user_id = employee.id"\
-							" where employee.company_id = '"+session[SESSION_COMPANY_ID]+"' and"\
-									" (report.status = '"+STATUS_SUBMITTED+"' or report.status = '"+STATUS_APRROVED+"')"
-	results = sql_select(sql_string)
-	reports_submitted = []
-	reports_approved = []
-	if results:
-		for result in results:
-			if result['status'] == STATUS_SUBMITTED:
-				reports_submitted.append(result.copy())
-			elif result['status'] == STATUS_APRROVED:
-				reports_approved.append(result.copy())
-	return render_template('approve_list.html', params=getPendoParams(), title=TITLE_APPROVE_LIST, reports_submitted=reports_submitted, reports_approved=reports_approved)
+	if SESSION_EMAIL in session:
+		# get all reports submitted
+		sql_string = "select report.id as id, report.name as name, report.status as status"\
+								" from report join employee"\
+								" on report.user_id = employee.id"\
+								" where employee.company_id = '"+session[SESSION_COMPANY_ID]+"' and"\
+										" (report.status = '"+STATUS_SUBMITTED+"' or report.status = '"+STATUS_APRROVED+"')"
+		results = sql_select(sql_string)
+		reports_submitted = []
+		reports_approved = []
+		if results:
+			for result in results:
+				if result['status'] == STATUS_SUBMITTED:
+					reports_submitted.append(result.copy())
+				elif result['status'] == STATUS_APRROVED:
+					reports_approved.append(result.copy())
+		return render_template('approve_list.html', params=getPendoParams(), title=TITLE_APPROVE_LIST, reports_submitted=reports_submitted, reports_approved=reports_approved)
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/approve_report', methods=['POST'])
 def approve_report():
-	report_id = request.get('id')
-	if report_id:
-		sql_string = "update report set"\
-								" approve_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
-								" status = '"+STATUS_APRROVED+"'"\
-								" where report.id = '"+report_id+"'"
-	sql_execute(sql_string)
-
-	return redirect(url_for('approve_list_html'))
+	if SESSION_EMAIL in session:
+		report_id = request.get('id')
+		if report_id:
+			sql_string = "update report set"\
+									" approve_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
+									" status = '"+STATUS_APRROVED+"'"\
+									" where report.id = '"+report_id+"'"
+		sql_execute(sql_string)
+		return redirect(url_for('approve_list_html'))
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/employee_list_html')
 def employee_list_html():
-	# get all employees in this company
-	sql_string = "select id, email, first_name, last_name, role"\
-							" from employee"\
-							" where company_id = '"+session[SESSION_COMPANY_ID]+"'"
-	employees = sql_select(sql_string)
-	
-	return render_template('employee_list.html', params=getPendoParams(), title=TITLE_EMPLOYEE_LIST, employees=employees)
+	if SESSION_EMAIL in session:
+		# get all employees in this company
+		sql_string = "select id, email, first_name, last_name, role"\
+								" from employee"\
+								" where company_id = '"+session[SESSION_COMPANY_ID]+"'"
+		employees = sql_select(sql_string)
+		return render_template('employee_list.html', params=getPendoParams(), title=TITLE_EMPLOYEE_LIST, employees=employees)
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/employee_new_html')
 def employee_new_html():
-
-	return render_template('employee_new.html', params=getPendoParams(), title=TITLE_EMPLOYEE_NEW)
+	if SESSION_EMAIL in session:
+		return render_template('employee_new.html', params=getPendoParams(), title=TITLE_EMPLOYEE_NEW)
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/employee_detail_html', methods=['POST'])
 def employee_detail_html():
-	# get details of the employee record
-	sql_string = "select id, first_name, last_name, email, password, role"\
-							" from employee"\
-							" where id = '"+request.form['id']+"'"
-	employees = sql_select(sql_string)
-
-	return render_template('employee_detail.html', params=getPendoParams(), title=TITLE_EMPLOYEE_DETAIL, employee=employees[0])
+	if SESSION_EMAIL in session:
+		# get details of the employee record
+		sql_string = "select id, first_name, last_name, email, password, role"\
+								" from employee"\
+								" where id = '"+request.form['id']+"'"
+		employees = sql_select(sql_string)
+		return render_template('employee_detail.html', params=getPendoParams(), title=TITLE_EMPLOYEE_DETAIL, employee=employees[0])
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/create_employee', methods=['POST'])
 def create_employee():
-	sql_string = "insert into employee(first_name, last_name, email, password, role, company_id)"\
-							" values('"+request.form['first_name']+"','"\
-											+request.form['last_name']+"','"\
-											+request.form['email']+"','"\
-											+request.form['password']+"','"\
-											+request.form['role']+"','"\
-											+session[SESSION_COMPANY_ID]+"')"
-	sql_execute(sql_string)
-
-	return redirect(url_for('employee_list_html'))
+	if SESSION_EMAIL in session:
+		sql_string = "insert into employee(first_name, last_name, email, password, role, company_id)"\
+								" values('"+request.form['first_name']+"','"\
+												+request.form['last_name']+"','"\
+												+request.form['email']+"','"\
+												+request.form['password']+"','"\
+												+request.form['role']+"','"\
+												+session[SESSION_COMPANY_ID]+"')"
+		sql_execute(sql_string)
+		return redirect(url_for('employee_list_html'))
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/update_employee', methods=['POST'])
 def update_employee():
-	sql_string = "update employee set"\
-							" email = '"+request.form['email']+"',"\
-							" first_name = '"+request.form['first_name']+"',"\
-							" last_name = '"+request.form['last_name']+"',"\
-							" role = '"+request.form['role']+"'"\
-							" where id = "+request.form['id']+""
-	sql_execute(sql_string)
-
-	return redirect(url_for('employee_list_html'))
+	if SESSION_EMAIL in session:
+		sql_string = "update employee set"\
+								" email = '"+request.form['email']+"',"\
+								" first_name = '"+request.form['first_name']+"',"\
+								" last_name = '"+request.form['last_name']+"',"\
+								" role = '"+request.form['role']+"'"\
+								" where id = "+request.form['id']+""
+		sql_execute(sql_string)
+		return redirect(url_for('employee_list_html'))
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/delete_employee', methods=['POST'])
 def delete_employee():
-	sql_string = "delete from employee"\
-							" where id = "+request.form['id']+""
-	sql_execute(sql_string)
-
-	return redirect(url_for('employee_list_html'))
+	if SESSION_EMAIL in session:
+		sql_string = "delete from employee"\
+								" where id = "+request.form['id']+""
+		sql_execute(sql_string)
+		return redirect(url_for('employee_list_html'))
+	else:
+		return redirect(url_for('login'))
 
 if __name__ == '__main__':
   main()

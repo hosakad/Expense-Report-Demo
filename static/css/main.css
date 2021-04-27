@@ -6,13 +6,14 @@ html, body, div, nav, section{
 }
 
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   -webkit-box-sizing: inherit;
   box-sizing: inherit;
 }
 
 button {
+	overflow:hidden;
   font-size: 1.2rem;
   font-weight: 700;
   line-height: 1.5;
@@ -33,6 +34,30 @@ button {
   letter-spacing: 0.1em;
   color: #212529;
   border-radius: 0.5rem;
+}
+
+button.button_motion::before{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	content: '';
+	-webkit-transition: all .5s ease-in-out;
+	transition: all .5s ease-in-out;
+	-webkit-transform: translateX(-99%);
+	transform: translateX(-99%);
+	background: #ec2059;
+}
+
+button.button_motion span {
+	position:relative;
+}
+
+button.button_motion:hover::before{
+  -webkit-transform: translateX(0%);
+  transform: translateX(0%);	
+	color:navy;
 }
 
 nav{

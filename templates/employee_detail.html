@@ -21,11 +21,12 @@
 		<input type="hidden" name="id" value="{{employee['id']}}">
 	</form>
 	<div>
-		<button id="button_update_employee" type="submit" form="form_employee_detail" formaction="../update_employee" formmethod="post">{{get_text('BUTTON_UPDATE')}}</button>
-		<button id="button_list employee" onclick="location.href='../employee_list_html'">{{get_text('BUTTON_BACK_TO_LIST')}}</button>
-	</div>
-	<div>
-		<button type="submit" form="form_employee_detail" formaction="../delete_employee" formmethod="post">{{get_text('BUTTON_DELETE')}}</button>
+		<button class="button_motion" id="button_update_employee" type="submit" form="form_employee_detail" formaction="../update_employee" formmethod="post">
+			<span>{{get_text('BUTTON_UPDATE')}}</span>
+		</button>
+		<button class="button_motion" id="button_list employee" onclick="location.href='../employee_list_html'">
+			<span>{{get_text('BUTTON_BACK_TO_LIST')}}</span>
+		</button>
 	</div>
 	<div>
 		<script>
@@ -39,7 +40,9 @@
 				}
 			}
 		</script>
-		<button id="button_delete_employee" onclick="are_you_sure();">{{get_text('BUTTON_DELETE')}}</button>
+		<button class="button_motion" id="button_delete_employee" onclick="are_you_sure();">
+			<span>{{get_text('BUTTON_DELETE')}}</span>
+		</button>
 	</div>
 </article>
 {% endblock %}
