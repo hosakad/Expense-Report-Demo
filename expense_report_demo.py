@@ -17,6 +17,9 @@ app = Flask(__name__)
 app.debug = True
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 
+# API Key for Pendo
+PENDO_API_KEY = os.environ['PENDO_API_KEY']
+
 # Redis settings
 redis_url = os.environ['REDIS_URL']
 pool = redis.ConnectionPool(decode_responses=True)
@@ -168,7 +171,8 @@ def function_processor():
 			return 'MSG_MISMATCH'
 	def get_currency_expression(amount, currency):
 		return generate_currency_expression(amount, currency)
-	return dict(get_fullname=get_fullname,
+	return dict(pendo_api_key=PENDO_API_KEY,
+							get_fullname=get_fullname,
 							role_list=ROLES,
 							currency_list=CURRENCIES,
 							get_text=get_text,
@@ -277,7 +281,7 @@ def expense_list_html():
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
 					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
-								" and expense.report_id = null"
+								" and expense.report_id is null"
 		expenses = sql_select(sql_string)
 		return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
 	else:
