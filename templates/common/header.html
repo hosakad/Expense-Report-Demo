@@ -4,12 +4,6 @@
 	<link rel="stylesheet" href={{url_for('static', filename='css/main.css')}}>
 	<title>{{get_text(title)}}</title>
 	<script type="text/javascript">
-		var role = "{{params['role']}}";
-		var full_name = "{{params['full_name']}}";
-		var language = "{{params['language']}}";
-		var company_id = "{{params['company_id']}}";
-		var company_name = "{{params['company_name']}}";
-		var company_plan = "{{params['company_plan']}}";
     (function(apiKey){
         (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
         v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
@@ -21,19 +15,19 @@
             // Please use Strings, Numbers, or Bools for value types.
             pendo.initialize({
                 visitor: {
-                    id:         {{params['email']}} ||'VISITOR-UNIQUE-ID',   // Required if user is logged in
-                    role:       role,
-                    full_name:  full_name,
-                    language:   language
+                    id:         "{{params['email']}}" ||'VISITOR-UNIQUE-ID',   // Required if user is logged in
+                    role:       "{{params['role']}}",
+                    full_name:  "{{params['full_name']}}",
+                    language:   "{{params['language']}}"
 
                     // You can add any additional visitor level key-values here,
                     // as long as it's not one of the above reserved names.
                 },
 
                 account: {
-                    id:         company_id ||'ACCOUNT-UNIQUE-ID', // Highly recommended
-                    name:       company_name,
-                    plan:       company_plan
+                    id:         "{{params['company_id']}}" ||'ACCOUNT-UNIQUE-ID', // Highly recommended
+                    name:       "{{params['company_name']}}",
+                    plan:       "{{params['company_plan']}}"
                     // name:         // Optional
                     // is_paying:    // Recommended if using Pendo Feedback
                     // monthly_value:// Recommended if using Pendo Feedback
