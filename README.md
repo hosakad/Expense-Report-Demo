@@ -9,7 +9,7 @@ This is a web-based application intended to use in a demo of Pendo. It's a simpl
 
 ## Localization
 ### Language support
-Currently it supports Japanese and English. If you would like to add another language, please modify code as follows:
+Currently it supports Japanese and English. If you would like to add another language, please modify code as follows:  
 expense_report_demo.py
 * Add code to handle the new language(s) in set_language()
 * 
