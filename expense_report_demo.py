@@ -114,7 +114,6 @@ def getPendoParams():
 
 def set_language(language):
 	# currently supported language; ja-JP, en-US
-	print('language:',language)
 	lang = 'en-US' # set en_US as default
 	if language == 'ja' or language == 'ja-JP':
 		# ja_JP as Japanese
