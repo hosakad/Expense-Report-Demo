@@ -1,6 +1,6 @@
 import os
 import json
-from datetime import timedelta
+from datetime import date, timedelta
 from flask import Flask, redirect, request, url_for, render_template, session
 import redis
 import psycopg2
@@ -459,7 +459,7 @@ def submit_report():
 	if SESSION_EMAIL in session:
 		# change the status of the report to submitted
 		sql_string = "update report set"\
-								" submit_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
+								" submit_date = '"+date.today().strftime('%Y-%m-%d')+"',"\
 								" status = '"+STATUS_SUBMITTED+"'"\
 								" where report.id = '"+request.form['id']+"'"
 		sql_execute(sql_string)
