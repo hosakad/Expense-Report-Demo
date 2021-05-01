@@ -9,13 +9,13 @@ There are 3 roles defined in this app and each role has their own UI for the fol
 * Create/modify/delete expenses
 * Create/modify/delete reports
 * Add expenses to a report
-* Submit a report for approval
+* Submit a report for approval  
 Users can handle only expenses and reports that they created. They can't see others' expenses or reports.
 ### Approver
-* Approve/reject reports
+* Approve/reject reports  
 Approvers can see only reports submitted by users who are in the same company. There is no functionality to add a reason of approval or rejection in the report.
 ### Admin
-* Create/modify/delete accounts (User/Approver/Admin)
+* Create/modify/delete accounts (User/Approver/Admin)  
 Admins can create accounts only in their company. The first admin should be created by directly inserting a record in DB. 
 
 ## How to set up in you environment
@@ -27,7 +27,7 @@ You need to install database and redis along with this app. You also need to mak
 * REDIS_URL
 
 # Data model
-![Data Model](images/data_diagram.jpg)
+![Data Model](data_diagram.jpg)
 
 ## Localization
 ### Language support
