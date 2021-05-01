@@ -504,6 +504,20 @@ def approve_report():
 	else:
 		return redirect(url_for('login'))
 
+@app.route('/reject_report', methods=['POST'])
+def reject_report():
+	if SESSION_EMAIL in session:
+		report_id = request.get('id')
+		if report_id:
+			sql_string = "update report set"\
+									" approve_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
+									" status = '"+STATUS_OPEN+"'"\
+									" where report.id = '"+report_id+"'"
+		sql_execute(sql_string)
+		return redirect(url_for('approve_list_html'))
+	else:
+		return redirect(url_for('login'))
+
 @app.route('/employee_list_html')
 def employee_list_html():
 	if SESSION_EMAIL in session:
