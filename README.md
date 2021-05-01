@@ -49,3 +49,16 @@ In case you woule like to use currency other than Yen and Dolloar, please modify
 In case the language requires full name displayed in Last name and First name order like Japanese, please modify code as follows:
 **expense_report_demo.py**
 * Update `generate_fullname()`
+
+## Pendo collaboration
+This app gives the following IDs and metadata to Pendo:
+**Visitor data**
+* ID
+* Role
+* Full name
+* Language
+  
+**Account data**
+* ID
+* Name
+* Plan
