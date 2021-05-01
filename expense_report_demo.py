@@ -1,6 +1,6 @@
 import os
 import json
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 from flask import Flask, redirect, request, url_for, render_template, session
 import redis
 import psycopg2
@@ -114,7 +114,6 @@ def getPendoParams():
 
 def set_language(language):
 	# currently supported language; ja-JP, en-US
-	print('language:',language)
 	lang = 'en-US' # set en_US as default
 	if language == 'ja' or language == 'ja-JP':
 		# ja_JP as Japanese
@@ -460,7 +459,7 @@ def submit_report():
 	if SESSION_EMAIL in session:
 		# change the status of the report to submitted
 		sql_string = "update report set"\
-								" submit_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
+								" submit_date = '"+date.today().strftime('%Y-%m-%d')+"',"\
 								" status = '"+STATUS_SUBMITTED+"'"\
 								" where report.id = '"+request.form['id']+"'"
 		sql_execute(sql_string)
@@ -493,12 +492,22 @@ def approve_list_html():
 @app.route('/approve_report', methods=['POST'])
 def approve_report():
 	if SESSION_EMAIL in session:
-		report_id = request.get('id')
-		if report_id:
-			sql_string = "update report set"\
-									" approve_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
-									" status = '"+STATUS_APRROVED+"'"\
-									" where report.id = '"+report_id+"'"
+		sql_string = "update report set"\
+								" approve_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
+								" status = '"+STATUS_APRROVED+"'"\
+								" where report.id = '"+request.form['id']+"'"
+		sql_execute(sql_string)
+		return redirect(url_for('approve_list_html'))
+	else:
+		return redirect(url_for('login'))
+
+@app.route('/reject_report', methods=['POST'])
+def reject_report():
+	if SESSION_EMAIL in session:
+		sql_string = "update report set"\
+								" submit_date = null,"\
+								" status = '"+STATUS_OPEN+"'"\
+								" where report.id = '"+request.form['id']+"'"
 		sql_execute(sql_string)
 		return redirect(url_for('approve_list_html'))
 	else:

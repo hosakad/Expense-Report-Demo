@@ -66,6 +66,7 @@
   "BUTTON_SHOW_DETAIL": "詳細情報表示",
   "BUTTON_SUBMIT_REPORT": "申請",
   "BUTTON_APPROVE_REPORT": "レポート承認",
+  "BUTTON_REJECT_REPORT": "レポート却下",
   "BUTTON_LOGIN": "ログイン",
   "BUTTON_LOGIN_AGAIN": "再ログイン",
 

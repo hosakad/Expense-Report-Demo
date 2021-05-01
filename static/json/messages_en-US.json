@@ -66,6 +66,7 @@
   "BUTTON_SHOW_DETAIL": "Show Detail",
   "BUTTON_SUBMIT_REPORT": "Submit Report",
   "BUTTON_APPROVE_REPORT": "Approve Report(s)",
+  "BUTTON_REJECT_REPORT": "Reject Report(s)",
   "BUTTON_LOGIN": "Login",
   "BUTTON_LOGIN_AGAIN": "Login Again",
 
