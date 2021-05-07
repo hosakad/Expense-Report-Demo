@@ -26,8 +26,8 @@ pool = redis.ConnectionPool(decode_responses=True)
 redis_client = redis.StrictRedis(connection_pool=pool).from_url(redis_url)
 
 # Redis keys
-REDISDIS_LANGUAGE = 'EMPLOYEE_LANGUAGE'
-REDISDIS_MESSAGES = "MESSAGES" # dict for messages
+REDIS_LANGUAGE = 'EMPLOYEE_LANGUAGE'
+REDIS_MESSAGES = "MESSAGES" # dict for messages
 
 # Session keys
 SESSION_EMPLOYEE_ID = 'EMPLOYEE_ID'
@@ -106,7 +106,7 @@ def getPendoParams():
 	params['email'] = session[SESSION_EMAIL]
 	params['role'] = session[SESSION_ROLE]
 	params['full_name'] = session[SESSION_FULL_NAME]
-	params['language'] = session[REDISDIS_LANGUAGE]
+	params['language'] = session[REDIS_LANGUAGE]
 	params['company_id'] = session[SESSION_COMPANY_ID]
 	params['company_name'] = session[SESSION_COMPANY_NAME]
 	params['company_plan'] = session[SESSION_COMPANY_PLAN]
@@ -121,12 +121,12 @@ def set_language(language):
 	elif language == 'en':
 		# if 'en' is specified, set en_US
 		lang = 'en-US'
-	session[REDISDIS_LANGUAGE] = lang
+	session[REDIS_LANGUAGE] = lang
 
 # this should be called after language is set
 # return default currenct to be used in expense
 def get_default_currency():
-	language = session[REDISDIS_LANGUAGE]
+	language = session[REDIS_LANGUAGE]
 	if language == 'ja-JP':
 		return CURRENCY_YEN
 	else:
@@ -135,7 +135,7 @@ def get_default_currency():
 # this should be called after language is set
 # generage full name according to the language choosen
 def generate_fullname(first_name, last_name):
-	language = session[REDISDIS_LANGUAGE]
+	language = session[REDIS_LANGUAGE]
 	if language == 'ja-JP':
 		# in case Japanese is used, last name comes first
 		return last_name + ' ' + first_name
@@ -145,7 +145,7 @@ def generate_fullname(first_name, last_name):
 # this should be called after language is set
 # generage an expression in html according to the language choosen
 def generate_currency_expression(amount, currency):
-	language = session[REDISDIS_LANGUAGE]
+	language = session[REDIS_LANGUAGE]
 	if language == 'ja-JP':
 		return "{:,}".format(amount) + ' ' + currency
 	else:
@@ -154,7 +154,7 @@ def generate_currency_expression(amount, currency):
 def get_message_dict():
 	# load messages
 	messages = {}
-	path = 'static/json/messages_'+session[REDISDIS_LANGUAGE]+'.json'
+	path = 'static/json/messages_'+session[REDIS_LANGUAGE]+'.json'
 	with open(path) as message_file:
 		messages = json.load(message_file)
 	return messages
@@ -164,8 +164,8 @@ def function_processor():
 	def get_fullname(first_name, last_name):
 		return generate_fullname(first_name, last_name)
 	def get_text(msg_key):
-		if redis_client.hexists(REDISDIS_MESSAGES, msg_key):
-			return redis_client.hget(REDISDIS_MESSAGES, msg_key).decode('utf8')
+		if redis_client.hexists(REDIS_MESSAGES, msg_key):
+			return redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
 		else:
 			return 'MSG_MISMATCH'
 	def get_currency_expression(amount, currency):
@@ -181,7 +181,7 @@ def function_processor():
 def index():
 	if SESSION_EMAIL in session:
 		email = session[SESSION_EMAIL]
-		redis_client.hmset(REDISDIS_MESSAGES, get_message_dict())
+		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 		# if the employee is already logged in, show index.html
 		role = session[SESSION_ROLE]
 		if role == ROLE_USER:
