@@ -25,8 +25,13 @@ You need to install database and redis along with this app. You also need to mak
 * DATABASE_URL
 * PENDO_API_KEY
 * REDIS_URL
+  
+Pendo setting:
+* Set `app_language` to Language Preference Metadata in Localization Settings
+  
+This gives Pendo a value representing the language you are using with a pre-defined value in this app. Since the default metadata of Pendo, `language` is automatically set accorting to the browser setting, the format can be unpredictable for the app.
 
-# Data model
+## Data model
 ![Data Model](data_diagram.jpg)
 
 ## Localization
