@@ -58,12 +58,14 @@ In case the language requires full name displayed in Last name and First name or
 ## Pendo collaboration
 This app gives the following IDs and metadata to Pendo:
 **Visitor data**
-* ID
-* Role
-* Full name
-* Language
+* Visitor ID - `id`
+* Role of the user - `role`
+* Full name of the user - `full_name`
+* Language used - `app_language`
+  
+(A key `language` is a reserved metadata that Pendo puts the language of the browser you are using)
   
 **Account data**
-* ID
-* Name
-* Plan
+* Account ID - `id`
+* Company name - `name`
+* Plan the company pays for - `plan`
