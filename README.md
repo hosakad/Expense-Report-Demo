@@ -25,8 +25,13 @@ You need to install database and redis along with this app. You also need to mak
 * DATABASE_URL
 * PENDO_API_KEY
 * REDIS_URL
+  
+Pendo setting:
+* Set `app_language` to Language Preference Metadata in Localization Settings
+  
+This gives Pendo a value representing the language you are using with a pre-defined value in this app. Since the default metadata of Pendo, `language` is automatically set accorting to the browser setting, the format can be unpredictable for the app.
 
-# Data model
+## Data model
 ![Data Model](data_diagram.jpg)
 
 ## Localization
@@ -49,3 +54,18 @@ In case you woule like to use currency other than Yen and Dolloar, please modify
 In case the language requires full name displayed in Last name and First name order like Japanese, please modify code as follows:
 **expense_report_demo.py**
 * Update `generate_fullname()`
+
+## Pendo collaboration
+This app gives the following IDs and metadata to Pendo:
+**Visitor data**
+* Visitor ID - `id`
+* Role of the user - `role`
+* Full name of the user - `full_name`
+* Language used - `app_language`
+  
+(A key `language` is a reserved metadata that Pendo puts the language of the browser you are using)
+  
+**Account data**
+* Account ID - `id`
+* Company name - `name`
+* Plan the company pays for - `plan`
