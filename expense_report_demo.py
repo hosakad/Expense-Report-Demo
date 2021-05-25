@@ -301,7 +301,7 @@ def expense_detail_html():
 		sql_string = "select id, name, date, amount, currency, description, receipt_image"\
 					" from expense"\
 					" where id = %s"
-		params = (request.form['id'])
+		params = (request.form['id'],)
 		results = sql_select(sql_string, params)
 		if len(results) == 1:
 			return render_template('expense_detail.html', params=getPendoParams(), expense=results[0], title=TITLE_EXPENSE_DETAIL)
