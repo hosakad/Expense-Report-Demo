@@ -56,7 +56,7 @@ CURRENCIES = [CURRENCY_DOLLAR, CURRENCY_YEN]
 # account plan
 ACCOUNT_PLAN = ['Advanced', 'Standard']
 # root path for image files
-RECEIPT_IMAGE_ROOT = 'images/receipt/'
+RECEIPT_IMAGE_ROOT = 'receipt/'
 # app name
 APP_NAME = 'APP_NAME'
 # page titles
@@ -312,17 +312,18 @@ def expense_new_html():
 @app.route('/create_expense', methods=['POST'])
 def create_expense():
 	if SESSION_EMAIL in session:
-		file = request.files['receipt_image']
-		file_path = RECEIPT_IMAGE_ROOT + str(uuid.uuid4()) + '_' + file.filename
-		print('file_path:', file_path)
-		file.save('static/' + file_path)
+		file_name = 'NULL'
+		file = request.files.get('receipt_image')
+		if file:
+			file_name = str(uuid.uuid4()) + '_' + file.filename
+			file.save(RECEIPT_IMAGE_ROOT + file_name)
 		sql_string = "insert into expense(name, date, amount, currency, description, receipt_image, user_id)"\
 								" values('"+request.form['name']+"','"\
 												+request.form['date']+"',"\
 												+request.form['amount']+",'"\
 												+request.form['currency']+"','"\
 												+request.form['description']+"','"\
-												+file_path+"','"\
+												+file_name+"','"\
 												+session[SESSION_EMPLOYEE_ID]+"')"
 		sql_execute(sql_string)
 		return redirect(url_for('expense_list_html'))
@@ -350,10 +351,39 @@ def delete_expense():
 	if SESSION_EMAIL in session:
 		receipt_image = request.form.get('receipt_image')
 		if (receipt_image):
-			os.remove('static/' + receipt_image)
+			os.remove(RECEIPT_IMAGE_ROOT + receipt_image)
 		sql_string = "delete from expense"\
 								" where id = "+request.form['id']+""
 		sql_execute(sql_string)
+		return redirect(url_for('expense_list_html'))
+	else:
+		return redirect(url_for('login'))
+
+@app.route('/delete_receipt_image', methods=['POST'])
+def delete_receipt_image():
+	if SESSION_EMAIL in session:
+		receipt_image = request.form.get('receipt_image')
+		if (receipt_image):
+			os.remove(RECEIPT_IMAGE_ROOT + receipt_image)
+		sql_string = "update expense set"\
+								" receipt_image = null"\
+								" where id = "+request.form['id']+""
+		sql_execute(sql_string)
+		return redirect(url_for('expense_list_html'))
+	else:
+		return redirect(url_for('login'))
+
+@app.route('/update_receipt_image', methods=['POST'])
+def update_receipt_image():
+	if SESSION_EMAIL in session:
+		file = request.files.get('receipt_image')
+		if file:
+			file_name = str(uuid.uuid4()) + '_' + file.filename
+			file.save(RECEIPT_IMAGE_ROOT + file_name)
+			sql_string = "update expense set"\
+									" receipt_image = '"+file_name+"'"\
+									" where id = "+request.form['id']+""
+			sql_execute(sql_string)
 		return redirect(url_for('expense_list_html'))
 	else:
 		return redirect(url_for('login'))

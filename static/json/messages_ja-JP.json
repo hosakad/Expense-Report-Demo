@@ -63,6 +63,8 @@
   "BUTTON_NEW_EXPENSE": "新規経費",
   "BUTTON_NEW_REPORT": "新規レポート",
   "BUTTON_BACK_TO_LIST": "一覧へ戻る",
+  "BUTTON_DELETE_RECEIPT_IMAGE": "画像を削除",
+  "BUTTON_UPDATE_RECEIPT_IMAGE": "画像を追加",
   "BUTTON_ADD_EMPLOYEE": "新規メンバー追加",
   "BUTTON_SHOW_DETAIL": "詳細情報表示",
   "BUTTON_SUBMIT_REPORT": "申請",
