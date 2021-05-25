@@ -18,7 +18,7 @@
 		</p>
 		<p>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}:<input name="amount" type="number" required></p>
 		<p>{{get_text('LABEL_MAIN_DESCRIPTION')}}:<input name="description" type="text"></p>
-		<p>{{get_text('LABEL_MAIN_RECEIPT_IMAGE')}}:<input name="receipt_image" type="file" accept="image/*" required></p>
+		<p>{{get_text('LABEL_MAIN_RECEIPT_IMAGE')}}:<input name="receipt_image" type="file" accept="image/*, .pdf" required></p>
 	</form>
 	<button class="button_motion" id="button_create_expense" type="submit" form="form_expense_new" formaction="../create_expense" formmethod="post">
 		<span>{{get_text('BUTTON_CREATE')}}</span>
