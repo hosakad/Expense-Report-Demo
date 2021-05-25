@@ -311,7 +311,7 @@ def expense_new_html():
 @app.route('/create_expense', methods=['POST'])
 def create_expense():
 	if SESSION_EMAIL in session:
-		file = request.files.get['receipt_image']
+		file = request.files['receipt_image']
 		file_path = RECEIPT_IMAGE_ROOT + uuid.uuid4() + '_' + file.filename
 		file.save(file_path)
 		sql_string = "insert into expense(name, date, amount, currency, description, receipt_image, user_id)"\
