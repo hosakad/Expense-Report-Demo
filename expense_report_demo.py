@@ -56,7 +56,7 @@ CURRENCIES = [CURRENCY_DOLLAR, CURRENCY_YEN]
 # account plan
 ACCOUNT_PLAN = ['Advanced', 'Standard']
 # root path for image files
-RECEIPT_IMAGE_ROOT = 'static/images/receipt/'
+RECEIPT_IMAGE_ROOT = 'images/receipt/'
 # app name
 APP_NAME = 'APP_NAME'
 # page titles
@@ -314,7 +314,7 @@ def create_expense():
 	if SESSION_EMAIL in session:
 		file = request.files['receipt_image']
 		file_path = RECEIPT_IMAGE_ROOT + str(uuid.uuid4()) + '_' + file.filename
-		file.save(file_path)
+		file.save('static/' + file_path)
 		sql_string = "insert into expense(name, date, amount, currency, description, receipt_image, user_id)"\
 								" values('"+request.form['name']+"','"\
 												+request.form['date']+"',"\
@@ -349,7 +349,7 @@ def delete_expense():
 	if SESSION_EMAIL in session:
 		receipt_image = request.form.get('receipt_image')
 		if (receipt_image):
-			os.remove(receipt_image)
+			os.remove('static/' + receipt_image)
 		sql_string = "delete from expense"\
 								" where id = "+request.form['id']+""
 		sql_execute(sql_string)
