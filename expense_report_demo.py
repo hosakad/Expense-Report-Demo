@@ -351,8 +351,10 @@ def update_expense():
 def delete_expense():
 	if SESSION_EMAIL in session:
 		receipt_image = request.form.get('receipt_image')
-		if (receipt_image):
-			os.remove(RECEIPT_IMAGE_ROOT + receipt_image)
+		if receipt_image:
+			file_path = RECEIPT_IMAGE_ROOT + receipt_image
+			if os.path.exists(file_path):
+				os.remove(file_path)
 		sql_string = "delete from expense"\
 								" where id = "+request.form['id']+""
 		sql_execute(sql_string)
@@ -364,8 +366,10 @@ def delete_expense():
 def delete_receipt_image():
 	if SESSION_EMAIL in session:
 		receipt_image = request.form.get('receipt_image')
-		if (receipt_image):
-			os.remove(RECEIPT_IMAGE_ROOT + receipt_image)
+		if receipt_image:
+			file_path = RECEIPT_IMAGE_ROOT + receipt_image
+			if os.path.exists(file_path):
+				os.remove(file_path)
 		sql_string = "update expense set"\
 								" receipt_image = null"\
 								" where id = "+request.form['id']+""
