@@ -25,7 +25,9 @@
 					<td>{{expense_included['date']}}</td>
 					<td>{{get_currency_expression(expense_included['amount'], get_text(expense_included['currency']))}}</td>
 					<td>{{expense_included['description']}}</td>
+					{% if expense_included['receipt_image'] %}
 					<td><img src="{{expense_included['receipt_image']}}" /></td>
+					{% endif %}
 				</tr>
 				{% endfor %}
 			{% else %}
