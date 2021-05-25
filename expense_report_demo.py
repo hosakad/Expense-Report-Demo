@@ -263,11 +263,11 @@ def authenticate():
 			employee_id, email, role, first_name, last_name, company_id, company_name, company_plan = results[0]
 			print('login as email:', email, ', company: ', company_name)
 			# set Pendo parameters
-			session[SESSION_EMPLOYEE_ID] = employee_id
+			session[SESSION_EMPLOYEE_ID] = str(employee_id)
 			session[SESSION_EMAIL] = email
 			session[SESSION_ROLE] = role
 			session[SESSION_FULL_NAME] = generate_fullname(first_name, last_name) # this requires that language has been already set
-			session[SESSION_COMPANY_ID] = company_id
+			session[SESSION_COMPANY_ID] = str(company_id)
 			session[SESSION_COMPANY_NAME] = company_name
 			session[SESSION_COMPANY_PLAN] = company_plan
 			session.permanent = True
