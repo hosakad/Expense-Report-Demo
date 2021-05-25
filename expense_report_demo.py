@@ -91,10 +91,10 @@ def getDBConnection():
 
 	return DATABASE_CONNECTION
 
-def sql_select(sql_string):
-	print("execute sql:", sql_string)
+def sql_select(sql_string, params):
+	print("execute sql:", sql_string % params)
 	cursor = getDBConnection().cursor(cursor_factory=DictCursor)
-	cursor.execute(sql_string)
+	cursor.execute(sql_string, params)
 	results = cursor.fetchall()
 	return results
 
@@ -283,9 +283,10 @@ def expense_list_html():
 		sql_string = "select expense.id, name, date, amount, currency, description, receipt_image"\
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
+					" where expense.user_id = %s"\
 								" and expense.report_id is null"
-		expenses = sql_select(sql_string)
+		params = (session[SESSION_EMPLOYEE_ID])
+		expenses = sql_select(sql_string, params)
 		return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
 	else:
 		return redirect(url_for('login'))
