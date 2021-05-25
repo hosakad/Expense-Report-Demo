@@ -44,6 +44,7 @@
   "LABEL_MAIN_CURRENCY": "Currency",
   "LABEL_MAIN_AMOUNT_MONEY": "Amount",
   "LABEL_MAIN_DESCRIPTION": "Description",
+  "LABEL_MAIN_RECEIPT_IMAGE": "Image of Receipt",
   "LABEL_MAIN_REPORT_NAME": "Name",
   "LABEL_MAIN_SUBMITTED_DATE": "Submitted Date",
   "LABEL_MAIN_APPROVED_DATE": "Approved Date",

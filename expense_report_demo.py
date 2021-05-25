@@ -5,6 +5,7 @@ from flask import Flask, redirect, request, url_for, render_template, session
 import redis
 import psycopg2
 from psycopg2.extras import DictCursor
+import uuid
 
 # retrieve parametes for database from enrironment value
 DATABASE_URL = os.environ['DATABASE_URL']
@@ -53,6 +54,8 @@ CURRENCY_YEN = 'CURRENCY_YEN'
 CURRENCIES = [CURRENCY_DOLLAR, CURRENCY_YEN]
 # account plan
 ACCOUNT_PLAN = ['Advanced', 'Standard']
+# root path for image files
+RECEIPT_IMAGE_ROOT = '/images/receipt/'
 # app name
 APP_NAME = 'APP_NAME'
 # page titles
@@ -308,13 +311,16 @@ def expense_new_html():
 @app.route('/create_expense', methods=['POST'])
 def create_expense():
 	if SESSION_EMAIL in session:
-		print("image data:", request.files.get['receipt_image'])
-		sql_string = "insert into expense(name, date, amount, currency, description, user_id)"\
+		file = request.files.get['receipt_image']
+		file_path = RECEIPT_IMAGE_ROOT + uuid.uuid4() + '_' + file.filename
+		file.save(file_path)
+		sql_string = "insert into expense(name, date, amount, currency, description, receipt_image, user_id)"\
 								" values('"+request.form['name']+"','"\
 												+request.form['date']+"',"\
 												+request.form['amount']+",'"\
 												+request.form['currency']+"','"\
 												+request.form['description']+"','"\
+												+file_path+"','"\
 												+session[SESSION_EMPLOYEE_ID]+"')"
 		sql_execute(sql_string)
 		return redirect(url_for('expense_list_html'))
