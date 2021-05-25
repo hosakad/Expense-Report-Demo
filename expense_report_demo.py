@@ -324,7 +324,7 @@ def create_expense():
 			file.save(RECEIPT_IMAGE_ROOT + file_name)
 			print('file created at ', RECEIPT_IMAGE_ROOT + file_name)
 		sql_string = "insert into expense(name, date, amount, currency, description, receipt_image, user_id)"\
-								" values(%s, %s, %s, %s, %s, %s, %s)"
+								" values('%s', '%s', '%s', '%s', '%s', %s, %s)"
 		params = (request.form['name'], request.form['date'], request.form['amount'], request.form['currency'], request.form['description'], file_name, session[SESSION_EMPLOYEE_ID])
 		sql_execute(sql_string % params)
 		return redirect(url_for('expense_list_html'))
