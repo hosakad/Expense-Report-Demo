@@ -22,7 +22,7 @@
 		<input type="hidden" name="receipt_image" value="{{expense['receipt_image']}}">
 	</form>
 	<form id="receipt_image_form">
-	{% if receipt_image %}
+	{% if expense['receipt_image'] %}
 	<p>{{get_text('LABEL_MAIN_RECEIPT_IMAGE')}}:</p>
 	<p>
 		<img src="../receipt/{{expense['receipt_image']}}" />

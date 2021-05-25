@@ -317,6 +317,7 @@ def create_expense():
 		if file:
 			file_name = str(uuid.uuid4()) + '_' + file.filename
 			file.save(RECEIPT_IMAGE_ROOT + file_name)
+			print('file created at ', RECEIPT_IMAGE_ROOT + file_name)
 		sql_string = "insert into expense(name, date, amount, currency, description, receipt_image, user_id)"\
 								" values('"+request.form['name']+"','"\
 												+request.form['date']+"',"\
