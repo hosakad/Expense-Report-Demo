@@ -56,7 +56,7 @@ CURRENCIES = [CURRENCY_DOLLAR, CURRENCY_YEN]
 # account plan
 ACCOUNT_PLAN = ['Advanced', 'Standard']
 # root path for image files
-RECEIPT_IMAGE_ROOT = 'images/receipt/'
+RECEIPT_IMAGE_ROOT = 'static/images/receipt/'
 # app name
 APP_NAME = 'APP_NAME'
 # page titles
