@@ -33,7 +33,6 @@
 		<table>
 			{% if expenses_open %}
 			<caption>{{get_text('LABEL_MAIN_EXPENSE_TO_ADD')}}</caption>
-				{% for expense_open in expenses_open %}
 				<tr>
 					<th>{{get_text('LABEL_MAIN_CHOOSE_EXPENSE_TO_ADD')}}</th>
 					<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
@@ -41,6 +40,7 @@
 					<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
 					<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
 				</tr>
+				{% for expense_open in expenses_open %}
 				<tr>
 					<td><input type="checkbox" name="id_added" value="{{expense_open['id']}}"></td>
 					<td>{{expense_open['name']}}</td>
