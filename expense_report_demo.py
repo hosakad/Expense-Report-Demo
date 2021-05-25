@@ -193,20 +193,23 @@ def index():
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
-								" and report.status = '"+STATUS_OPEN+"'"
+					" where expense.user_id = %s"\
+								" and report.status = %s"
+			params = (session[SESSION_EMPLOYEE_ID], STATUS_OPEN)
 			inprogress_records = sql_select(sql_string, params)
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
-								" and report.status = '"+STATUS_SUBMITTED+"'"
+					" where expense.user_id = %s"\
+								" and report.status = %s"
+			params = (session[SESSION_EMPLOYEE_ID], STATUS_SUBMITTED)
 			submitted_records = sql_select(sql_string, params)
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
-								" and report.status = '"+STATUS_APRROVED+"'"
+					" where expense.user_id = %s"\
+								" and report.status = %s"
+			params = (session[SESSION_EMPLOYEE_ID], STATUS_APRROVED)
 			approved_records = sql_select(sql_string, params)
 			return render_template('index.html', params=getPendoParams(),
 																				title=TITLE_INDEX,
