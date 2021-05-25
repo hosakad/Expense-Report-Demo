@@ -359,7 +359,7 @@ def delete_expense():
 				os.remove(file_path)
 		sql_string = "delete from expense"\
 								" where id = %s"
-		params = (request.form['id'])
+		params = (request.form['id'],)
 		sql_execute(sql_string, params)
 		return redirect(url_for('expense_list_html'))
 	else:
@@ -376,7 +376,7 @@ def delete_receipt_image():
 		sql_string = "update expense set"\
 								" receipt_image = null"\
 								" where id = %s"
-		params = (request.form['id'])
+		params = (request.form['id'],)
 		sql_execute(sql_string, params)
 		return redirect(url_for('expense_list_html'))
 	else:
@@ -437,7 +437,7 @@ def report_detail_html():
 		sql_string = "select id, name"\
 					" from report"\
 					" where id = %s"
-		params = (request.form['id'])
+		params = (request.form['id'],)
 		reports = sql_select(sql_string, params)
 		# retrieve a list of expenses which haven't been assigned to the report
 		expenses = []
