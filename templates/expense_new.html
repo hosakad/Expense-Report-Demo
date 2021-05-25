@@ -2,7 +2,7 @@
 {% block body %}
 <h1>{{get_text('TITLE_EXPENSE_NEW')}}</h1>
 <article id="expense_new">
-	<form id="form_expense_new">
+	<form id="form_expense_new" enctype="multipart/form-data">
 		<p>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}:<input name="name" type="text" required></p>
 		<p>{{get_text('LABEL_MAIN_DATE')}}:<input name="date" type="date" required></p>
 		<p>{{get_text('LABEL_MAIN_CURRENCY')}}:
