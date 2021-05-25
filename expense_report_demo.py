@@ -312,7 +312,7 @@ def expense_new_html():
 @app.route('/create_expense', methods=['POST'])
 def create_expense():
 	if SESSION_EMAIL in session:
-		file_name = 'NULL'
+		file_name = None
 		file = request.files.get('receipt_image')
 		if file:
 			file_name = str(uuid.uuid4()) + '_' + file.filename
