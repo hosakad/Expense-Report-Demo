@@ -53,7 +53,7 @@
   "LABEL_MAIN_EXPENSE_TO_DELETE": "Remove from Report",
   "LABEL_MAIN_EXPENSE_TO_ADD": "Expense(s) to add to this report",
   "LABEL_MAIN_NO_EXPENSE_TO_ADD": "There is no expense that can be added to this report",
-  "LABEL_MAIN_CHOOSE_EXPENSE": "Choose Expense(s)",
+  "LABEL_MAIN_CHOOSE_EXPENSE_TO_ADD": "Choose Expense(s) to add",
   "LABEL_MAIN_LOGOUT": "Logged out",
 
   "BUTTON_CREATE": "Create",

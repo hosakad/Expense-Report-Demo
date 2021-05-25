@@ -53,7 +53,7 @@
   "LABEL_MAIN_EXPENSE_TO_DELETE": "レポートから削除",
   "LABEL_MAIN_EXPENSE_TO_ADD": "レポートに追加可能な経費",
   "LABEL_MAIN_NO_EXPENSE_TO_ADD": "このレポートに新たに追加できる経費はありません",
-  "LABEL_MAIN_CHOOSE_EXPENSE": "経費の選択",
+  "LABEL_MAIN_CHOOSE_EXPENSE_TO_ADD": "このレポートに追加",
   "LABEL_MAIN_LOGOUT": "ログアウトしました",
 
   "BUTTON_CREATE": "作成",

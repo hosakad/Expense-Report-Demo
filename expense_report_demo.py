@@ -314,6 +314,7 @@ def create_expense():
 												+request.form['amount']+",'"\
 												+request.form['currency']+"','"\
 												+request.form['description']+"','"\
+												+request.form['receipt_image']
 												+session[SESSION_EMPLOYEE_ID]+"')"
 		sql_execute(sql_string)
 		return redirect(url_for('expense_list_html'))
@@ -331,6 +332,7 @@ def update_expense():
 								" description = '"+request.form['description']+"'"\
 								" where id = "+request.form['id']+""
 		sql_execute(sql_string)
+		print("image data:", request.form['receipt_image'])
 
 		return redirect(url_for('expense_list_html'))
 	else:
