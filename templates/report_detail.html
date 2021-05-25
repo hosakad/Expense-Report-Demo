@@ -16,7 +16,6 @@
 					<th>{{get_text('LABEL_MAIN_DATE')}}</th>
 					<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
 					<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
-					<th>{{get_text('LABEL_MAIN_RECEIPT_IMAGE')}}</th>
 				</tr>
 				{% for expense_included in expenses_included %}
 				<tr>
@@ -25,9 +24,6 @@
 					<td>{{expense_included['date']}}</td>
 					<td>{{get_currency_expression(expense_included['amount'], get_text(expense_included['currency']))}}</td>
 					<td>{{expense_included['description']}}</td>
-					{% if expense_included['receipt_image'] %}
-					<td><img src="{{expense_included['receipt_image']}}" /></td>
-					{% endif %}
 				</tr>
 				{% endfor %}
 			{% else %}
