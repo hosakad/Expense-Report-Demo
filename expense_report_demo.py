@@ -98,13 +98,6 @@ def sql_select(sql_string, params):
 	results = cursor.fetchall()
 	return results
 
-def sql_execute(sql_string, params):
-	print("execute sql:", sql_string % params)
-	cursor = getDBConnection().cursor()
-	cursor.execute(sql_string, params)
-	getDBConnection().commit()
-	return
-
 def sql_execute(sql_string):
 	print("execute sql:", sql_string)
 	cursor = getDBConnection().cursor()
@@ -330,7 +323,7 @@ def create_expense():
 		sql_string = "insert into expense(name, date, amount, currency, description, receipt_image, user_id)"\
 								" values(%s, %s, %s, %s, %s, %s, %s)"
 		params = (request.form['name'], request.form['date'], request.form['amount'], request.form['currency'], request.form['description'], file_name, session[SESSION_EMPLOYEE_ID])
-		sql_execute(sql_string, params)
+		sql_execute(sql_string % params)
 		return redirect(url_for('expense_list_html'))
 	else:
 		return redirect(url_for('login'))
