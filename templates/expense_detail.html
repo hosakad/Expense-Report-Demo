@@ -23,7 +23,7 @@
 	</form>
 	<form id="receipt_image_form">
 	{% if receipt_image %}
-	<p>{{get_text('LABEL_MAIN_RECEIPT_IMAGE'):}}</p>
+	<p>{{get_text('LABEL_MAIN_RECEIPT_IMAGE')}}:</p>
 	<p>
 		<img src="../receipt/{{expense['receipt_image']}}" />
 		<button class="button_motion" id="buttun_delete_receipt_image" type="submit" form="receipt_image_form" formaction="../delete_receipt_image" formmethod="post">
