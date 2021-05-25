@@ -503,12 +503,12 @@ def delete_report():
 		sql_string = "update expense set"\
 								" report_id = null"\
 								" where expense.report_id = %s"
-		params = (request.form['id'])
+		params = (request.form['id'],)
 		sql_execute(sql_string, params)
 		# delete the specified report
 		sql_string = "delete from report"\
 								" where id = %s"
-		params = (request.form['id'])
+		params = (request.form['id'],)
 		sql_execute(sql_string, params)
 		return redirect(url_for('report_list_html'))
 	else:
@@ -522,7 +522,7 @@ def submit_report():
 								" submit_date = %s,"\
 								" status = %s"\
 								" where report.id = %s"
-		params = (date.today().strftime('%Y-%m-%s'), STATUS_SUBMITTED, request.form['id'])
+		params = (date.today().strftime('%Y-%m-%d'), STATUS_SUBMITTED, request.form['id'])
 		sql_execute(sql_string, params)
 		return redirect(url_for('expense_list_html'))
 	else:
@@ -558,7 +558,7 @@ def approve_report():
 								" approve_date = %s,"\
 								" status = %s"\
 								" where report.id = %s"
-		params = (datetime.date.today().strftime('%Y-%m-%s'), STATUS_APRROVED, request.form['id'])
+		params = (datetime.date.today().strftime('%Y-%m-%d'), STATUS_APRROVED, request.form['id'])
 		sql_execute(sql_string, params)
 		return redirect(url_for('approve_list_html'))
 	else:
