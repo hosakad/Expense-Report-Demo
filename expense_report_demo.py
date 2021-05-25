@@ -312,7 +312,7 @@ def expense_new_html():
 def create_expense():
 	if SESSION_EMAIL in session:
 		file = request.files['receipt_image']
-		file_path = RECEIPT_IMAGE_ROOT + uuid.uuid4() + '_' + file.filename
+		file_path = RECEIPT_IMAGE_ROOT + str(uuid.uuid4()) + '_' + file.filename
 		file.save(file_path)
 		sql_string = "insert into expense(name, date, amount, currency, description, receipt_image, user_id)"\
 								" values('"+request.form['name']+"','"\
