@@ -4,3 +4,4 @@ redis
 requests
 psycopg2-binary
 sqlalchemy
+Pillow
