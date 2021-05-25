@@ -293,7 +293,7 @@ def expense_list_html():
 @app.route('/expense_detail_html', methods=['POST'])
 def expense_detail_html():
 	if SESSION_EMAIL in session:
-		sql_string = "select id, name, date, amount, currency, description"\
+		sql_string = "select id, name, date, amount, currency, description, receipt_image"\
 					" from expense"\
 					" where id = "+request.form['id']
 		results = sql_select(sql_string)
@@ -347,6 +347,9 @@ def update_expense():
 @app.route('/delete_expense', methods=['POST'])
 def delete_expense():
 	if SESSION_EMAIL in session:
+		receipt_image = request.forms.get('receipt_image')
+		if (receipt_image):
+			os.remove(receipt_image)
 		sql_string = "delete from expense"\
 								" where id = "+request.form['id']+""
 		sql_execute(sql_string)
