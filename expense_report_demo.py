@@ -2,7 +2,6 @@ import os
 import json
 from datetime import date, timedelta
 from flask import Flask, redirect, request, url_for, render_template, session
-from flask_thumbnails import Thumbnail
 import redis
 import psycopg2
 from psycopg2.extras import DictCursor
@@ -19,10 +18,6 @@ DB_ENGINE = None
 app = Flask(__name__)
 app.debug = True
 app.secret_key = os.environ['FLASK_SECRET_KEY']
-
-thumb = Thumbnail(app)
-app.config['THUMBNAIL_MEDIA_ROOT'] = 'images/receipt'
-app.config['THUMBNAIL_MEDIA_URL'] = 'images/receipt'
 
 # API Key for Pendo
 PENDO_API_KEY = os.environ['PENDO_API_KEY']
@@ -285,7 +280,7 @@ def authenticate():
 def expense_list_html():
 	if SESSION_EMAIL in session:
 		expenses = []
-		sql_string = "select expense.id, name, date, amount, currency, description"\
+		sql_string = "select expense.id, name, date, amount, currency, description, receipt_image"\
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
 					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
@@ -326,7 +321,7 @@ def create_expense():
 												+request.form['amount']+",'"\
 												+request.form['currency']+"','"\
 												+request.form['description']+"','"\
-												+file.filename+"','"\
+												+file_path+"','"\
 												+session[SESSION_EMPLOYEE_ID]+"')"
 		sql_execute(sql_string)
 		return redirect(url_for('expense_list_html'))
