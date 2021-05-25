@@ -256,7 +256,8 @@ def authenticate():
 					" company.name as company_name, company.plan as company_plan"\
 					" from employee join company"\
 					" on employee.company_id = company.id"\
-					" where email='"+email+"' and password='"+password+"'"
+					" where email=%s and password=%s"
+		params = (email, password)
 		results = sql_select(sql_string, params)
 		if len(results) == 1:
 			employee_id, email, role, first_name, last_name, company_id, company_name, company_plan = results[0]
