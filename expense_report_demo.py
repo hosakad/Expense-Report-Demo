@@ -347,7 +347,7 @@ def update_expense():
 @app.route('/delete_expense', methods=['POST'])
 def delete_expense():
 	if SESSION_EMAIL in session:
-		receipt_image = request.form['receipt_image']
+		receipt_image = request.form.get('receipt_image')
 		if (receipt_image):
 			os.remove(receipt_image)
 		sql_string = "delete from expense"\
