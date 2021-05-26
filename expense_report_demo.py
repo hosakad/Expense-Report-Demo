@@ -386,9 +386,8 @@ def delete_receipt_image():
 @app.route('/update_receipt_image', methods=['POST'])
 def update_receipt_image():
 	if SESSION_EMAIL in session:
-		print('request.files.get(id):', request.files.get('id'))
 		print('request.files:', request.files)
-		file = request.files.get('new_receipt_image')
+		file = request.files.get('receipt_image')
 		if file:
 			file_name = str(uuid.uuid4()) + '_' + file.filename
 			file.save(RECEIPT_IMAGE_ROOT + file_name)
