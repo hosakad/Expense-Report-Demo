@@ -6,7 +6,7 @@ import redis
 import psycopg2
 from psycopg2.extras import DictCursor
 import uuid
-import PIL.Image
+import werkzeug
 
 # retrieve parametes for database from enrironment value
 DATABASE_URL = os.environ['DATABASE_URL']
@@ -163,6 +163,17 @@ def get_message_dict():
 		messages = json.load(message_file)
 	return messages
 
+# Save the specified file and return the name
+# If the format of the file is not correct or the file doesn't exist, then return None
+def save_image_file(file):
+		if file:
+			file_name = str(uuid.uuid4()) + '_' + werkzeug.utils.secure_filename(file.filename)
+			file.save(RECEIPT_IMAGE_ROOT + file_name)
+			print('file created at ', RECEIPT_IMAGE_ROOT + file_name)
+			return file_name
+		else:
+			return None
+
 @app.context_processor
 def function_processor():
 	def get_fullname(first_name, last_name):
@@ -318,12 +329,8 @@ def expense_new_html():
 @app.route('/create_expense', methods=['POST'])
 def create_expense():
 	if SESSION_EMAIL in session:
-		file_name = None
 		file = request.files.get('receipt_image')
-		if file:
-			file_name = str(uuid.uuid4()) + '_' + file.filename
-			file.save(RECEIPT_IMAGE_ROOT + file_name)
-			print('file created at ', RECEIPT_IMAGE_ROOT + file_name)
+		file_name = save_image_file(file)
 		sql_string = "insert into expense(name, date, amount, currency, description, receipt_image, user_id)"\
 								" values(%s, %s, %s, %s, %s, %s, %s)"
 		params = (request.form['name'], request.form['date'], request.form['amount'], request.form['currency'], request.form['description'], file_name, session[SESSION_EMPLOYEE_ID])
@@ -386,11 +393,9 @@ def delete_receipt_image():
 @app.route('/update_receipt_image', methods=['POST'])
 def update_receipt_image():
 	if SESSION_EMAIL in session:
-		print('request.files:', request.files)
 		file = request.files.get('new_receipt_image')
-		if file:
-			file_name = str(uuid.uuid4()) + '_' + file.filename
-			file.save(RECEIPT_IMAGE_ROOT + file_name)
+		file_name = save_image_file(file)
+		if file_name:
 			sql_string = "update expense set"\
 									" receipt_image = %s"\
 									" where id = %s"
