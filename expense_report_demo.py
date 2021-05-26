@@ -165,14 +165,23 @@ def get_message_dict():
 
 # Save the specified file and return the name
 # If the format of the file is not correct or the file doesn't exist, then return None
-def save_image_file(file):
-		if file:
-			file_name = str(uuid.uuid4()) + '_' + werkzeug.utils.secure_filename(file.filename)
-			file.save(RECEIPT_IMAGE_ROOT + file_name)
-			print('file created at ', RECEIPT_IMAGE_ROOT + file_name)
-			return file_name
-		else:
-			return None
+def save_file(file):
+	if file:
+		file_name = str(uuid.uuid4()) + '_' + werkzeug.utils.secure_filename(file.filename)
+		file.save(RECEIPT_IMAGE_ROOT + file_name)
+		print('file created at ', RECEIPT_IMAGE_ROOT + file_name)
+		return file_name
+	else:
+		return None
+
+# Delete the specified file
+def delete_file(file_name):
+	if file_name:
+		file_path = RECEIPT_IMAGE_ROOT + file_name
+		if os.path.exists(file_path):
+			os.remove(file_path)
+			return True
+	return False
 
 @app.context_processor
 def function_processor():
@@ -330,7 +339,7 @@ def expense_new_html():
 def create_expense():
 	if SESSION_EMAIL in session:
 		file = request.files.get('receipt_image')
-		file_name = save_image_file(file)
+		file_name = save_file(file)
 		sql_string = "insert into expense(name, date, amount, currency, description, receipt_image, user_id)"\
 								" values(%s, %s, %s, %s, %s, %s, %s)"
 		params = (request.form['name'], request.form['date'], request.form['amount'], request.form['currency'], request.form['description'], file_name, session[SESSION_EMPLOYEE_ID])
@@ -360,10 +369,7 @@ def update_expense():
 def delete_expense():
 	if SESSION_EMAIL in session:
 		receipt_image = request.form.get('receipt_image')
-		if receipt_image:
-			file_path = RECEIPT_IMAGE_ROOT + receipt_image
-			if os.path.exists(file_path):
-				os.remove(file_path)
+		delete_file(receipt_image)
 		sql_string = "delete from expense"\
 								" where id = %s"
 		params = (request.form['id'],)
@@ -376,16 +382,12 @@ def delete_expense():
 def delete_receipt_image():
 	if SESSION_EMAIL in session:
 		receipt_image = request.form.get('receipt_image')
-		if receipt_image:
-			file_path = RECEIPT_IMAGE_ROOT + receipt_image
-			if os.path.exists(file_path):
-				os.remove(file_path)
-			print('file updated at ', RECEIPT_IMAGE_ROOT + file_name)
-		sql_string = "update expense set"\
-								" receipt_image = null"\
-								" where id = %s"
-		params = (request.form['id'],)
-		sql_execute(sql_string, params)
+		if delete_file(receipt_image):
+			sql_string = "update expense set"\
+									" receipt_image = null"\
+									" where id = %s"
+			params = (request.form['id'],)
+			sql_execute(sql_string, params)
 		return redirect(url_for('expense_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -394,7 +396,7 @@ def delete_receipt_image():
 def update_receipt_image():
 	if SESSION_EMAIL in session:
 		file = request.files.get('new_receipt_image')
-		file_name = save_image_file(file)
+		file_name = save_file(file)
 		if file_name:
 			sql_string = "update expense set"\
 									" receipt_image = %s"\
