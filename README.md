@@ -20,11 +20,12 @@ Admins can create accounts only in their company. The first admin should be crea
 
 ## How to set up in you environment
 You need to install database and redis along with this app. You also need to make sure if your environment to run this app has Python packages described in requirement.txt. The following environment variables must be referred from os.environ in `expense_report_demo.py`:
-* FLASK_SECRET_KEY
-* DATABASE_SCHEMA
-* DATABASE_URL
-* PENDO_API_KEY
-* REDIS_URL
+* FLASK_SECRET_KEY: Arbitrary string
+* DATABASE_SCHEMA: Schema of DB for this app
+* DATABASE_URL: URL to access DB for this app
+* PENDO_API_KEY: API key of Pendo; Navigate you to "Subscription Setting"->your app->"App Details"
+* PENDO_TRACK_EVENT_SECRET_KEY: Key to give when throwing TrackEvent; In the same page where API key is shown
+* REDIS_URL: URL to refer to Redis you install
   
 Pendo setting:
 * Set `app_language` to Language Preference Metadata in Localization Settings

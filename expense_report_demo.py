@@ -19,8 +19,9 @@ app = Flask(__name__)
 app.debug = True
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 
-# API Key for Pendo
+# API Key and TrackEvent Secret Key for Pendo
 PENDO_API_KEY = os.environ['PENDO_API_KEY']
+PENDO_TRACK_EVENT_SECRET_KEY = os.environ['PENDO_TRACK_EVENT_SECRET_KEY']
 
 # Redis settings
 redis_url = os.environ['REDIS_URL']
@@ -39,6 +40,10 @@ SESSION_FULL_NAME = 'EMPLOYEE_FULL_NAME'
 SESSION_COMPANY_ID = 'COMPANY_ID' # account ID
 SESSION_COMPANY_NAME = 'COMPANY_NAME'
 SESSION_COMPANY_PLAN = 'COMPANY_PLAN'
+
+# Events
+EVENT_FILE_UPLOADED = 'FileUploaded'
+EVENT_FILE_DELETED = 'FileDeleted'
 
 # supported languages
 SUPPORTED_LANGUAGES = ['ja-JP', 'ja', 'en-US', 'en']
@@ -170,6 +175,7 @@ def save_file(file):
 		file_name = str(uuid.uuid4()) + '_' + werkzeug.utils.secure_filename(file.filename)
 		file.save(RECEIPT_IMAGE_ROOT + file_name)
 		print('file created at ', RECEIPT_IMAGE_ROOT + file_name)
+		send_track_event(EVENT_FILE_UPLOADED)
 		return file_name
 	else:
 		return None
@@ -180,8 +186,49 @@ def delete_file(file_name):
 		file_path = RECEIPT_IMAGE_ROOT + file_name
 		if os.path.exists(file_path):
 			os.remove(file_path)
+			send_track_event(EVENT_FILE_DELETED)
 			return True
 	return False
+
+def get_current_time_in_millisec():
+  return time.time().total_seconds() * 1000.0
+
+# Invoke Pendo API to send a track event
+def send_track_event(event_name):
+	if SESSION_EMAIL in session:
+		body = {
+			"type": "track",
+			"event": event_name,
+			"visitorId": session[SESSION_EMAIL],
+			"accountId": session[SESSION_COMPANY_ID],
+			"timestamp": get_current_time_in_millisec(),
+			"properties": {
+				"role": session[SESSION_ROLE],
+				"full_name": session[SESSION_FULL_NAME],
+				"company_name" : session[SESSION_COMPANY_NAME],
+				"company_plan" : session[SESSION_COMPANY_PLAN]
+			},
+			"context": {
+				"ip": request.remote_addr,
+				"userAgent": request.headers.get('User-Agent')
+			}
+		}
+		header = {
+			"Content-Type":"application/json; charset=utf-8",
+			"x-pendo-integration-key":PENDO_TRACK_EVENT_SECRET_KEY
+		}
+
+		api_url = "https://app.pendo.io/data/track"
+
+		result = requests.post(api_url, data=json.dumps(body), headers=header)
+		try:
+			content = json.loads(result.content)
+			return content
+		except Exception as exception:
+			print('exception:', exception)
+			return None
+	else:
+		return redirect(url_for('login'))
 
 @app.context_processor
 def function_processor():
