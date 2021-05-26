@@ -29,9 +29,10 @@
 		<button class="button_motion" id="buttun_delete_receipt_image" type="submit" form="receipt_image_form" formaction="../delete_receipt_image" formmethod="post">
 			<span>{{get_text('BUTTON_DELETE_RECEIPT_IMAGE')}}</span>
 		</button>
+		<input type="hidden" name="receipt_image" value="{{expense['receipt_image']}}">
 	</p>
 	{% else %}
-	<p>{{get_text('LABEL_MAIN_RECEIPT_IMAGE')}}:<input name="receipt_image" type="file" accept="image/*, .pdf"></p>
+	<p>{{get_text('LABEL_MAIN_RECEIPT_IMAGE')}}:<input name="new_receipt_image" type="file" accept="image/*, .pdf"></p>
 	<p>
 		<button class="button_motion" id="buttun_update_receipt_image" type="submit" form="receipt_image_form" formaction="../update_receipt_image" formmethod="post">
 			<span>{{get_text('BUTTON_UPDATE_RECEIPT_IMAGE')}}</span>
