@@ -208,7 +208,7 @@ def send_track_event(event_name):
 			},
 			"context": {
 				"ip": request.remote_addr,
-				"userAgent": user_agent.string
+				"userAgent": request.user_agent.string
 			}
 		}
 		header = {
