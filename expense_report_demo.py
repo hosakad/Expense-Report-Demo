@@ -1,6 +1,6 @@
 import os
 import json
-from datetime import date, timedelta
+from datetime import date, timedelta, time
 from flask import Flask, redirect, request, url_for, render_template, session
 import redis
 import psycopg2
