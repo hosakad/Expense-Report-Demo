@@ -3,6 +3,7 @@ import json
 from datetime import date, timedelta
 import time
 from flask import Flask, redirect, request, url_for, render_template, session
+import requests
 import redis
 import psycopg2
 from psycopg2.extras import DictCursor
