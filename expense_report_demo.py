@@ -1,6 +1,7 @@
 import os
 import json
-from datetime import date, timedelta, time
+from datetime import date, timedelta
+import time
 from flask import Flask, redirect, request, url_for, render_template, session
 import redis
 import psycopg2
@@ -190,9 +191,6 @@ def delete_file(file_name):
 			return True
 	return False
 
-def get_current_time_in_millisec():
-  return time.time().total_seconds() * 1000.0
-
 # Invoke Pendo API to send a track event
 def send_track_event(event_name):
 	if SESSION_EMAIL in session:
@@ -201,7 +199,7 @@ def send_track_event(event_name):
 			"event": event_name,
 			"visitorId": session[SESSION_EMAIL],
 			"accountId": session[SESSION_COMPANY_ID],
-			"timestamp": get_current_time_in_millisec(),
+			"timestamp": int(time.time() * 1000),
 			"properties": {
 				"role": session[SESSION_ROLE],
 				"full_name": session[SESSION_FULL_NAME],
