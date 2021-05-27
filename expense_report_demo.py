@@ -434,7 +434,7 @@ def delete_receipt_image():
 									" where id = %s"
 			params = (request.form['id'],)
 			sql_execute(sql_string, params)
-		return redirect(url_for('expense_detail_html', id=request.form['id']))
+		return redirect(url_for('expense_detail_html'), code=307)
 	else:
 		return redirect(url_for('login'))
 
