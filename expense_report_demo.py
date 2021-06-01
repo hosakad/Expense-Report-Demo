@@ -407,7 +407,7 @@ def update_expense():
 		params = (request.form['name'], request.form['date'], request.form['currency'], request.form['amount'], request.form['description'], request.form['id'])
 		sql_execute(sql_string, params)
 
-		return redirect(url_for('expense_list_html'))
+		return redirect(url_for('expense_detail_html'), code=307)
 	else:
 		return redirect(url_for('login'))
 
@@ -547,7 +547,7 @@ def update_report():
 									" where id in(%s)"
 			params = (",".join(id_removed))
 			sql_execute(sql_string, params)
-		return redirect(url_for('report_list_html'))
+		return redirect(url_for('report_detail_html'), code=307)
 	else:
 		return redirect(url_for('login'))
 
