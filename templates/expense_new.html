@@ -18,8 +18,20 @@
 		</p>
 		<p>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}:<input name="amount" type="number" required></p>
 		<p>{{get_text('LABEL_MAIN_DESCRIPTION')}}:<input name="description" type="text"></p>
-		<p>{{get_text('LABEL_MAIN_RECEIPT_IMAGE')}}:<input name="receipt_image" type="file" accept="image/*"></p>
+		<p>{{get_text('LABEL_MAIN_RECEIPT_IMAGE')}}:<input id="input_uploaded_file" name="receipt_image" type="file" accept="image/*"></p>
 	</form>
+	<script>
+		const max_size = 1024 * 1024 * 2;　// maximum size of file is 2MB
+		const uploaded_file = document.getElementById("input_uploaded_file");
+		const checkFileSize = () => {
+			if (uploaded_file.files[0].size > max_size) {
+				alert("{{get_text('MSG_TOO_LARGE_FILE')}}");
+				uploaded_file.value = '';
+				return;
+			}
+		}
+		uploaded_file.addEventListener("change", checkFileSize);
+	</script>
 	<button class="button_motion" id="button_create_expense" type="submit" form="form_expense_new" formaction="../create_expense" formmethod="post">
 		<span>{{get_text('BUTTON_CREATE')}}</span>
 	</button>
