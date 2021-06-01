@@ -534,7 +534,7 @@ def update_report():
 		if id_added:
 			# add specified expenses to this report
 			sql_string = "update expense set"\
-									" report_id = '"++"'"\
+									" report_id = %s"\
 									" where id in(%s)"
 			params = (request.form['id'], ",".join(id_added))
 			sql_execute(sql_string, params)
