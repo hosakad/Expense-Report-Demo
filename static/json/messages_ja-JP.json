@@ -85,6 +85,7 @@
   "CURRENCY_YEN": "円",
 
   "MSG_CONFIRM_DELETE": "削除してよろしいですか？",
+  "MSG_TOO_LARGE_FILE": "ファイルは2MB以下のものを指定してください",
 	"MSG_EMAIL_MISMATCH": "メールアドレスとパスワードが一致しません",
 	"MSG_NO_EMAIL_PASSWORD": "メールアドレスまたはパスワードが入力されませんでした",
 	"MSG_NO_EXPENSE_ID_MATCH": "一致する経費IDがありません",

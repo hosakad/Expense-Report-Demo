@@ -85,6 +85,7 @@
   "CURRENCY_YEN": "Yen",
 
   "MSG_CONFIRM_DELETE": "Are you sure to delete？",
+  "MSG_TOO_LARGE_FILE": "File size should be 2MB or smaller",
 	"MSG_EMAIL_MISMATCH": "Email address and password don't match",
 	"MSG_NO_EMAIL_PASSWORD": "Email address or password is empty",
 	"MSG_NO_EXPENSE_ID_MATCH": "There is no expemse ID matched",
