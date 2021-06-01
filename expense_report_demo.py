@@ -404,7 +404,7 @@ def update_expense():
 								" amount = %s,"\
 								" description = %s"\
 								" where id = %s"
-		params = (request.form['name'], request.form['date'], request.form['currency'], request.form['amount'], request.form['c'], request.form['id'])
+		params = (request.form['name'], request.form['date'], request.form['currency'], request.form['amount'], request.form['description'], request.form['id'])
 		sql_execute(sql_string, params)
 
 		return redirect(url_for('expense_list_html'))
