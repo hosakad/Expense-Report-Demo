@@ -34,9 +34,25 @@
 			{% endfor %}
 		</table>
 	</form>
-	<button class="button_motion" id="button_report_detail" type="submit" form="form_report_list" formaction="../report_detail_html" formmethod="post">
-		<span>{{get_text('BUTTON_SHOW_DETAIL')}}</span>
-	</button>
+	<div>
+		<button class="button_motion" id="button_report_detail" type="submit" form="form_report_list" formaction="../report_detail_html" formmethod="post">
+			<span>{{get_text('BUTTON_SHOW_DETAIL')}}</span>
+		</button>
+		<script>
+			function are_you_sure() {
+				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
+				if (result) {
+					form_report_list = document.getElementById("form_report_list");
+					form_report_list.action="../delete_report";
+					form_report_list.method="post";
+					form_report_list.submit();
+				}
+			}
+		</script>
+		<button class="button_motion" id="button_delete_report" onclick="are_you_sure();">
+			<span>{{get_text('BUTTON_DELETE')}}</span>
+		</button>
+	</div>
 	{% endif %}
 </article>
 {% endblock %}

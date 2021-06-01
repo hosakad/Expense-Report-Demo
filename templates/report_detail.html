@@ -64,20 +64,6 @@
 			<span>{{get_text('BUTTON_SUBMIT_REPORT')}}</span>
 		</button>
 		{% endif %}
-		<script>
-			function are_you_sure() {
-				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
-				if (result) {
-					form_report = document.getElementById("form_report_detail");
-					form_report.action="../delete_report";
-					form_report.method="post";
-					form_report.submit();
-				}
-			}
-		</script>
-		<button class="button_motion" id="button_delete_report" onclick="are_you_sure();">
-			<span>{{get_text('BUTTON_DELETE')}}</span>
-		</button>
 	</div>
 	<div>
 		<button class="button_motion" id="button_list_report" onclick="location.href='../report_list_html'">

@@ -63,21 +63,5 @@
 			<span>{{get_text('BUTTON_BACK_TO_LIST')}}</span>
 		</button>
 	</div>
-	<div>
-		<script>
-			function are_you_sure() {
-				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
-				if (result) {
-					form_report = document.getElementById("form_expense_detail");
-					form_report.action="../delete_expense";
-					form_report.method="post";
-					form_report.submit();
-				}
-			}
-		</script>
-		<button class="button_motion" id="button_delete_expense" onclick="are_you_sure();">
-			<span>{{get_text('BUTTON_DELETE')}}</span>
-		</button>
-	</div>
 </article>
 {% endblock %}
