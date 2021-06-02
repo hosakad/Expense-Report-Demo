@@ -23,13 +23,29 @@
 				<td>{{expense['date']}}</td>
 				<td>{{get_currency_expression(expense['amount'], get_text(expense['currency']))}}</td>
 				<td>{{expense['description']}}</td>
-			</tr>
+		</tr>
 			{% endfor %}
 		</table>
 	</form>
-	<button class="button_motion" id="button_expense_detail" type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post">
-		<span>{{get_text('BUTTON_SHOW_DETAIL')}}</span>
-	</button>
+	<div>
+		<script>
+			function are_you_sure() {
+				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
+				if (result) {
+					form_expense_list = document.getElementById("form_expense_list");
+					form_expense_list.action="../delete_expense";
+					form_expense_list.method="post";
+					form_expense_list.submit();
+				}
+			}
+		</script>
+		<button class="button_motion" id="button_expense_detail" type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post">
+			<span>{{get_text('BUTTON_SHOW_DETAIL')}}</span>
+		</button>
+		<button class="button_motion" id="button_delete_expense" onclick="are_you_sure();">
+			<span>{{get_text('BUTTON_DELETE')}}</span>
+		</button>
+	</div>
 	{% endif %}
 </article>
 {% endblock %}

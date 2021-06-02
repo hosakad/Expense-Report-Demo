@@ -44,6 +44,7 @@
   "LABEL_MAIN_CURRENCY": "Currency",
   "LABEL_MAIN_AMOUNT_MONEY": "Amount",
   "LABEL_MAIN_DESCRIPTION": "Description",
+  "LABEL_MAIN_RECEIPT_IMAGE": "Image of Receipt",
   "LABEL_MAIN_REPORT_NAME": "Name",
   "LABEL_MAIN_SUBMITTED_DATE": "Submitted Date",
   "LABEL_MAIN_APPROVED_DATE": "Approved Date",
@@ -53,7 +54,7 @@
   "LABEL_MAIN_EXPENSE_TO_DELETE": "Remove from Report",
   "LABEL_MAIN_EXPENSE_TO_ADD": "Expense(s) to add to this report",
   "LABEL_MAIN_NO_EXPENSE_TO_ADD": "There is no expense that can be added to this report",
-  "LABEL_MAIN_CHOOSE_EXPENSE": "Choose Expense(s)",
+  "LABEL_MAIN_CHOOSE_EXPENSE_TO_ADD": "Choose Expense(s) to add",
   "LABEL_MAIN_LOGOUT": "Logged out",
 
   "BUTTON_CREATE": "Create",
@@ -62,6 +63,8 @@
   "BUTTON_NEW_EXPENSE": "Create New Expense",
   "BUTTON_NEW_REPORT": "Create New Report",
   "BUTTON_BACK_TO_LIST": "Go Back to List",
+  "BUTTON_DELETE_RECEIPT_IMAGE": "Delete Image",
+  "BUTTON_UPDATE_RECEIPT_IMAGE": "Upload Image",
   "BUTTON_ADD_EMPLOYEE": "Add New Member",
   "BUTTON_SHOW_DETAIL": "Show Detail",
   "BUTTON_SUBMIT_REPORT": "Submit Report",
@@ -82,6 +85,7 @@
   "CURRENCY_YEN": "Yen",
 
   "MSG_CONFIRM_DELETE": "Are you sure to delete？",
+  "MSG_TOO_LARGE_FILE": "File size should be 2MB or smaller",
 	"MSG_EMAIL_MISMATCH": "Email address and password don't match",
 	"MSG_NO_EMAIL_PASSWORD": "Email address or password is empty",
 	"MSG_NO_EXPENSE_ID_MATCH": "There is no expemse ID matched",

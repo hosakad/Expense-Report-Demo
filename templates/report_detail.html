@@ -30,17 +30,18 @@
 			<caption>{{get_text('LABEL_MAIN_NO_EXPENSE_ADDED')}}</caption>
 			{% endif %}
 		</table>
+		<hr>
 		<table>
 			{% if expenses_open %}
 			<caption>{{get_text('LABEL_MAIN_EXPENSE_TO_ADD')}}</caption>
-				{% for expense_open in expenses_open %}
 				<tr>
-					<th>{{get_text('LABEL_MAIN_CHOOSE_EXPENSE')}}</th>
+					<th>{{get_text('LABEL_MAIN_CHOOSE_EXPENSE_TO_ADD')}}</th>
 					<th>{{get_text('LABEL_MAIN_EXPENSE_NAME')}}</th>
 					<th>{{get_text('LABEL_MAIN_DATE')}}</th>
 					<th>{{get_text('LABEL_MAIN_AMOUNT_MONEY')}}</th>
 					<th>{{get_text('LABEL_MAIN_DESCRIPTION')}}</th>
 				</tr>
+				{% for expense_open in expenses_open %}
 				<tr>
 					<td><input type="checkbox" name="id_added" value="{{expense_open['id']}}"></td>
 					<td>{{expense_open['name']}}</td>
@@ -64,20 +65,6 @@
 			<span>{{get_text('BUTTON_SUBMIT_REPORT')}}</span>
 		</button>
 		{% endif %}
-		<script>
-			function are_you_sure() {
-				result = window.confirm("{{get_text('MSG_CONFIRM_DELETE')}}");
-				if (result) {
-					form_report = document.getElementById("form_report_detail");
-					form_report.action="../delete_report";
-					form_report.method="post";
-					form_report.submit();
-				}
-			}
-		</script>
-		<button class="button_motion" id="button_delete_report" onclick="are_you_sure();">
-			<span>{{get_text('BUTTON_DELETE')}}</span>
-		</button>
 	</div>
 	<div>
 		<button class="button_motion" id="button_list_report" onclick="location.href='../report_list_html'">

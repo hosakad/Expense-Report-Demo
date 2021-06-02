@@ -1,10 +1,14 @@
 import os
 import json
 from datetime import date, timedelta
+import time
 from flask import Flask, redirect, request, url_for, render_template, session
+import requests
 import redis
 import psycopg2
 from psycopg2.extras import DictCursor
+import uuid
+import werkzeug
 
 # retrieve parametes for database from enrironment value
 DATABASE_URL = os.environ['DATABASE_URL']
@@ -17,8 +21,9 @@ app = Flask(__name__)
 app.debug = True
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 
-# API Key for Pendo
+# API Key and TrackEvent Secret Key for Pendo
 PENDO_API_KEY = os.environ['PENDO_API_KEY']
+PENDO_TRACK_EVENT_SECRET_KEY = os.environ['PENDO_TRACK_EVENT_SECRET_KEY']
 
 # Redis settings
 redis_url = os.environ['REDIS_URL']
@@ -38,6 +43,10 @@ SESSION_COMPANY_ID = 'COMPANY_ID' # account ID
 SESSION_COMPANY_NAME = 'COMPANY_NAME'
 SESSION_COMPANY_PLAN = 'COMPANY_PLAN'
 
+# Events
+EVENT_FILE_UPLOADED = 'FileUploaded'
+EVENT_FILE_DELETED = 'FileDeleted'
+
 # supported languages
 SUPPORTED_LANGUAGES = ['ja-JP', 'ja', 'en-US', 'en']
 
@@ -53,6 +62,8 @@ CURRENCY_YEN = 'CURRENCY_YEN'
 CURRENCIES = [CURRENCY_DOLLAR, CURRENCY_YEN]
 # account plan
 ACCOUNT_PLAN = ['Advanced', 'Standard']
+# root path for image files
+RECEIPT_IMAGE_ROOT = 'static/images/receipt/'
 # app name
 APP_NAME = 'APP_NAME'
 # page titles
@@ -87,17 +98,17 @@ def getDBConnection():
 
 	return DATABASE_CONNECTION
 
-def sql_select(sql_string):
-	print("execute sql:", sql_string)
+def sql_select(sql_string, params):
+	print("execute sql:", sql_string % params)
 	cursor = getDBConnection().cursor(cursor_factory=DictCursor)
-	cursor.execute(sql_string)
+	cursor.execute(sql_string, params)
 	results = cursor.fetchall()
 	return results
 
-def sql_execute(sql_string):
-	print("execute sql:", sql_string)
+def sql_execute(sql_string, params):
+	print("execute sql:", sql_string % params)
 	cursor = getDBConnection().cursor()
-	cursor.execute(sql_string)
+	cursor.execute(sql_string, params)
 	getDBConnection().commit()
 	return
 
@@ -159,6 +170,65 @@ def get_message_dict():
 		messages = json.load(message_file)
 	return messages
 
+# Save the specified file and return the name
+# If the format of the file is not correct or the file doesn't exist, then return None
+def save_file(file):
+	if file:
+		file_name = str(uuid.uuid4()) + '_' + werkzeug.utils.secure_filename(file.filename)
+		file.save(RECEIPT_IMAGE_ROOT + file_name)
+		print('file created at ', RECEIPT_IMAGE_ROOT + file_name)
+		send_track_event(EVENT_FILE_UPLOADED)
+		return file_name
+	else:
+		return None
+
+# Delete the specified file
+def delete_file(file_name):
+	if file_name:
+		file_path = RECEIPT_IMAGE_ROOT + file_name
+		if os.path.exists(file_path):
+			os.remove(file_path)
+			send_track_event(EVENT_FILE_DELETED)
+			return True
+	return False
+
+# Invoke Pendo API to send a track event
+def send_track_event(event_name):
+	if SESSION_EMAIL in session:
+		body = {
+			"type": "track",
+			"event": event_name,
+			"visitorId": session[SESSION_EMAIL],
+			"accountId": session[SESSION_COMPANY_ID],
+			"timestamp": int(time.time() * 1000),
+			"properties": {
+				"role": session[SESSION_ROLE],
+				"full_name": session[SESSION_FULL_NAME],
+				"company_name" : session[SESSION_COMPANY_NAME],
+				"company_plan" : session[SESSION_COMPANY_PLAN]
+			},
+			"context": {
+				"ip": request.remote_addr,
+				"userAgent": request.user_agent.string
+			}
+		}
+		header = {
+			"Content-Type":"application/json; charset=utf-8",
+			"x-pendo-integration-key":PENDO_TRACK_EVENT_SECRET_KEY
+		}
+
+		api_url = "https://app.pendo.io/data/track"
+
+		result = requests.post(api_url, data=json.dumps(body), headers=header)
+		try:
+			content = json.loads(result.content)
+			return content
+		except Exception as exception:
+			print('exception:', exception)
+			return None
+	else:
+		return redirect(url_for('login'))
+
 @app.context_processor
 def function_processor():
 	def get_fullname(first_name, last_name):
@@ -189,21 +259,24 @@ def index():
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
-								" and report.status = '"+STATUS_OPEN+"'"
-			inprogress_records = sql_select(sql_string)
+					" where expense.user_id = %s"\
+								" and report.status = %s"
+			params = (session[SESSION_EMPLOYEE_ID], STATUS_OPEN)
+			inprogress_records = sql_select(sql_string, params)
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
-								" and report.status = '"+STATUS_SUBMITTED+"'"
-			submitted_records = sql_select(sql_string)
+					" where expense.user_id = %s"\
+								" and report.status = %s"
+			params = (session[SESSION_EMPLOYEE_ID], STATUS_SUBMITTED)
+			submitted_records = sql_select(sql_string, params)
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
-								" and report.status = '"+STATUS_APRROVED+"'"
-			approved_records = sql_select(sql_string)
+					" where expense.user_id = %s"\
+								" and report.status = %s"
+			params = (session[SESSION_EMPLOYEE_ID], STATUS_APRROVED)
+			approved_records = sql_select(sql_string, params)
 			return render_template('index.html', params=getPendoParams(),
 																				title=TITLE_INDEX,
 																				inprogress_records=inprogress_records[0],
@@ -249,8 +322,9 @@ def authenticate():
 					" company.name as company_name, company.plan as company_plan"\
 					" from employee join company"\
 					" on employee.company_id = company.id"\
-					" where email='"+email+"' and password='"+password+"'"
-		results = sql_select(sql_string)
+					" where email=%s and password=%s"
+		params = (email, password)
+		results = sql_select(sql_string, params)
 		if len(results) == 1:
 			employee_id, email, role, first_name, last_name, company_id, company_name, company_plan = results[0]
 			print('login as email:', email, ', company: ', company_name)
@@ -276,12 +350,13 @@ def authenticate():
 def expense_list_html():
 	if SESSION_EMAIL in session:
 		expenses = []
-		sql_string = "select expense.id, name, date, amount, currency, description"\
+		sql_string = "select expense.id, name, date, amount, currency, description, receipt_image"\
 					" from expense join employee"\
 					" on expense.user_id = employee.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
+					" where expense.user_id = %s"\
 								" and expense.report_id is null"
-		expenses = sql_select(sql_string)
+		params = (session[SESSION_EMPLOYEE_ID])
+		expenses = sql_select(sql_string, params)
 		return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
 	else:
 		return redirect(url_for('login'))
@@ -289,10 +364,11 @@ def expense_list_html():
 @app.route('/expense_detail_html', methods=['POST'])
 def expense_detail_html():
 	if SESSION_EMAIL in session:
-		sql_string = "select id, name, date, amount, currency, description"\
+		sql_string = "select id, name, date, amount, currency, description, receipt_image"\
 					" from expense"\
-					" where id = "+request.form['id']
-		results = sql_select(sql_string)
+					" where id = %s"
+		params = (request.form['id'],)
+		results = sql_select(sql_string, params)
 		if len(results) == 1:
 			return render_template('expense_detail.html', params=getPendoParams(), expense=results[0], title=TITLE_EXPENSE_DETAIL)
 		else:
@@ -308,14 +384,12 @@ def expense_new_html():
 @app.route('/create_expense', methods=['POST'])
 def create_expense():
 	if SESSION_EMAIL in session:
-		sql_string = "insert into expense(name, date, amount, currency, description, user_id)"\
-								" values('"+request.form['name']+"','"\
-												+request.form['date']+"',"\
-												+request.form['amount']+",'"\
-												+request.form['currency']+"','"\
-												+request.form['description']+"','"\
-												+session[SESSION_EMPLOYEE_ID]+"')"
-		sql_execute(sql_string)
+		file = request.files.get('receipt_image')
+		file_name = save_file(file)
+		sql_string = "insert into expense(name, date, amount, currency, description, receipt_image, user_id)"\
+								" values(%s, %s, %s, %s, %s, %s, %s)"
+		params = (request.form['name'], request.form['date'], request.form['amount'], request.form['currency'], request.form['description'], file_name, session[SESSION_EMPLOYEE_ID])
+		sql_execute(sql_string, params)
 		return redirect(url_for('expense_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -324,25 +398,58 @@ def create_expense():
 def update_expense():
 	if SESSION_EMAIL in session:
 		sql_string = "update expense set"\
-								" name = '"+request.form['name']+"',"\
-								" date = '"+request.form['date']+"',"\
-								" currency = '"+request.form['currency']+"',"\
-								" amount = "+request.form['amount']+","\
-								" description = '"+request.form['description']+"'"\
-								" where id = "+request.form['id']+""
-		sql_execute(sql_string)
+								" name = %s,"\
+								" date = %s,"\
+								" currency = %s,"\
+								" amount = %s,"\
+								" description = %s"\
+								" where id = %s"
+		params = (request.form['name'], request.form['date'], request.form['currency'], request.form['amount'], request.form['description'], request.form['id'])
+		sql_execute(sql_string, params)
 
-		return redirect(url_for('expense_list_html'))
+		return redirect(url_for('expense_detail_html'), code=307)
 	else:
 		return redirect(url_for('login'))
 
 @app.route('/delete_expense', methods=['POST'])
 def delete_expense():
 	if SESSION_EMAIL in session:
+		receipt_image = request.form.get('receipt_image')
+		delete_file(receipt_image)
 		sql_string = "delete from expense"\
-								" where id = "+request.form['id']+""
-		sql_execute(sql_string)
+								" where id = %s"
+		params = (request.form['id'],)
+		sql_execute(sql_string, params)
 		return redirect(url_for('expense_list_html'))
+	else:
+		return redirect(url_for('login'))
+
+@app.route('/delete_receipt_image', methods=['POST'])
+def delete_receipt_image():
+	if SESSION_EMAIL in session:
+		receipt_image = request.form.get('receipt_image')
+		if delete_file(receipt_image):
+			sql_string = "update expense set"\
+									" receipt_image = null"\
+									" where id = %s"
+			params = (request.form['id'],)
+			sql_execute(sql_string, params)
+		return redirect(url_for('expense_detail_html'), code=307)
+	else:
+		return redirect(url_for('login'))
+
+@app.route('/update_receipt_image', methods=['POST'])
+def update_receipt_image():
+	if SESSION_EMAIL in session:
+		file = request.files.get('new_receipt_image')
+		file_name = save_file(file)
+		if file_name:
+			sql_string = "update expense set"\
+									" receipt_image = %s"\
+									" where id = %s"
+			params = (file_name, request.form['id'])
+			sql_execute(sql_string, params)
+		return redirect(url_for('expense_detail_html'), code=307)
 	else:
 		return redirect(url_for('login'))
 
@@ -352,8 +459,9 @@ def report_list_html():
 		sql_string = "select report.id, name, submit_date, approve_date, status"\
 					" from report join employee"\
 					" on report.user_id = employee.id"\
-					" where report.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"
-		reports = sql_select(sql_string)
+					" where report.user_id = %s"
+		params = (session[SESSION_EMPLOYEE_ID])
+		reports = sql_select(sql_string, params)
 		return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT_LIST)
 	else:
 		return redirect(url_for('login'))
@@ -370,10 +478,9 @@ def create_report():
 	if SESSION_EMAIL in session:
 		# create a report record
 		sql_string = "insert into report(name, user_id, status)"\
-								" values('"+request.form['name']+"',"\
-												" '"+session[SESSION_EMPLOYEE_ID]+"',"\
-												"	'"+STATUS_OPEN+"')"
-		sql_execute(sql_string)
+								" values(%s, %s, %s)"
+		params = (request.form['name'], session[SESSION_EMPLOYEE_ID], STATUS_OPEN)
+		sql_execute(sql_string, params)
 		return redirect(url_for('report_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -384,24 +491,27 @@ def report_detail_html():
 		# get the specified report
 		sql_string = "select id, name"\
 					" from report"\
-					" where id = "+request.form['id']
-		reports = sql_select(sql_string)
+					" where id = %s"
+		params = (request.form['id'],)
+		reports = sql_select(sql_string, params)
 		# retrieve a list of expenses which haven't been assigned to the report
 		expenses = []
 		sql_string = "select expense.id, name, date, amount, currency, description"\
 					" from expense"\
 					" join employee on expense.user_id = employee.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"' and expense.report_id is null"
-		expenses_open = sql_select(sql_string)
+					" where expense.user_id = %s and expense.report_id is null"
+		params = (session[SESSION_EMPLOYEE_ID])
+		expenses_open = sql_select(sql_string, params)
 		# retrieve a list of expenses which have already been assigned in the report
 		sql_string = "select expense.id, expense.name, date, amount, currency, description"\
 					" from expense"\
 					" join employee on expense.user_id = employee.id"\
 					" join report on expense.report_id = report.id"\
-					" where expense.user_id = '"+session[SESSION_EMPLOYEE_ID]+"'"\
-								" and expense.report_id = '"+request.form['id']+"'"\
-								" and report.status = '"+STATUS_OPEN+"'"
-		expenses_included = sql_select(sql_string)
+					" where expense.user_id = %s"\
+								" and expense.report_id = %s"\
+								" and report.status = %s"
+		params = (session[SESSION_EMPLOYEE_ID], request.form['id'], STATUS_OPEN)
+		expenses_included = sql_select(sql_string, params)
 
 		if len(reports) == 1:
 			return render_template('report_detail.html', params=getPendoParams(), report=reports[0], expenses_open=expenses_open, expenses_included=expenses_included, title=TITLE_REPORT_DETAIL)
@@ -415,26 +525,29 @@ def update_report():
 	if SESSION_EMAIL in session:
 		# update the name of the report
 		sql_string = "update report set"\
-								" name = '"+request.form['name']+"'"\
-								" where id = "+request.form['id']+""
-		sql_execute(sql_string)
+								" name = %s"\
+								" where id = %s"
+		params = (request.form['name'], request.form['id'])
+		sql_execute(sql_string, params)
 		# update the report ID in the expenses
 		id_added = request.form.getlist('id_added')
 		if id_added:
 			# add specified expenses to this report
 			sql_string = "update expense set"\
-									" report_id = '"+request.form['id']+"'"\
-									" where id in("+",".join(id_added)+")"
-			sql_execute(sql_string)
+									" report_id = %s"\
+									" where id in(%s)"
+			params = (request.form['id'], ",".join(id_added))
+			sql_execute(sql_string, params)
 		# remove the report ID from the expenses
 		id_removed = request.form.getlist('id_removed')
 		if id_removed:
 			# remove specified expenses from this report
 			sql_string = "update expense set"\
 									" report_id = null"\
-									" where id in("+",".join(id_removed)+")"
-			sql_execute(sql_string)
-		return redirect(url_for('report_list_html'))
+									" where id in(%s)"
+			params = (",".join(id_removed))
+			sql_execute(sql_string, params)
+		return redirect(url_for('report_detail_html'), code=307)
 	else:
 		return redirect(url_for('login'))
 
@@ -444,12 +557,14 @@ def delete_report():
 		# remove specified expenses from this report
 		sql_string = "update expense set"\
 								" report_id = null"\
-								" where expense.report_id = '"+request.form['id']+"'"
-		sql_execute(sql_string)
+								" where expense.report_id = %s"
+		params = (request.form['id'],)
+		sql_execute(sql_string, params)
 		# delete the specified report
 		sql_string = "delete from report"\
-								" where id = '"+request.form['id']+"'"
-		sql_execute(sql_string)
+								" where id = %s"
+		params = (request.form['id'],)
+		sql_execute(sql_string, params)
 		return redirect(url_for('report_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -459,10 +574,11 @@ def submit_report():
 	if SESSION_EMAIL in session:
 		# change the status of the report to submitted
 		sql_string = "update report set"\
-								" submit_date = '"+date.today().strftime('%Y-%m-%d')+"',"\
-								" status = '"+STATUS_SUBMITTED+"'"\
-								" where report.id = '"+request.form['id']+"'"
-		sql_execute(sql_string)
+								" submit_date = %s,"\
+								" status = %s"\
+								" where report.id = %s"
+		params = (date.today().strftime('%Y-%m-%d'), STATUS_SUBMITTED, request.form['id'])
+		sql_execute(sql_string, params)
 		return redirect(url_for('expense_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -474,9 +590,10 @@ def approve_list_html():
 		sql_string = "select report.id as id, report.name as name, report.status as status"\
 								" from report join employee"\
 								" on report.user_id = employee.id"\
-								" where employee.company_id = '"+session[SESSION_COMPANY_ID]+"' and"\
-										" (report.status = '"+STATUS_SUBMITTED+"' or report.status = '"+STATUS_APRROVED+"')"
-		results = sql_select(sql_string)
+								" where employee.company_id = %s and"\
+										" (report.status = %s or report.status = %s)"
+		params = (session[SESSION_COMPANY_ID], STATUS_SUBMITTED, STATUS_APRROVED)
+		results = sql_select(sql_string, params)
 		reports_submitted = []
 		reports_approved = []
 		if results:
@@ -493,10 +610,11 @@ def approve_list_html():
 def approve_report():
 	if SESSION_EMAIL in session:
 		sql_string = "update report set"\
-								" approve_date = '"+datetime.date.today().strftime('%Y-%m-%d')+"',"\
-								" status = '"+STATUS_APRROVED+"'"\
-								" where report.id = '"+request.form['id']+"'"
-		sql_execute(sql_string)
+								" approve_date = %s,"\
+								" status = %s"\
+								" where report.id = %s"
+		params = (datetime.date.today().strftime('%Y-%m-%d'), STATUS_APRROVED, request.form['id'])
+		sql_execute(sql_string, params)
 		return redirect(url_for('approve_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -506,9 +624,10 @@ def reject_report():
 	if SESSION_EMAIL in session:
 		sql_string = "update report set"\
 								" submit_date = null,"\
-								" status = '"+STATUS_OPEN+"'"\
-								" where report.id = '"+request.form['id']+"'"
-		sql_execute(sql_string)
+								" status = %s"\
+								" where report.id = %s"
+		params = (STATUS_OPEN, request.form['id'])
+		sql_execute(sql_string, params)
 		return redirect(url_for('approve_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -519,8 +638,9 @@ def employee_list_html():
 		# get all employees in this company
 		sql_string = "select id, email, first_name, last_name, role"\
 								" from employee"\
-								" where company_id = '"+session[SESSION_COMPANY_ID]+"'"
-		employees = sql_select(sql_string)
+								" where company_id = %s"
+		params = (session[SESSION_COMPANY_ID])
+		employees = sql_select(sql_string, params)
 		return render_template('employee_list.html', params=getPendoParams(), title=TITLE_EMPLOYEE_LIST, employees=employees)
 	else:
 		return redirect(url_for('login'))
@@ -538,8 +658,9 @@ def employee_detail_html():
 		# get details of the employee record
 		sql_string = "select id, first_name, last_name, email, password, role"\
 								" from employee"\
-								" where id = '"+request.form['id']+"'"
-		employees = sql_select(sql_string)
+								" where id = %s"
+		params = (request.form['id'])
+		employees = sql_select(sql_string, params)
 		return render_template('employee_detail.html', params=getPendoParams(), title=TITLE_EMPLOYEE_DETAIL, employee=employees[0])
 	else:
 		return redirect(url_for('login'))
@@ -548,13 +669,14 @@ def employee_detail_html():
 def create_employee():
 	if SESSION_EMAIL in session:
 		sql_string = "insert into employee(first_name, last_name, email, password, role, company_id)"\
-								" values('"+request.form['first_name']+"','"\
-												+request.form['last_name']+"','"\
-												+request.form['email']+"','"\
-												+request.form['password']+"','"\
-												+request.form['role']+"','"\
-												+session[SESSION_COMPANY_ID]+"')"
-		sql_execute(sql_string)
+								" values(%s, %s, %s, %s, %s, %s)"
+		params = (request.form['first_name'], 
+							request.form['last_name'], 
+							request.form['email'], 
+							request.form['password'], 
+							request.form['role'], 
+							session[SESSION_COMPANY_ID])
+		sql_execute(sql_string, params)
 		return redirect(url_for('employee_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -563,12 +685,17 @@ def create_employee():
 def update_employee():
 	if SESSION_EMAIL in session:
 		sql_string = "update employee set"\
-								" email = '"+request.form['email']+"',"\
-								" first_name = '"+request.form['first_name']+"',"\
-								" last_name = '"+request.form['last_name']+"',"\
-								" role = '"+request.form['role']+"'"\
-								" where id = "+request.form['id']+""
-		sql_execute(sql_string)
+								" first_name = %s,"\
+								" last_name = %s,"\
+								" email = %s,"\
+								" role = %s"\
+								" where id = %s"
+		params = (request.form['first_name'], 
+							request.form['last_name'], 
+							request.form['email'], 
+							request.form['role'], 
+							request.form['id'])
+		sql_execute(sql_string, params)
 		return redirect(url_for('employee_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -577,8 +704,9 @@ def update_employee():
 def delete_employee():
 	if SESSION_EMAIL in session:
 		sql_string = "delete from employee"\
-								" where id = "+request.form['id']+""
-		sql_execute(sql_string)
+								" where id = %s"
+		params = (request.form['id'])
+		sql_execute(sql_string, params)
 		return redirect(url_for('employee_list_html'))
 	else:
 		return redirect(url_for('login'))
