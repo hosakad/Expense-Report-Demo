@@ -71,3 +71,8 @@ This app gives the following IDs and metadata to Pendo:
 * Account ID - `id`
 * Company name - `name`
 * Plan the company pays for - `plan`
+
+**Track Events**
+The following track events are thrown when an image file is uploaded or deleted:
+* File Uploaded
+* File Deleted
