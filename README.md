@@ -8,6 +8,7 @@ There are 3 roles defined in this app and each role has their own UI for the fol
 ### User
 Users can handle only expenses and reports that they created. They can't see others' expenses or reports.
 * Create/modify/delete expenses
+* Upload/delete an image of receipt to attach to an expense; an image file less than 2MB can be uploaded and pdf is not supported
 * Create/modify/delete reports
 * Add expenses to a report
 * Submit a report for approval  
@@ -70,3 +71,8 @@ This app gives the following IDs and metadata to Pendo:
 * Account ID - `id`
 * Company name - `name`
 * Plan the company pays for - `plan`
+
+**Track Events**
+The following track events are thrown when an image file is uploaded or deleted:
+* File Uploaded
+* File Deleted
