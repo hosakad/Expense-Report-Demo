@@ -355,7 +355,7 @@ def expense_list_html():
 					" on expense.user_id = employee.id"\
 					" where expense.user_id = %s"\
 								" and expense.report_id is null"
-		params = (session[SESSION_EMPLOYEE_ID])
+		params = (session[SESSION_EMPLOYEE_ID],)
 		expenses = sql_select(sql_string, params)
 		return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
 	else:
@@ -460,7 +460,7 @@ def report_list_html():
 					" from report join employee"\
 					" on report.user_id = employee.id"\
 					" where report.user_id = %s"
-		params = (session[SESSION_EMPLOYEE_ID])
+		params = (session[SESSION_EMPLOYEE_ID],)
 		reports = sql_select(sql_string, params)
 		return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT_LIST)
 	else:
