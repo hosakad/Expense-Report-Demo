@@ -5,6 +5,12 @@
 	<form id="form_approve_list">
 		<table>
 			<caption>{{get_text('LABEL_MAIN_REPORTS_TO_APPROVE')}}</caption>
+			{% if reports_submitted %}
+			<tr>
+				<th></th>
+				<th>{{get_text('LABEL_MAIN_REPORT_NAME')}}</th>
+			</tr>
+			{% endif %}
 			{% for report in reports_submitted %}
 			<tr>
 				<td><input type="radio" name="id" value="{{report['id']}}" required></td>
@@ -14,6 +20,12 @@
 		</table>
 		<table>
 			<caption>{{get_text('LABEL_MAIN_REPORTS_APPROVED')}}</caption>
+			{% if reports_approved %}
+			<tr>
+				<th></th>
+				<th>{{get_text('LABEL_MAIN_REPORT_NAME')}}</th>
+			</tr>
+			{% endif %}
 			{% for report in reports_approved %}
 			<tr>
 				<td></td>
