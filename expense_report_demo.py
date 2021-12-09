@@ -659,7 +659,7 @@ def employee_detail_html():
 		sql_string = "select id, first_name, last_name, email, password, role"\
 								" from employee"\
 								" where id = %s"
-		params = (request.form['id'])
+		params = (request.form['id'],)
 		employees = sql_select(sql_string, params)
 		return render_template('employee_detail.html', params=getPendoParams(), title=TITLE_EMPLOYEE_DETAIL, employee=employees[0])
 	else:
