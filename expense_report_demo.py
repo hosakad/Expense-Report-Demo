@@ -255,7 +255,7 @@ def index():
 		# if the employee is already logged in, show index.html
 		role = session[SESSION_ROLE]
 		if role == ROLE_USER:
-			return redirect('user_home')
+			return redirect('index')
 		elif role == ROLE_ADMIN:
 			return redirect('employee_list_html')
 		elif role == ROLE_APPROVER:
@@ -320,8 +320,8 @@ def authenticate():
 		# email or password was null
 		return redirect(url_for('error', message_key=MSG_NO_EMAIL_PASSWORD))
 
-@app.route('/user_home')
-def user_ome():
+@app.route('/index')
+def index():
 	if SESSION_EMAIL in session:
 		# get number of expenses and reports that the user has
 		sql_string = "select count(distinct expense.id), count(distinct report.id)"\
