@@ -219,7 +219,7 @@ def send_track_event(event_name):
 
 		api_url = "https://app.pendo.io/data/track"
 
-		result = requests.post(api_url, data=json.dumps(body), headers=header)
+		result = requests.post(api_url, data=jsonify(body), headers=header)
 		try:
 			content = json.loads(result.content)
 			return content
@@ -256,12 +256,15 @@ def index():
 		role = session[SESSION_ROLE]
 		if role == ROLE_USER:
 			# get number of expenses and reports that the user has
+			"""
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
 					" on expense.report_id = report.id"\
 					" where expense.user_id = %s"\
 								" and report.status = %s"
 			params = (session[SESSION_EMPLOYEE_ID], STATUS_OPEN)
+			"""
+			
 			inprogress_records = sql_select(sql_string, params)
 			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
 					" from expense join report"\
