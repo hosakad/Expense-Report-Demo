@@ -247,7 +247,7 @@ def function_processor():
 							get_text=get_text,
 							get_currency_expression=get_currency_expression)
 
-@app.route('/test', method='POST')
+@app.route('/test', methods=['POST'])
 def test():
 	# get number of expenses and reports that the user has
 	sql_string = f'select count(distinct expense.id), count(distinct report.id)\
