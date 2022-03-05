@@ -252,10 +252,10 @@ def index():
 	if SESSION_EMAIL in session:
 		email = session[SESSION_EMAIL]
 		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
-		# if the employee is already logged in, show index.html
+		# if the employee is already logged in, show root page
 		role = session[SESSION_ROLE]
 		if role == ROLE_USER:
-			return redirect('index')
+			return redirect('user_home')
 		elif role == ROLE_ADMIN:
 			return redirect('employee_list_html')
 		elif role == ROLE_APPROVER:
@@ -320,8 +320,8 @@ def authenticate():
 		# email or password was null
 		return redirect(url_for('error', message_key=MSG_NO_EMAIL_PASSWORD))
 
-@app.route('/index')
-def index():
+@app.route('/user_home')
+def user_home():
 	if SESSION_EMAIL in session:
 		# get number of expenses and reports that the user has
 		sql_string = "select count(distinct expense.id), count(distinct report.id)"\
@@ -346,7 +346,7 @@ def index():
 							" and report.status = %s"
 		params = (session[SESSION_EMPLOYEE_ID], STATUS_APRROVED)
 		approved_records = sql_select(sql_string, params)
-		return render_template('index.html', params=getPendoParams(),
+		return render_template('user_home.html', params=getPendoParams(),
 																			title=TITLE_INDEX,
 																			inprogress_records=inprogress_records[0],
 																			submitted_records=submitted_records[0],
