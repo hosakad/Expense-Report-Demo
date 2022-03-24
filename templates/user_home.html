@@ -1,9 +1,9 @@
 {% extends "common/framework.html" %}
 {% block body %}
 	{% if params['role'] == 'ROLE_USER' %}
-		{% include "home_user.html" %}
+		{% include "user_status.html" %}
 	{% else %}
-		<article id="home">
+		<article id="user_home">
 			<li>{{get_text('LABEL_ERROR')}}:params['role']</li>
 		</article>
 	{% endif %}

@@ -219,7 +219,7 @@ def send_track_event(event_name):
 
 		api_url = "https://app.pendo.io/data/track"
 
-		result = requests.post(api_url, data=json.dumps(body), headers=header)
+		result = requests.post(api_url, data=jsonify(body), headers=header)
 		try:
 			content = json.loads(result.content)
 			return content
@@ -252,36 +252,10 @@ def index():
 	if SESSION_EMAIL in session:
 		email = session[SESSION_EMAIL]
 		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
-		# if the employee is already logged in, show index.html
+		# if the employee is already logged in, show root page
 		role = session[SESSION_ROLE]
 		if role == ROLE_USER:
-			# get number of expenses and reports that the user has
-			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
-					" from expense join report"\
-					" on expense.report_id = report.id"\
-					" where expense.user_id = %s"\
-								" and report.status = %s"
-			params = (session[SESSION_EMPLOYEE_ID], STATUS_OPEN)
-			inprogress_records = sql_select(sql_string, params)
-			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
-					" from expense join report"\
-					" on expense.report_id = report.id"\
-					" where expense.user_id = %s"\
-								" and report.status = %s"
-			params = (session[SESSION_EMPLOYEE_ID], STATUS_SUBMITTED)
-			submitted_records = sql_select(sql_string, params)
-			sql_string = "select count(distinct expense.id), count(distinct report.id)"\
-					" from expense join report"\
-					" on expense.report_id = report.id"\
-					" where expense.user_id = %s"\
-								" and report.status = %s"
-			params = (session[SESSION_EMPLOYEE_ID], STATUS_APRROVED)
-			approved_records = sql_select(sql_string, params)
-			return render_template('index.html', params=getPendoParams(),
-																				title=TITLE_INDEX,
-																				inprogress_records=inprogress_records[0],
-																				submitted_records=submitted_records[0],
-																				approved_records=approved_records[0])
+			return redirect('user_home')
 		elif role == ROLE_ADMIN:
 			return redirect('employee_list_html')
 		elif role == ROLE_APPROVER:
@@ -345,6 +319,40 @@ def authenticate():
 	else:
 		# email or password was null
 		return redirect(url_for('error', message_key=MSG_NO_EMAIL_PASSWORD))
+
+@app.route('/user_home')
+def user_home():
+	if SESSION_EMAIL in session:
+		# get number of expenses and reports that the user has
+		sql_string = "select count(distinct expense.id), count(distinct report.id)"\
+				" from expense join report"\
+				" on expense.report_id = report.id"\
+				" where expense.user_id = %s"\
+							" and report.status = %s"
+		params = (session[SESSION_EMPLOYEE_ID], STATUS_OPEN)
+
+		inprogress_records = sql_select(sql_string, params)
+		sql_string = "select count(distinct expense.id), count(distinct report.id)"\
+				" from expense join report"\
+				" on expense.report_id = report.id"\
+				" where expense.user_id = %s"\
+							" and report.status = %s"
+		params = (session[SESSION_EMPLOYEE_ID], STATUS_SUBMITTED)
+		submitted_records = sql_select(sql_string, params)
+		sql_string = "select count(distinct expense.id), count(distinct report.id)"\
+				" from expense join report"\
+				" on expense.report_id = report.id"\
+				" where expense.user_id = %s"\
+							" and report.status = %s"
+		params = (session[SESSION_EMPLOYEE_ID], STATUS_APRROVED)
+		approved_records = sql_select(sql_string, params)
+		return render_template('user_home.html', params=getPendoParams(),
+																			title=TITLE_INDEX,
+																			inprogress_records=inprogress_records[0],
+																			submitted_records=submitted_records[0],
+																			approved_records=approved_records[0])
+	else:
+		return redirect(url_for('login'))
 
 @app.route('/expense_list_html')
 def expense_list_html():
@@ -639,7 +647,7 @@ def employee_list_html():
 		sql_string = "select id, email, first_name, last_name, role"\
 								" from employee"\
 								" where company_id = %s"
-		params = (session[SESSION_COMPANY_ID])
+		params = (session[SESSION_COMPANY_ID],)
 		employees = sql_select(sql_string, params)
 		return render_template('employee_list.html', params=getPendoParams(), title=TITLE_EMPLOYEE_LIST, employees=employees)
 	else:
