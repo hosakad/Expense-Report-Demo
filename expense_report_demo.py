@@ -647,7 +647,7 @@ def employee_list_html():
 		sql_string = "select id, email, first_name, last_name, role"\
 								" from employee"\
 								" where company_id = %s"
-		params = (session[SESSION_COMPANY_ID])
+		params = (session[SESSION_COMPANY_ID],)
 		employees = sql_select(sql_string, params)
 		return render_template('employee_list.html', params=getPendoParams(), title=TITLE_EMPLOYEE_LIST, employees=employees)
 	else:
