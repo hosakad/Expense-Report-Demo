@@ -2,7 +2,7 @@
 {% block body %}
 <h1>{{get_text('TITLE_EXPENSE_LIST')}}</h1>
 <article id="expense_list">
-	<button class="button_motion" id="button_create_expense" onclick="location.href='../expense_new_html'">
+	<button class="button_motion" id="button_create_expense" test-attr="create-expense" onclick="location.href='../expense_new_html'">
 		<span>{{get_text('BUTTON_NEW_EXPENSE')}}</span>
 	</button>
 	{% if expenses %}
@@ -39,10 +39,10 @@
 				}
 			}
 		</script>
-		<button class="button_motion" id="button_expense_detail" type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post">
+		<button class="button_motion" id="button_expense_detail" type="submit" form="form_expense_list" formaction="../expense_detail_html" formmethod="post" test-attr="expense-detail">
 			<span>{{get_text('BUTTON_SHOW_DETAIL')}}</span>
 		</button>
-		<button class="button_motion" id="button_delete_expense" onclick="are_you_sure();">
+		<button class="button_motion" id="button_delete_expense" onclick="are_you_sure();" test-attr="delete-expense" >
 			<span>{{get_text('BUTTON_DELETE')}}</span>
 		</button>
 	</div>
