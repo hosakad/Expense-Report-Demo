@@ -422,12 +422,13 @@ def update_expense():
 @app.route('/delete_expense', methods=['POST'])
 def delete_expense():
 	if SESSION_EMAIL in session:
-		receipt_image = request.form.get('receipt_image')
-		delete_file(receipt_image)
-		sql_string = "delete from expense"\
-								" where id = %s"
-		params = (request.form['id'],)
-		sql_execute(sql_string, params)
+		if (request.form['id']):
+			receipt_image = request.form.get('receipt_image')
+			delete_file(receipt_image)
+			sql_string = "delete from expense"\
+									" where id = %s"
+			params = (request.form['id'],)
+			sql_execute(sql_string, params)
 		return redirect(url_for('expense_list_html'))
 	else:
 		return redirect(url_for('login'))
