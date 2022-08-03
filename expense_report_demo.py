@@ -133,6 +133,7 @@ def set_language(language):
 		# if 'en' is specified, set en_US
 		lang = 'en-US'
 	session[REDIS_LANGUAGE] = lang
+	redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 
 # this should be called after language is set
 # return default currenct to be used in expense
