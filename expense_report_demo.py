@@ -2,7 +2,7 @@ import os
 import json
 from datetime import date, timedelta
 import time
-from flask import Flask, redirect, request, url_for, render_template, session
+from flask import Flask, redirect, request, url_for, render_template, session, jsonify
 import requests
 import redis
 import psycopg2
@@ -133,6 +133,7 @@ def set_language(language):
 		# if 'en' is specified, set en_US
 		lang = 'en-US'
 	session[REDIS_LANGUAGE] = lang
+	redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 
 # this should be called after language is set
 # return default currenct to be used in expense
@@ -249,9 +250,11 @@ def function_processor():
 
 @app.route('/')
 def index():
+	if redis_client.exists(REDIS_MESSAGES):
+		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
+
 	if SESSION_EMAIL in session:
 		email = session[SESSION_EMAIL]
-		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 		# if the employee is already logged in, show root page
 		role = session[SESSION_ROLE]
 		if role == ROLE_USER:
@@ -422,12 +425,13 @@ def update_expense():
 @app.route('/delete_expense', methods=['POST'])
 def delete_expense():
 	if SESSION_EMAIL in session:
-		receipt_image = request.form.get('receipt_image')
-		delete_file(receipt_image)
-		sql_string = "delete from expense"\
-								" where id = %s"
-		params = (request.form['id'],)
-		sql_execute(sql_string, params)
+		if (request.form['id']):
+			receipt_image = request.form.get('receipt_image')
+			delete_file(receipt_image)
+			sql_string = "delete from expense"\
+									" where id = %s"
+			params = (request.form['id'],)
+			sql_execute(sql_string, params)
 		return redirect(url_for('expense_list_html'))
 	else:
 		return redirect(url_for('login'))
