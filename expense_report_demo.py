@@ -250,8 +250,8 @@ def function_processor():
 
 @app.route('/')
 def index():
-	if redis_client.exists(REDIS_MESSAGES):
-		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
+#	if redis_client.exists(REDIS_MESSAGES):
+	redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 
 	if SESSION_EMAIL in session:
 		email = session[SESSION_EMAIL]
