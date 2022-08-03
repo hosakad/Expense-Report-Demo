@@ -2,7 +2,7 @@ import os
 import json
 from datetime import date, timedelta
 import time
-from flask import Flask, redirect, request, url_for, render_template, session
+from flask import Flask, redirect, request, url_for, render_template, session, jsonify
 import requests
 import redis
 import psycopg2
@@ -249,9 +249,11 @@ def function_processor():
 
 @app.route('/')
 def index():
+	if redis_client.exists(REDIS_MESSAGES):
+		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
+
 	if SESSION_EMAIL in session:
 		email = session[SESSION_EMAIL]
-		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 		# if the employee is already logged in, show root page
 		role = session[SESSION_ROLE]
 		if role == ROLE_USER:
