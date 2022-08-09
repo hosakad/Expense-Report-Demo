@@ -133,7 +133,8 @@ def set_language(language):
 		# if 'en' is specified, set en_US
 		lang = 'en-US'
 	session[REDIS_LANGUAGE] = lang
-	redis_client.hmset(REDIS_MESSAGES, get_message_dict())
+	if not redis_client.exists(REDIS_MESSAGES):
+		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
 
 # this should be called after language is set
 # return default currenct to be used in expense
@@ -231,7 +232,7 @@ def send_track_event(event_name):
 		return redirect(url_for('login'))
 
 def display_page(url_name, **arg):
-
+	set_language(request.accept_languages.best_match(SUPPORTED_LANGUAGES))
 	return render_template(url_name, **arg)
 
 @app.context_processor
@@ -273,7 +274,6 @@ def error(message_key):
 
 @app.route('/login')
 def login():
-	set_language(request.accept_languages.best_match(SUPPORTED_LANGUAGES))
 	return display_page('login.html')
 
 @app.route('/logout')
