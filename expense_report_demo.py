@@ -106,7 +106,7 @@ def sql_select(sql_string, params):
 	return results
 
 def sql_execute(sql_string, params):
-	print("execute sql:", sql_string % params)
+	print('execute sql:', sql_string % params)
 	cursor = getDBConnection().cursor()
 	cursor.execute(sql_string, params)
 	getDBConnection().commit()
@@ -124,6 +124,7 @@ def getPendoParams():
 	return params
 
 def set_language(language):
+	print('language: ', language)
 	# currently supported language; ja-JP, en-US
 	lang = 'en-US' # set en_US as default
 	if language == 'ja' or language == 'ja-JP':
@@ -133,7 +134,13 @@ def set_language(language):
 		# if 'en' is specified, set en_US
 		lang = 'en-US'
 	session[REDIS_LANGUAGE] = lang
-	redis_client.hmset(REDIS_MESSAGES, get_message_dict())
+	if not redis_client.exists(REDIS_MESSAGES + '/' + lang):
+		# load messages
+		messages = {}
+		path = 'static/json/messages_'+session[REDIS_LANGUAGE]+'.json'
+		with open(path) as message_file:
+			messages = json.load(message_file)
+		redis_client.hmset(REDIS_MESSAGES + '/' + lang, messages)
 
 # this should be called after language is set
 # return default currenct to be used in expense
@@ -162,14 +169,6 @@ def generate_currency_expression(amount, currency):
 		return "{:,}".format(amount) + ' ' + currency
 	else:
 		return currency + ' ' + "{:,.2f}".format(amount)
-
-def get_message_dict():
-	# load messages
-	messages = {}
-	path = 'static/json/messages_'+session[REDIS_LANGUAGE]+'.json'
-	with open(path) as message_file:
-		messages = json.load(message_file)
-	return messages
 
 # Save the specified file and return the name
 # If the format of the file is not correct or the file doesn't exist, then return None
@@ -230,13 +229,17 @@ def send_track_event(event_name):
 	else:
 		return redirect(url_for('login'))
 
+def display_page(url_name, **arg):
+	set_language(request.accept_languages.best_match(SUPPORTED_LANGUAGES))
+	return render_template(url_name, **arg)
+
 @app.context_processor
 def function_processor():
 	def get_fullname(first_name, last_name):
 		return generate_fullname(first_name, last_name)
 	def get_text(msg_key):
-		if redis_client.hexists(REDIS_MESSAGES, msg_key):
-			return redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
+		if redis_client.hexists(REDIS_MESSAGES + '/' + session[REDIS_LANGUAGE], msg_key):
+			return redis_client.hget(REDIS_MESSAGES + '/' + session[REDIS_LANGUAGE], msg_key).decode('utf8')
 		else:
 			return 'MSG_MISMATCH'
 	def get_currency_expression(amount, currency):
@@ -250,9 +253,6 @@ def function_processor():
 
 @app.route('/')
 def index():
-	if redis_client.exists(REDIS_MESSAGES):
-		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
-
 	if SESSION_EMAIL in session:
 		email = session[SESSION_EMAIL]
 		# if the employee is already logged in, show root page
@@ -268,12 +268,11 @@ def index():
 
 @app.route('/error/<message_key>')
 def error(message_key):
-	return render_template('error.html', message_key=message_key)
+	return display_page('error.html', message_key=message_key)
 
 @app.route('/login')
 def login():
-	set_language(request.accept_languages.best_match(SUPPORTED_LANGUAGES))
-	return render_template('login.html')
+	return display_page('login.html')
 
 @app.route('/logout')
 def logout():
@@ -285,7 +284,7 @@ def logout():
 	session.pop(SESSION_COMPANY_ID, None)
 	session.pop(SESSION_COMPANY_NAME, None)
 	session.pop(SESSION_COMPANY_PLAN, None)
-	return render_template('logout.html')
+	return display_page('logout.html')
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
@@ -349,7 +348,7 @@ def user_home():
 							" and report.status = %s"
 		params = (session[SESSION_EMPLOYEE_ID], STATUS_APRROVED)
 		approved_records = sql_select(sql_string, params)
-		return render_template('user_home.html', params=getPendoParams(),
+		return display_page('user_home.html', params=getPendoParams(),
 																			title=TITLE_INDEX,
 																			inprogress_records=inprogress_records[0],
 																			submitted_records=submitted_records[0],
@@ -368,7 +367,7 @@ def expense_list_html():
 								" and expense.report_id is null"
 		params = (session[SESSION_EMPLOYEE_ID],)
 		expenses = sql_select(sql_string, params)
-		return render_template('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
+		return display_page('expense_list.html', params=getPendoParams(), expenses=expenses, title=TITLE_EXPENSE_LIST)
 	else:
 		return redirect(url_for('login'))
 
@@ -381,14 +380,14 @@ def expense_detail_html():
 		params = (request.form['id'],)
 		results = sql_select(sql_string, params)
 		if len(results) == 1:
-			return render_template('expense_detail.html', params=getPendoParams(), expense=results[0], title=TITLE_EXPENSE_DETAIL)
+			return display_page('expense_detail.html', params=getPendoParams(), expense=results[0], title=TITLE_EXPENSE_DETAIL)
 		else:
 			return redirect(url_for('error', message_key=MSG_NO_EXPENSE_ID_MATCH))
 
 @app.route('/expense_new_html')
 def expense_new_html():		
 	if SESSION_EMAIL in session:
-		return render_template('expense_new.html', params=getPendoParams(), title=TITLE_EXPENSE_NEW, default_currency=get_default_currency())
+		return display_page('expense_new.html', params=getPendoParams(), title=TITLE_EXPENSE_NEW, default_currency=get_default_currency())
 	else:
 		return redirect(url_for('login'))
 
@@ -474,14 +473,14 @@ def report_list_html():
 					" where report.user_id = %s"
 		params = (session[SESSION_EMPLOYEE_ID],)
 		reports = sql_select(sql_string, params)
-		return render_template('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT_LIST)
+		return display_page('report_list.html', params=getPendoParams(), reports=reports, title=TITLE_REPORT_LIST)
 	else:
 		return redirect(url_for('login'))
 
 @app.route('/report_new_html')
 def report_new_html():
 	if SESSION_EMAIL in session:
-		return render_template('report_new.html', params=getPendoParams(), title=TITLE_REPORT_NEW)
+		return display_page('report_new.html', params=getPendoParams(), title=TITLE_REPORT_NEW)
 	else:
 		return redirect(url_for('login'))
 
@@ -526,7 +525,7 @@ def report_detail_html():
 		expenses_included = sql_select(sql_string, params)
 
 		if len(reports) == 1:
-			return render_template('report_detail.html', params=getPendoParams(), report=reports[0], expenses_open=expenses_open, expenses_included=expenses_included, title=TITLE_REPORT_DETAIL)
+			return display_page('report_detail.html', params=getPendoParams(), report=reports[0], expenses_open=expenses_open, expenses_included=expenses_included, title=TITLE_REPORT_DETAIL)
 		else:
 			return redirect(url_for('error', message_key=MSG_NO_REPORT_ID_MATCH))
 	else:
@@ -614,7 +613,7 @@ def approve_list_html():
 					reports_submitted.append(result.copy())
 				elif result['status'] == STATUS_APRROVED:
 					reports_approved.append(result.copy())
-		return render_template('approve_list.html', params=getPendoParams(), title=TITLE_APPROVE_LIST, reports_submitted=reports_submitted, reports_approved=reports_approved)
+		return display_page('approve_list.html', params=getPendoParams(), title=TITLE_APPROVE_LIST, reports_submitted=reports_submitted, reports_approved=reports_approved)
 	else:
 		return redirect(url_for('login'))
 
@@ -653,14 +652,14 @@ def employee_list_html():
 								" where company_id = %s"
 		params = (session[SESSION_COMPANY_ID],)
 		employees = sql_select(sql_string, params)
-		return render_template('employee_list.html', params=getPendoParams(), title=TITLE_EMPLOYEE_LIST, employees=employees)
+		return display_page('employee_list.html', params=getPendoParams(), title=TITLE_EMPLOYEE_LIST, employees=employees)
 	else:
 		return redirect(url_for('login'))
 
 @app.route('/employee_new_html')
 def employee_new_html():
 	if SESSION_EMAIL in session:
-		return render_template('employee_new.html', params=getPendoParams(), title=TITLE_EMPLOYEE_NEW)
+		return display_page('employee_new.html', params=getPendoParams(), title=TITLE_EMPLOYEE_NEW)
 	else:
 		return redirect(url_for('login'))
 
@@ -673,7 +672,7 @@ def employee_detail_html():
 								" where id = %s"
 		params = (request.form['id'],)
 		employees = sql_select(sql_string, params)
-		return render_template('employee_detail.html', params=getPendoParams(), title=TITLE_EMPLOYEE_DETAIL, employee=employees[0])
+		return display_page('employee_detail.html', params=getPendoParams(), title=TITLE_EMPLOYEE_DETAIL, employee=employees[0])
 	else:
 		return redirect(url_for('login'))
 
