@@ -230,9 +230,9 @@ def send_track_event(event_name):
 	else:
 		return redirect(url_for('login'))
 
-def display_page(*arg):
+def display_page(url_name, **arg):
 
-	return render_template(arg)
+	return render_template(url_name, **arg)
 
 @app.context_processor
 def function_processor():
