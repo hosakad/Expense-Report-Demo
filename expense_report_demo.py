@@ -134,8 +134,13 @@ def set_language(language):
 		# if 'en' is specified, set en_US
 		lang = 'en-US'
 	session[REDIS_LANGUAGE] = lang
-	if not redis_client.exists(REDIS_MESSAGES):
-		redis_client.hmset(REDIS_MESSAGES, get_message_dict())
+	if not redis_client.exists(REDIS_MESSAGES + '/' + lang):
+		# load messages
+		messages = {}
+		path = 'static/json/messages_'+session[REDIS_LANGUAGE]+'.json'
+		with open(path) as message_file:
+			messages = json.load(message_file)
+		redis_client.hmset(REDIS_MESSAGES + '/' + lang, messages)
 
 # this should be called after language is set
 # return default currenct to be used in expense
@@ -164,14 +169,6 @@ def generate_currency_expression(amount, currency):
 		return "{:,}".format(amount) + ' ' + currency
 	else:
 		return currency + ' ' + "{:,.2f}".format(amount)
-
-def get_message_dict():
-	# load messages
-	messages = {}
-	path = 'static/json/messages_'+session[REDIS_LANGUAGE]+'.json'
-	with open(path) as message_file:
-		messages = json.load(message_file)
-	return messages
 
 # Save the specified file and return the name
 # If the format of the file is not correct or the file doesn't exist, then return None
@@ -241,8 +238,8 @@ def function_processor():
 	def get_fullname(first_name, last_name):
 		return generate_fullname(first_name, last_name)
 	def get_text(msg_key):
-		if redis_client.hexists(REDIS_MESSAGES, msg_key):
-			return redis_client.hget(REDIS_MESSAGES, msg_key).decode('utf8')
+		if redis_client.hexists(REDIS_MESSAGES + '/' + session[REDIS_LANGUAGE], msg_key):
+			return redis_client.hget(REDIS_MESSAGES + '/' + session[REDIS_LANGUAGE], msg_key).decode('utf8')
 		else:
 			return 'MSG_MISMATCH'
 	def get_currency_expression(amount, currency):
