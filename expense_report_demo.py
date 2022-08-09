@@ -106,7 +106,7 @@ def sql_select(sql_string, params):
 	return results
 
 def sql_execute(sql_string, params):
-	print("execute sql:", sql_string % params)
+	print('execute sql:', sql_string % params)
 	cursor = getDBConnection().cursor()
 	cursor.execute(sql_string, params)
 	getDBConnection().commit()
@@ -124,6 +124,7 @@ def getPendoParams():
 	return params
 
 def set_language(language):
+	print('language: ', language)
 	# currently supported language; ja-JP, en-US
 	lang = 'en-US' # set en_US as default
 	if language == 'ja' or language == 'ja-JP':
