@@ -2,7 +2,7 @@ import os
 import json
 from datetime import date, timedelta
 import time
-from flask import Flask, redirect, request, url_for, display_page, session, jsonify
+from flask import Flask, redirect, request, url_for, render_template, session, jsonify
 import requests
 import redis
 import psycopg2
