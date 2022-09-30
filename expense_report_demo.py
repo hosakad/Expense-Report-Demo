@@ -1,6 +1,6 @@
 import os
 import json
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 import time
 from flask import Flask, redirect, request, url_for, render_template, session, jsonify
 import requests
@@ -624,7 +624,7 @@ def approve_report():
 								" approve_date = %s,"\
 								" status = %s"\
 								" where report.id = %s"
-		params = (datetime.date.today().strftime('%Y-%m-%d'), STATUS_APRROVED, request.form['id'])
+		params = (date.today().strftime('%Y-%m-%d'), STATUS_APRROVED, request.form['id'])
 		sql_execute(sql_string, params)
 		return redirect(url_for('approve_list_html'))
 	else:
