@@ -33,7 +33,7 @@ def getPendoParams():
 	params['email'] = session[cns.SESSION_EMAIL]
 	params['role'] = session[cns.SESSION_ROLE]
 	params['full_name'] = session[cns.SESSION_FULL_NAME]
-	params['language'] = session[cns.cns.REDIS_LANGUAGE]
+	params['language'] = session[cns.REDIS_LANGUAGE]
 	params['company_id'] = session[cns.SESSION_COMPANY_ID]
 	params['company_name'] = session[cns.SESSION_COMPANY_NAME]
 	params['company_plan'] = session[cns.SESSION_COMPANY_PLAN]
