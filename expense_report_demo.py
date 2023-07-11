@@ -5,15 +5,36 @@ from flask import Flask, redirect, request, url_for, session
 import constants as cns
 from file_operations import save_file, delete_file
 from db_operations import sql_execute, sql_select
-from utilities import getPendoParams, get_default_currency, generate_fullname, display_page
+from utilities import getPendoParams, get_default_currency, generate_fullname, display_page, getRedisClient, generate_currency_expression
 
 # a random secret used by Flask to encrypt session data cookies
 app = Flask(__name__)
 app.debug = True
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 
+# Pendo API Key of this app
+PENDO_API_KEY = os.environ['PENDO_API_KEY']
+
 def main():
     return None
+
+@app.context_processor
+def function_processor():
+	def get_fullname(first_name, last_name):
+		return generate_fullname(first_name, last_name)
+	def get_text(msg_key):
+		if getRedisClient().hexists(cns.REDIS_MESSAGES + '/' + session[cns.REDIS_LANGUAGE], msg_key):
+			return getRedisClient().hget(cns.REDIS_MESSAGES + '/' + session[cns.REDIS_LANGUAGE], msg_key).decode('utf8')
+		else:
+			return 'MSG_MISMATCH'
+	def get_currency_expression(amount, currency):
+		return generate_currency_expression(amount, currency)
+	return dict(pendo_api_key=PENDO_API_KEY,
+							get_fullname=get_fullname,
+							role_list=cns.ROLES,
+							currency_list=cns.CURRENCIES,
+							get_text=get_text,
+							get_currency_expression=get_currency_expression)
 
 @app.route('/')
 def index():

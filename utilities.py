@@ -13,8 +13,7 @@ app = Flask(__name__)
 app.debug = True
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 
-# API Key and TrackEvent Secret Key for Pendo
-PENDO_API_KEY = os.environ['PENDO_API_KEY']
+# TrackEvent Secret Key for Pendo
 PENDO_TRACK_EVENT_SECRET_KEY = os.environ['PENDO_TRACK_EVENT_SECRET_KEY']
 
 # Redis settings
@@ -22,28 +21,13 @@ REDIS_url = os.environ['REDIS_URL']
 pool = redis.ConnectionPool(decode_responses=True)
 REDIS_client = redis.StrictRedis(connection_pool=pool).from_url(REDIS_url)
 
-@app.context_processor
-def function_processor():
-	def get_fullname(first_name, last_name):
-		return generate_fullname(first_name, last_name)
-	def get_text(msg_key):
-		if REDIS_client.hexists(cns.REDIS_MESSAGES + '/' + session[cns.REDIS_LANGUAGE], msg_key):
-			return REDIS_client.hget(cns.REDIS_MESSAGES + '/' + session[cns.REDIS_LANGUAGE], msg_key).decode('utf8')
-		else:
-			return 'MSG_MISMATCH'
-	def get_currency_expression(amount, currency):
-		return generate_currency_expression(amount, currency)
-	return dict(pendo_api_key=PENDO_API_KEY,
-							get_fullname=get_fullname,
-							role_list=cns.ROLES,
-							currency_list=cns.CURRENCIES,
-							get_text=get_text,
-							get_currency_expression=get_currency_expression)
-
 def display_page(url_name, **arg):
 	set_language(request.accept_languages.best_match(cns.SUPPORTED_LANGUAGES))
 	return render_template(url_name, **arg)
 
+def getRedisClient():
+    return REDIS_client
+    
 def getPendoParams():
 	params = {}
 	params['email'] = session[cns.SESSION_EMAIL]
