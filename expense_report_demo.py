@@ -202,7 +202,7 @@ def update_expense():
 		params = (request.form['name'], request.form['date'], request.form['currency'], request.form['amount'], request.form['description'], request.form['id'])
 		sql_execute(sql_string, params)
 
-		return redirect(url_for('expense_detail_html'), code=307)
+		return redirect(url_for('expense_list_html'))
 	else:
 		return redirect(url_for('login'))
 
