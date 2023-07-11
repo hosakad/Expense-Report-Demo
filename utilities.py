@@ -18,17 +18,17 @@ PENDO_API_KEY = os.environ['PENDO_API_KEY']
 PENDO_TRACK_EVENT_SECRET_KEY = os.environ['PENDO_TRACK_EVENT_SECRET_KEY']
 
 # Redis settings
-cns.REDIS_url = os.environ['cns.REDIS_URL']
+REDIS_url = os.environ['REDIS_URL']
 pool = redis.ConnectionPool(decode_responses=True)
-cns.REDIS_client = redis.StrictRedis(connection_pool=pool).from_url(cns.REDIS_url)
+REDIS_client = redis.StrictRedis(connection_pool=pool).from_url(REDIS_url)
 
 @app.context_processor
 def function_processor():
 	def get_fullname(first_name, last_name):
 		return generate_fullname(first_name, last_name)
 	def get_text(msg_key):
-		if cns.REDIS_client.hexists(cns.REDIS_MESSAGES + '/' + session[cns.REDIS_LANGUAGE], msg_key):
-			return cns.REDIS_client.hget(cns.REDIS_MESSAGES + '/' + session[cns.REDIS_LANGUAGE], msg_key).decode('utf8')
+		if REDIS_client.hexists(cns.REDIS_MESSAGES + '/' + session[cns.REDIS_LANGUAGE], msg_key):
+			return REDIS_client.hget(cns.REDIS_MESSAGES + '/' + session[cns.REDIS_LANGUAGE], msg_key).decode('utf8')
 		else:
 			return 'MSG_MISMATCH'
 	def get_currency_expression(amount, currency):
@@ -66,13 +66,13 @@ def set_language(language):
 		# if 'en' is specified, set en_US
 		lang = 'en-US'
 	session[cns.REDIS_LANGUAGE] = lang
-	if not cns.REDIS_client.exists(cns.REDIS_MESSAGES + '/' + lang):
+	if not REDIS_client.exists(cns.REDIS_MESSAGES + '/' + lang):
 		# load messages
 		messages = {}
 		path = 'static/json/messages_'+session[cns.REDIS_LANGUAGE]+'.json'
 		with open(path) as message_file:
 			messages = json.load(message_file)
-		cns.REDIS_client.hmset(cns.REDIS_MESSAGES + '/' + lang, messages)
+		REDIS_client.hmset(cns.REDIS_MESSAGES + '/' + lang, messages)
 
 # this should be called after language is set
 # return default currenct to be used in expense
