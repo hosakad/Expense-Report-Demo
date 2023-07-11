@@ -98,7 +98,7 @@ def authenticate():
 			session[cns.SESSION_COMPANY_NAME] = company_name
 			session[cns.SESSION_COMPANY_PLAN] = company_plan
 			session.permanent = True
-			app.permanent_cns.SESSION_lifetime = timedelta(hours=24)
+			app.permanent_session_lifetime = timedelta(hours=24)
 			return redirect(url_for('index'))
 		else:
 			# login failed
