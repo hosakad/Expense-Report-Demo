@@ -114,9 +114,9 @@ def send_track_event(event_name):
 
 		api_url = "https://app.pendo.io/data/track"
 
-		result = requests.post(api_url, data=jsonify(body), headers=header)
+		result = requests.post(api_url, json=body, headers=header)
 		try:
-			content = json.loads(result.content)
+			content = result.json()
 			return content
 		except Exception as exception:
 			print('exception:', exception)
