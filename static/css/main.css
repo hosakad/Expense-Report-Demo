@@ -183,8 +183,8 @@ main{
 	}
 
 .dashboard {
-display: flex;
-justify-content: space-around;
+	display: flex;
+	flex-direction: column;
 }
 
 .widget {
