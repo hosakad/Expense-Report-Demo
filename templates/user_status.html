@@ -1,17 +1,18 @@
 <article id="user_status">
-  <section>
-    <h2>{{get_text('STATUS_OPEN')}}</h2>
-    <p>{{get_text('LABEL_MAIN_NUM_OF_REPORT')}}:{{inprogress_records[1]}}</p>
-    <p>{{get_text('LABEL_MAIN_NUM_OF_EXPENSE')}}:{{inprogress_records[0]}}</p>
-  </section>
-  <section>
-    <h2>{{get_text('STATUS_SUBMITTED')}}</h2>
-    <p>{{get_text('LABEL_MAIN_NUM_OF_REPORT')}}:{{submitted_records[1]}}</p>
-    <p>{{get_text('LABEL_MAIN_NUM_OF_EXPENSE')}}:{{submitted_records[0]}}</p>
-  </section>
-  <section>
-    <h2>{{get_text('STATUS_APRROVED')}}</h2>
-    <p>{{get_text('LABEL_MAIN_NUM_OF_REPORT')}}:{{approved_records[1]}}</p>
-    <p>{{get_text('LABEL_MAIN_NUM_OF_EXPENSE')}}:{{approved_records[0]}}</p>
-  </section>
+  <div class="dashboard">
+    <div class="widget">
+      <h2>{{get_text('STATUS_OPEN')}}</h2>
+      <p>{{get_text('LABEL_MAIN_NUM_OF_REPORT')}}:<span id="unsubmitted-report-count">{{inprogress_records[1]}}</span></p>
+      <p>{{get_text('LABEL_MAIN_NUM_OF_EXPENSE')}}:<span id="unsubmitted-expense-count">{{inprogress_records[0]}}</span></p>
+    </div>
+    <div class="widget">
+      <h2>{{get_text('STATUS_SUBMITTED')}}</h2>
+      <p>{{get_text('LABEL_MAIN_NUM_OF_REPORT')}}:<span id="submitted-report-count">{{submitted_records[1]}}</span></p>
+      <p>{{get_text('LABEL_MAIN_NUM_OF_EXPENSE')}}:<span id="submitted-expense-count">{{submitted_records[0]}}</span></p>
+    </div>
+    <div class="widget">
+      <h2>{{get_text('STATUS_APRROVED')}}</h2>
+      <p>{{get_text('LABEL_MAIN_NUM_OF_REPORT')}}:<span id="approved-report-count">{{approved_records[1]}}</span></p>
+      <p>{{get_text('LABEL_MAIN_NUM_OF_EXPENSE')}}:<span id="approved-expense-count">{{approved_records[0]}}</span></p>
+    </div>
 </article>
