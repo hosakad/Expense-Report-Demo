@@ -1,5 +1,6 @@
 import os
 import psycopg2
+from psycopg2 import InterfaceError
 from psycopg2.extras import DictCursor
 
 # retrieve parametes for database from enrironment value
