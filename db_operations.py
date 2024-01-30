@@ -38,11 +38,19 @@ def sql_select(sql_string, params):
 
 def sql_execute(sql_string, params):
     print('execute sql:', sql_string % params)
+    connection = None
     cursor = None
     try:
-        cursor = getDBConnection().cursor()
-        cursor.execute(sql_string, params)
-        getDBConnection().commit()
+        connection = getDBConnection()
+        cursor = connection.cursor()
+        cursor.execute(sql_string, params)  # パラメータはSQL文に直接埋め込まず、executeメソッドに渡す
+        connection.commit()
+    except Exception as e:
+        print("Error during SQL execution:", e)
+        if connection is not None:
+            connection.rollback()  # エラー発生時にはロールバック
     finally:
         if cursor is not None:
             cursor.close()
+        if connection is not None:
+            connection.close()  # DB接続を適切に閉じる
