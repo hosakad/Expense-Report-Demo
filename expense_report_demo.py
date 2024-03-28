@@ -10,10 +10,11 @@ from utilities import getPendoParams, get_default_currency, generate_fullname, d
 # a random secret used by Flask to encrypt session data cookies
 app = Flask(__name__)
 app.debug = True
-app.secret_key = os.environ['FLASK_SECRET_KEY']
+app.secret_key = os.environ.get('FLASK_SECRET_KEY')
 
 # Pendo API Key of this app
-PENDO_API_KEY = os.environ['PENDO_API_KEY']
+PENDO_API_KEY = os.environ.get('PENDO_API_KEY')
+PENDO_API_KEY_2 = os.environ.get('PENDO_API_KEY_2')
 
 def main():
     return None
@@ -30,6 +31,7 @@ def function_processor():
 	def get_currency_expression(amount, currency):
 		return generate_currency_expression(amount, currency)
 	return dict(pendo_api_key=PENDO_API_KEY,
+							pendo_api_key_2=PENDO_API_KEY_2,
 							get_fullname=get_fullname,
 							role_list=cns.ROLES,
 							currency_list=cns.CURRENCIES,
