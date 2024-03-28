@@ -1,7 +1,7 @@
 <head>
 	<meta charset="UTF-8">
-	<link rel="icon" type="image/jpg" href={{url_for('static', filename='images/favicon.jpg')}} />
-	<link rel="stylesheet" href={{url_for('static', filename='css/main.css')}}>
+	<link rel="icon" type="image/jpg" href="{{url_for('static', filename='images/favicon.jpg')}}">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
 	<title>{{get_text(title)}}</title>
 	<script type="text/javascript">
     (function(apiKey){
@@ -14,6 +14,7 @@
             // Call this whenever information about your visitors becomes available
             // Please use Strings, Numbers, or Bools for value types.
             pendo.initialize({
+                ...( {{additional_api_key}} ? { additionalApiKeys: [{{additional_api_key}}] } : {} ), // 指定されていればadditional api keyを追加
                 visitor: {
                     id:         "{{params['email']}}" ||'VISITOR-UNIQUE-ID',   // Required if user is logged in
                     role:       "{{params['role']}}",
