@@ -5,7 +5,7 @@ from psycopg2.extras import DictCursor
 
 # retrieve parametes for database from enrironment value
 DATABASE_URL = os.environ.get('DATABASE_URL')
-DATABASE_SCHEMA = os.environ.gey(['DATABASE_SCHEMA')
+DATABASE_SCHEMA = os.environ.get('DATABASE_SCHEMA')
 DATABASE_CONNECTION = None
 
 def getDBConnection():
