@@ -9,6 +9,7 @@ DATABASE_SCHEMA = os.environ['DATABASE_SCHEMA']
 DATABASE_CONNECTION = None
 
 def getDBConnection():
+    global DATABASE_CONNECTION 
 	# Check if the existing connection is alive
     if DATABASE_CONNECTION is None or DATABASE_CONNECTION.closed != 0:
         # SSLモード'require'を指定して新しい接続を確立
