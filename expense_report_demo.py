@@ -86,7 +86,7 @@ def authenticate():
 					" where email=%s and password=%s"
 		params = (email, password)
 		results = sql_select(sql_string, params)
-		if len(results) == 1:
+		if results is not None and len(results) == 1:
 			employee_id, email, role, first_name, last_name, company_id, company_name, company_plan = results[0]
 			print('login as email:', email, ', company: ', company_name)
 			# set Pendo parameters
