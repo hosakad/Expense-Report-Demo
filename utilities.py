@@ -17,9 +17,14 @@ app.secret_key = os.environ['FLASK_SECRET_KEY']
 PENDO_TRACK_EVENT_SECRET_KEY = os.environ['PENDO_TRACK_EVENT_SECRET_KEY']
 
 # Redis settings
-REDIS_url = os.environ['REDIS_URL']
+# REDIS_url = os.environ['REDIS_URL']
 pool = redis.ConnectionPool(decode_responses=True)
-REDIS_client = redis.StrictRedis(connection_pool=pool).from_url(REDIS_url)
+# REDIS_client = redis.StrictRedis(connection_pool=pool).from_url(REDIS_url)
+REDIS_client = redis.from_url(
+    os.getenv('REDIS_URL'),
+    ssl=True,
+    ssl_cert_reqs=None
+)
 
 def display_page(url_name, **arg):
 	set_language(request.accept_languages.best_match(cns.SUPPORTED_LANGUAGES))
