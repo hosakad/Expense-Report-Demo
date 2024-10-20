@@ -19,9 +19,17 @@ app.secret_key = os.environ['FLASK_SECRET_KEY']
 PENDO_TRACK_EVENT_SECRET_KEY = os.environ['PENDO_TRACK_EVENT_SECRET_KEY']
 
 # Redis settings
-REDIS_url = os.environ['REDIS_URL']
-pool = redis.ConnectionPool(decode_responses=True)
-REDIS_client = redis.StrictRedis(connection_pool=pool).from_url(REDIS_url)
+redis_url = os.getenv('REDIS_URL')
+url = urlparse(redis_url)
+
+# Redisクライアントの初期化
+REDIS_client = redis.StrictRedis(
+    host=url.hostname,
+    port=url.port,
+    password=url.password,
+    ssl=True,  # SSL接続を有効にする
+    ssl_cert_reqs=None  # 証明書検証を無効化する
+)
 
 def display_page(url_name, **arg):
 	set_language(request.accept_languages.best_match(cns.SUPPORTED_LANGUAGES))
