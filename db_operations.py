@@ -4,53 +4,50 @@ from psycopg2 import InterfaceError
 from psycopg2.extras import DictCursor
 
 # retrieve parametes for database from enrironment value
-DATABASE_URL = os.environ['DATABASE_URL']
-DATABASE_SCHEMA = os.environ['DATABASE_SCHEMA']
+DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_SCHEMA = os.environ.get('DATABASE_SCHEMA')
 DATABASE_CONNECTION = None
 
 def getDBConnection():
-	global DATABASE_CONNECTION
+    global DATABASE_CONNECTION 
 	# Check if the existing connection is alive
-	try:
-		DATABASE_CONNECTION.ping()
-	except (AttributeError, InterfaceError):
-		DATABASE_CONNECTION = None
-
-	if DATABASE_CONNECTION is None:
-		DATABASE_CONNECTION = psycopg2.connect(DATABASE_URL, sslmode='require')
-		cursor = DATABASE_CONNECTION.cursor()
-		cursor.execute('SET search_path TO ' + DATABASE_SCHEMA)
-		cursor.close()
-
-	return DATABASE_CONNECTION
+    if DATABASE_CONNECTION is None or DATABASE_CONNECTION.closed != 0:
+        # SSLモード'require'を指定して新しい接続を確立
+        DATABASE_CONNECTION = psycopg2.connect(DATABASE_URL, sslmode='require')
+        with DATABASE_CONNECTION.cursor() as cursor:
+            cursor.execute(f"SET search_path TO {DATABASE_SCHEMA};")
+    return DATABASE_CONNECTION
 
 def sql_select(sql_string, params):
-	print("execute sql:", sql_string % params)
-	cursor = None
-	try:
-		cursor = getDBConnection().cursor(cursor_factory=DictCursor)
-		cursor.execute(sql_string, params)
-		results = cursor.fetchall()
-		return results
-	finally:
-		if cursor is not None:
-			cursor.close()
+    print("Preparing to execute SQL:", sql_string, "with params:", params)
+    cursor = None
+    try:
+        cursor = getDBConnection().cursor(cursor_factory=DictCursor)
+        cursor.execute(sql_string, params) 
+        results = cursor.fetchall()
+        return results
+    except Exception as e:
+        print("Error during SQL execution:", e)
+    finally:
+        if cursor is not None:
+            cursor.close()
+
 
 def sql_execute(sql_string, params):
-    print('execute sql:', sql_string % params)
+    print("Preparing to execute SQL:", sql_string, "with params:", params)
     connection = None
     cursor = None
     try:
         connection = getDBConnection()
         cursor = connection.cursor()
-        cursor.execute(sql_string, params)  # パラメータはSQL文に直接埋め込まず、executeメソッドに渡す
+        cursor.execute(sql_string, params) 
         connection.commit()
     except Exception as e:
         print("Error during SQL execution:", e)
         if connection is not None:
-            connection.rollback()  # エラー発生時にはロールバック
+            connection.rollback()
     finally:
         if cursor is not None:
             cursor.close()
         if connection is not None:
-            connection.close()  # DB接続を適切に閉じる
+            connection.close()
