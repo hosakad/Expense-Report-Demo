@@ -6,7 +6,7 @@
 </head>
 <body>
 	<h1>{{get_text('LABEL_ERROR')}}</h1>
-	<p>{{get_text(message_key)}}</p>
+	<p>{% if error_message %}{{error_message}}{% else %}{{get_text(message_key)}}{% endif %}</p>
 	<button onclick="location.href='../'">{{get_text('BUTTON_LOGIN_AGAIN')}}</button>
 </body>
 </html>

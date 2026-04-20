@@ -344,7 +344,9 @@ def update_employee():
 @app.route('/delete_employee', methods=['POST'])
 def delete_employee():
 	if cns.SESSION_EMAIL in session:
-		db.delete_employee(request.form['id'])
+		result = db.delete_employee(request.form['id'])
+		if isinstance(result, Exception):
+			return display_page('error.html', message_key=cns.MSG_DELETE_EMPLOYEE_FAILED, error_message=str(result))
 		return redirect(url_for('employee_list_html'))
 	else:
 		return redirect(url_for('login'))
