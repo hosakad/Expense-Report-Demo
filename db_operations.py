@@ -116,7 +116,7 @@ def get_report(report_id):
     return sql_select(sql, (report_id,))
 
 def get_expenses_in_report(user_id, report_id):
-    sql = ("select expense.id, expense.name, date, amount, currency, description"
+    sql = ("select expense.id, expense.name, date, amount, currency, description, receipt_image"
            " from expense"
            " join employee on expense.user_id = employee.id"
            " join report on expense.report_id = report.id"

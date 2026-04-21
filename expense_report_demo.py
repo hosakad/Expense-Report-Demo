@@ -4,13 +4,14 @@ from flask import Flask, redirect, request, url_for, session
 
 import constants as cns
 import db_operations as db
-from file_operations import save_file, delete_file
+from file_operations import save_file, delete_file, get_file_url
 from utilities import getPendoParams, get_default_currency, generate_fullname, display_page, getRedisClient, generate_currency_expression
 
 # a random secret used by Flask to encrypt session data cookies
 app = Flask(__name__)
 app.debug = True
 app.secret_key = os.environ.get('FLASK_SECRET_KEY')
+app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
 
 # Pendo API Key of this app
 PENDO_API_KEY = os.environ.get('PENDO_API_KEY')
@@ -130,7 +131,8 @@ def expense_detail_html():
 	if cns.SESSION_EMAIL in session:
 		results = db.get_expense(request.form['id'])
 		if len(results) == 1:
-			return display_page('expense_detail.html', params=getPendoParams(), expense=results[0], title=cns.TITLE_EXPENSE_DETAIL)
+			receipt_url = get_file_url(results[0]['receipt_image'])
+			return display_page('expense_detail.html', params=getPendoParams(), expense=results[0], receipt_url=receipt_url, title=cns.TITLE_EXPENSE_DETAIL)
 		else:
 			return redirect(url_for('error', message_key=cns.MSG_NO_EXPENSE_ID_MATCH))
 
@@ -223,6 +225,7 @@ def report_detail_html():
 		reports = db.get_report(request.form['id'])
 		expenses_open = db.get_expenses_unassigned_for_report(session[cns.SESSION_EMPLOYEE_ID])
 		expenses_included = db.get_expenses_in_report(session[cns.SESSION_EMPLOYEE_ID], request.form['id'])
+		expenses_included = [dict(e, receipt_url=get_file_url(e['receipt_image'])) for e in expenses_included]
 
 		if len(reports) == 1:
 			return display_page('report_detail.html', params=getPendoParams(), report=reports[0], expenses_open=expenses_open, expenses_included=expenses_included, title=cns.TITLE_REPORT_DETAIL)
