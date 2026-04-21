@@ -1,6 +1,7 @@
 import os
 import uuid
 import boto3
+from botocore.config import Config
 from botocore.exceptions import ClientError
 import werkzeug
 
@@ -30,6 +31,8 @@ if USE_R2:
         endpoint_url=f'https://{_R2_ACCOUNT_ID}.r2.cloudflarestorage.com',
         aws_access_key_id=_R2_ACCESS_KEY_ID,
         aws_secret_access_key=_R2_SECRET_ACCESS_KEY,
+        region_name='auto',
+        config=Config(signature_version='s3v4'),
     )
     print('file_operations: R2 mode')
 else:
