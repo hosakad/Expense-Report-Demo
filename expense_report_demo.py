@@ -82,7 +82,10 @@ def authenticate():
 
 	if email and password:
 		# login succeeds
-		results = db.get_employee_by_email(email, password)
+		try:
+			results = db.get_employee_by_email(email, password)
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		if results is not None and len(results) == 1:
 			employee_id, email, role, first_name, last_name, company_id, company_name, company_plan = results[0]
 			print('login as email:', email, ', company: ', company_name)
@@ -107,9 +110,12 @@ def authenticate():
 @app.route('/user_home')
 def user_home():
 	if cns.SESSION_EMAIL in session:
-		inprogress_records = db.get_open_expenses_count(session[cns.SESSION_EMPLOYEE_ID])
-		submitted_records = db.get_reports_summary(session[cns.SESSION_EMPLOYEE_ID])
-		approved_records = db.get_submitted_reports(session[cns.SESSION_EMPLOYEE_ID])
+		try:
+			inprogress_records = db.get_open_expenses_count(session[cns.SESSION_EMPLOYEE_ID])
+			submitted_records = db.get_reports_summary(session[cns.SESSION_EMPLOYEE_ID])
+			approved_records = db.get_submitted_reports(session[cns.SESSION_EMPLOYEE_ID])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return display_page('user_home.html', params=getPendoParams(),
 													title=cns.TITLE_INDEX,
 													inprogress_records=inprogress_records[0],
@@ -121,7 +127,10 @@ def user_home():
 @app.route('/expense_list_html')
 def expense_list_html():
 	if cns.SESSION_EMAIL in session:
-		expenses = db.get_expenses_unassigned(session[cns.SESSION_EMPLOYEE_ID])
+		try:
+			expenses = db.get_expenses_unassigned(session[cns.SESSION_EMPLOYEE_ID])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return display_page('expense_list.html', params=getPendoParams(), expenses=expenses, title=cns.TITLE_EXPENSE_LIST)
 	else:
 		return redirect(url_for('login'))
@@ -129,7 +138,10 @@ def expense_list_html():
 @app.route('/expense_detail_html', methods=['POST'])
 def expense_detail_html():
 	if cns.SESSION_EMAIL in session:
-		results = db.get_expense(request.form['id'])
+		try:
+			results = db.get_expense(request.form['id'])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		if len(results) == 1:
 			receipt_url = get_file_url(results[0]['receipt_image'])
 			return display_page('expense_detail.html', params=getPendoParams(), expense=results[0], receipt_url=receipt_url, title=cns.TITLE_EXPENSE_DETAIL)
@@ -148,9 +160,12 @@ def create_expense():
 	if cns.SESSION_EMAIL in session:
 		file = request.files.get('receipt_image')
 		file_name = save_file(file)
-		db.create_expense(request.form['name'], request.form['date'], request.form['amount'],
-						  request.form['currency'], request.form['description'], file_name,
-						  session[cns.SESSION_EMPLOYEE_ID])
+		try:
+			db.create_expense(request.form['name'], request.form['date'], request.form['amount'],
+							  request.form['currency'], request.form['description'], file_name,
+							  session[cns.SESSION_EMPLOYEE_ID])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return redirect(url_for('expense_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -158,8 +173,11 @@ def create_expense():
 @app.route('/update_expense', methods=['POST'])
 def update_expense():
 	if cns.SESSION_EMAIL in session:
-		db.update_expense(request.form['name'], request.form['date'], request.form['currency'],
-						  request.form['amount'], request.form['description'], request.form['id'])
+		try:
+			db.update_expense(request.form['name'], request.form['date'], request.form['currency'],
+							  request.form['amount'], request.form['description'], request.form['id'])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return redirect(url_for('expense_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -170,7 +188,10 @@ def delete_expense():
 		if (request.form['id']):
 			receipt_image = request.form.get('receipt_image')
 			delete_file(receipt_image)
-			db.delete_expense(request.form['id'])
+			try:
+				db.delete_expense(request.form['id'])
+			except Exception as e:
+				return display_page('error.html', error_message=str(e))
 		return redirect(url_for('expense_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -180,7 +201,10 @@ def delete_receipt_image():
 	if cns.SESSION_EMAIL in session:
 		receipt_image = request.form.get('receipt_image')
 		if delete_file(receipt_image):
-			db.delete_receipt_image(request.form['id'])
+			try:
+				db.delete_receipt_image(request.form['id'])
+			except Exception as e:
+				return display_page('error.html', error_message=str(e))
 		return redirect(url_for('expense_detail_html'), code=307)
 	else:
 		return redirect(url_for('login'))
@@ -191,7 +215,10 @@ def update_receipt_image():
 		file = request.files.get('new_receipt_image')
 		file_name = save_file(file)
 		if file_name:
-			db.update_receipt_image(file_name, request.form['id'])
+			try:
+				db.update_receipt_image(file_name, request.form['id'])
+			except Exception as e:
+				return display_page('error.html', error_message=str(e))
 		return redirect(url_for('expense_detail_html'), code=307)
 	else:
 		return redirect(url_for('login'))
@@ -199,7 +226,10 @@ def update_receipt_image():
 @app.route('/report_list_html')
 def report_list_html():
 	if cns.SESSION_EMAIL in session:
-		reports = db.get_reports(session[cns.SESSION_EMPLOYEE_ID])
+		try:
+			reports = db.get_reports(session[cns.SESSION_EMPLOYEE_ID])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return display_page('report_list.html', params=getPendoParams(), reports=reports, title=cns.TITLE_REPORT_LIST)
 	else:
 		return redirect(url_for('login'))
@@ -214,7 +244,10 @@ def report_new_html():
 @app.route('/create_report', methods=['POST'])
 def create_report():
 	if cns.SESSION_EMAIL in session:
-		db.create_report(request.form['name'], session[cns.SESSION_EMPLOYEE_ID])
+		try:
+			db.create_report(request.form['name'], session[cns.SESSION_EMPLOYEE_ID])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return redirect(url_for('report_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -222,9 +255,12 @@ def create_report():
 @app.route('/report_detail_html', methods=['POST'])
 def report_detail_html():
 	if cns.SESSION_EMAIL in session:
-		reports = db.get_report(request.form['id'])
-		expenses_open = db.get_expenses_unassigned_for_report(session[cns.SESSION_EMPLOYEE_ID])
-		expenses_included = db.get_expenses_in_report(session[cns.SESSION_EMPLOYEE_ID], request.form['id'])
+		try:
+			reports = db.get_report(request.form['id'])
+			expenses_open = db.get_expenses_unassigned_for_report(session[cns.SESSION_EMPLOYEE_ID])
+			expenses_included = db.get_expenses_in_report(session[cns.SESSION_EMPLOYEE_ID], request.form['id'])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		expenses_included = [dict(e, receipt_url=get_file_url(e['receipt_image'])) for e in expenses_included]
 
 		if len(reports) == 1:
@@ -237,13 +273,16 @@ def report_detail_html():
 @app.route('/update_report', methods=['POST'])
 def update_report():
 	if cns.SESSION_EMAIL in session:
-		db.update_report_name(request.form['id'], request.form['name'])
-		id_added = request.form.getlist('id_added')
-		if id_added:
-			db.assign_expenses_to_report(request.form['id'], id_added)
-		id_removed = request.form.getlist('id_removed')
-		if id_removed:
-			db.unassign_expenses_from_report(id_removed)
+		try:
+			db.update_report_name(request.form['id'], request.form['name'])
+			id_added = request.form.getlist('id_added')
+			if id_added:
+				db.assign_expenses_to_report(request.form['id'], id_added)
+			id_removed = request.form.getlist('id_removed')
+			if id_removed:
+				db.unassign_expenses_from_report(id_removed)
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return redirect(url_for('report_detail_html'), code=307)
 	else:
 		return redirect(url_for('login'))
@@ -251,7 +290,10 @@ def update_report():
 @app.route('/delete_report', methods=['POST'])
 def delete_report():
 	if cns.SESSION_EMAIL in session:
-		db.delete_report(request.form['id'])
+		try:
+			db.delete_report(request.form['id'])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return redirect(url_for('report_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -259,7 +301,10 @@ def delete_report():
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
 	if cns.SESSION_EMAIL in session:
-		db.submit_report(request.form['id'])
+		try:
+			db.submit_report(request.form['id'])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return redirect(url_for('expense_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -267,7 +312,10 @@ def submit_report():
 @app.route('/approve_list_html')
 def approve_list_html():
 	if cns.SESSION_EMAIL in session:
-		results = db.get_approve_list(session[cns.SESSION_COMPANY_ID])
+		try:
+			results = db.get_approve_list(session[cns.SESSION_COMPANY_ID])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		reports_submitted = []
 		reports_approved = []
 		if results:
@@ -283,7 +331,10 @@ def approve_list_html():
 @app.route('/approve_report', methods=['POST'])
 def approve_report():
 	if cns.SESSION_EMAIL in session:
-		db.approve_report(request.form['id'])
+		try:
+			db.approve_report(request.form['id'])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return redirect(url_for('approve_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -291,7 +342,10 @@ def approve_report():
 @app.route('/reject_report', methods=['POST'])
 def reject_report():
 	if cns.SESSION_EMAIL in session:
-		db.reject_report(request.form['id'])
+		try:
+			db.reject_report(request.form['id'])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return redirect(url_for('approve_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -299,7 +353,10 @@ def reject_report():
 @app.route('/employee_list_html')
 def employee_list_html():
 	if cns.SESSION_EMAIL in session:
-		employees = db.get_employees(session[cns.SESSION_COMPANY_ID])
+		try:
+			employees = db.get_employees(session[cns.SESSION_COMPANY_ID])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return display_page('employee_list.html', params=getPendoParams(), title=cns.TITLE_EMPLOYEE_LIST, employees=employees)
 	else:
 		return redirect(url_for('login'))
@@ -314,7 +371,10 @@ def employee_new_html():
 @app.route('/employee_detail_html', methods=['POST'])
 def employee_detail_html():
 	if cns.SESSION_EMAIL in session:
-		employees = db.get_employee(request.form['id'])
+		try:
+			employees = db.get_employee(request.form['id'])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return display_page('employee_detail.html', params=getPendoParams(), title=cns.TITLE_EMPLOYEE_DETAIL, employee=employees[0])
 	else:
 		return redirect(url_for('login'))
@@ -322,12 +382,15 @@ def employee_detail_html():
 @app.route('/create_employee', methods=['POST'])
 def create_employee():
 	if cns.SESSION_EMAIL in session:
-		db.create_employee(request.form['first_name'],
-						   request.form['last_name'],
-						   request.form['email'],
-						   request.form['password'],
-						   request.form['role'],
-						   session[cns.SESSION_COMPANY_ID])
+		try:
+			db.create_employee(request.form['first_name'],
+							   request.form['last_name'],
+							   request.form['email'],
+							   request.form['password'],
+							   request.form['role'],
+							   session[cns.SESSION_COMPANY_ID])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return redirect(url_for('employee_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -335,11 +398,14 @@ def create_employee():
 @app.route('/update_employee', methods=['POST'])
 def update_employee():
 	if cns.SESSION_EMAIL in session:
-		db.update_employee(request.form['first_name'],
-						   request.form['last_name'],
-						   request.form['email'],
-						   request.form['role'],
-						   request.form['id'])
+		try:
+			db.update_employee(request.form['first_name'],
+							   request.form['last_name'],
+							   request.form['email'],
+							   request.form['role'],
+							   request.form['id'])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return redirect(url_for('employee_list_html'))
 	else:
 		return redirect(url_for('login'))
@@ -347,9 +413,10 @@ def update_employee():
 @app.route('/delete_employee', methods=['POST'])
 def delete_employee():
 	if cns.SESSION_EMAIL in session:
-		result = db.delete_employee(request.form['id'])
-		if isinstance(result, Exception):
-			return display_page('error.html', message_key=cns.MSG_DELETE_EMPLOYEE_FAILED, error_message=str(result))
+		try:
+			db.delete_employee(request.form['id'])
+		except Exception as e:
+			return display_page('error.html', error_message=str(e))
 		return redirect(url_for('employee_list_html'))
 	else:
 		return redirect(url_for('login'))

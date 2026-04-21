@@ -49,7 +49,7 @@ def sql_execute(sql_string, params):
         print("Error during SQL execution:", e)
         if connection is not None:
             connection.rollback()
-        return e
+        raise
     finally:
         if cursor is not None:
             cursor.close()
